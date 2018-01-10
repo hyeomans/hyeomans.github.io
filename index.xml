@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Hector Yeomans&#39; blog</title>
+    <link>https://hyeomans.com/</link>
+    <description>Recent content on Hector Yeomans&#39; blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 27 May 2017 14:46:09 -0700</lastBuildDate>
+    
+	<atom:link href="https://hyeomans.com/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Resilience with Disyuntor - Circuit Breaker</title>
+      <link>https://hyeomans.com/resilience-disyuntor-nodejs-circuit-breaker/</link>
+      <pubDate>Sat, 27 May 2017 14:46:09 -0700</pubDate>
+      
+      <guid>https://hyeomans.com/resilience-disyuntor-nodejs-circuit-breaker/</guid>
+      <description>&lt;p&gt;Resilience means the capacity to recover quickly from difficulties. Circuit breaker pattern is a good practice for resilience.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Redis, STunnel, and C#</title>
+      <link>https://hyeomans.com/redis-stunnel-and-c/</link>
+      <pubDate>Wed, 25 Jan 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://hyeomans.com/redis-stunnel-and-c/</guid>
+      <description>&lt;p&gt;In this blog post, I will try to demonstrate how to setup a working environment with StackExchange.Redis package is communicating to a Redis box using SSL through STunel.&lt;/p&gt;
+
+&lt;p&gt;By the end of this post, you will have a working environment on Vagrant like this:&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>ES6 Arrow functions</title>
+      <link>https://hyeomans.com/es6-arrow-functions/</link>
+      <pubDate>Mon, 21 Sep 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://hyeomans.com/es6-arrow-functions/</guid>
+      <description>Last night I was reading this post: ES6 arrow functions, syntax and lexical scoping and going through the comments I saw this question:
+so arrow functions always inherit scope?  The answer was by Barney: always.
+I went to the console and typed:
+nvm use 4 node var doSome = () =&amp;gt; { console.log(this.x) } doSome.call({x: &#39;hello&#39;}); global.x = &#39;hello&#39;; doSome.call({x: &#39;good bye&#39;});  Could you guess what is going to be printed?</description>
+    </item>
+    
+  </channel>
+</rss>
