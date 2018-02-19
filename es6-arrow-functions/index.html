@@ -50,6 +50,8 @@ so arrow functions always inherit scope?  The answer was by Barney: always.
 I went to the console and typed:
 nvm use 4 node var doSome = () =&gt; { console.log(this.x) } doSome.call({x: &#39;hello&#39;}); global.x = &#39;hello&#39;; doSome.call({x: &#39;good bye&#39;});  Could you guess what is going to be printed?">
     
+      <meta name="twitter:creator" content="@h_yeomans">
+    
     
 
     
@@ -77,6 +79,16 @@ nvm use 4 node var doSome = () =&gt; { console.log(this.x) } doSome.call({x: &#3
 
     
       
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-49713985-1', 'auto');
+ga('send', 'pageview');
+</script>
+
     
     
   </head>
@@ -454,7 +466,7 @@ doSome.call({x: 'good bye'});
       <div id="about-card-location">
         <i class="fa fa-map-marker"></i>
         <br/>
-        California
+        Mexico
       </div>
     
   </div>
