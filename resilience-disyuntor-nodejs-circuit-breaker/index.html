@@ -1,856 +1,191 @@
-
-
-  
-    
-  
-
-
-  
-
-
-
-
-  
-
-
-  
-
-<!DOCTYPE html>
-<html lang="en-us">
-  <head>
-    
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="generator" content="Hugo 0.21-DEV">
-    <meta name="theme" content="Tranquilpeak 0.3.1-BETA">
-    <title>Resilience with Disyuntor - Circuit Breaker</title>
-    <meta name="author" content="Hector Yeomans">
-    <meta name="keywords" content="">
-
-    <link rel="icon" href="https://hyeomans.com/favicon.png">
-    
-
-    
-    <meta name="description" content="Resilience means the capacity to recover quickly from difficulties. Circuit breaker pattern is a good practice for resilience.
-
-">
-    <meta property="og:description" content="Resilience means the capacity to recover quickly from difficulties. Circuit breaker pattern is a good practice for resilience.
-
-">
-    <meta property="og:type" content="blog">
-    <meta property="og:title" content="Resilience with Disyuntor - Circuit Breaker">
-    <meta property="og:url" content="/resilience-disyuntor-nodejs-circuit-breaker/">
-    <meta property="og:site_name" content="Hector Yeomans&#39; blog">
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Hector Yeomans&#39; blog">
-    <meta name="twitter:description" content="Resilience means the capacity to recover quickly from difficulties. Circuit breaker pattern is a good practice for resilience.
-
-">
-    
-      <meta name="twitter:creator" content="@h_yeomans">
-    
-    
-
-    
-    
-
-    
-      <meta property="og:image" content="//www.gravatar.com/avatar/3504447fb665c53d593ed79ca9fc0f38?s=640">
-    
-
-    
-      <meta property="og:image" content="//res.cloudinary.com/hyeomans-blog/image/upload/t_media_lib_thumb/v1496027814/circuitbreaker2_xtt7wg.jpg">
-    
-    
-      <meta property="og:image" content="//res.cloudinary.com/hyeomans-blog/image/upload/q_auto:good/v1496027814/circuitbreaker2_xtt7wg.jpg">
-    
-    
-
-    
-
-    
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.css" />
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" />
-    
-    
-    <link rel="stylesheet" href="https://hyeomans.com/css/style-u6mk0ojoywresbx8iepslrmmhl4stuhrsxuwhkpwrkrx7mryjcaimasnk4pi.min.css" />
-    
-    
-
-    
-      
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-49713985-1', 'auto');
-ga('send', 'pageview');
-</script>
-
-    
-    
-  </head>
-
-  <body>
-    <div id="blog">
-      <header id="header" data-behavior="3">
-  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
-  <div class="header-title">
-    <a class="header-title-link" href="https://hyeomans.com/">Hector Yeomans&#39; blog</a>
-  </div>
-  
-    
-      <a class="header-right-picture "
-         href="https://hyeomans.com/">
-    
-    
-    
-      
-        <img class="header-picture" src="//www.gravatar.com/avatar/3504447fb665c53d593ed79ca9fc0f38?s=90" alt="Author&#39;s picture" />
-      
-    
-    </a>
-  
-</header>
-
-      <nav id="sidebar" data-behavior="3">
-  <div class="sidebar-container">
-    
-      <div class="sidebar-profile">
-        <a href="https://hyeomans.com/">
-          <img class="sidebar-profile-picture" src="//www.gravatar.com/avatar/3504447fb665c53d593ed79ca9fc0f38?s=110" alt="Author&#39;s picture" />
-        </a>
-        <h4 class="sidebar-profile-name">Hector Yeomans</h4>
-        
-          <h5 class="sidebar-profile-bio">Senior Software Engineer</h5>
-        
-      </div>
-    
-    <ul class="sidebar-buttons">
-      
-  <li class="sidebar-button">
-    
-      <a class="sidebar-button-link " href="https://hyeomans.com/categories">
-    
-      <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
-      
-      <span class="sidebar-button-desc">Categories</span>
-    </a>
-  </li>
-
-  <li class="sidebar-button">
-    
-      <a class="sidebar-button-link " href="https://hyeomans.com/tags">
-    
-      <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
-      
-      <span class="sidebar-button-desc">Tags</span>
-    </a>
-  </li>
-
-  <li class="sidebar-button">
-    
-      <a class="sidebar-button-link " href="https://hyeomans.com/archives">
-    
-      <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
-      
-      <span class="sidebar-button-desc">Archives</span>
-    </a>
-  </li>
-
-  <li class="sidebar-button">
-    
-      <a class="sidebar-button-link " href="https://hyeomans.com/#about">
-    
-      <i class="sidebar-button-icon fa fa-lg fa-question"></i>
-      
-      <span class="sidebar-button-desc">About</span>
-    </a>
-  </li>
-
-  <li class="sidebar-button">
-    
-      <a class="sidebar-button-link " href="https://hyeomans.com/">
-    
-      <i class="sidebar-button-icon fa fa-lg fa-home"></i>
-      
-      <span class="sidebar-button-desc">Home</span>
-    </a>
-  </li>
-
-    </ul>
-    <ul class="sidebar-buttons">
-      
-  <li class="sidebar-button">
-    
-      <a class="sidebar-button-link " href="https://stackoverflow.com/users/122847/hyeomans" target="_blank">
-    
-      <i class="sidebar-button-icon fa fa-lg fa-stack-overflow"></i>
-      
-      <span class="sidebar-button-desc">Stack Overflow</span>
-    </a>
-  </li>
-
-  <li class="sidebar-button">
-    
-      <a class="sidebar-button-link " href="https://github.com/hyeomans" target="_blank">
-    
-      <i class="sidebar-button-icon fa fa-lg fa-github"></i>
-      
-      <span class="sidebar-button-desc">GitHub</span>
-    </a>
-  </li>
-
-    </ul>
-    <ul class="sidebar-buttons">
-      
-  <li class="sidebar-button">
-    
-      <a class="sidebar-button-link " href="https://hyeomans.com/index.xml">
-    
-      <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
-      
-      <span class="sidebar-button-desc">RSS</span>
-    </a>
-  </li>
-
-    </ul>
-  </div>
-</nav>
-
-      
-  <div class="post-header-cover
-              text-left
-              "
-       style="background-image:url('//res.cloudinary.com/hyeomans-blog/image/upload/q_auto:good/v1496027814/circuitbreaker2_xtt7wg.jpg')"
-       data-behavior="3">
-    
-      <div class="post-header main-content-wrap text-left">
-  
-    <h1 class="post-title" itemprop="headline">
-      Resilience with Disyuntor - Circuit Breaker
-    </h1>
-  
-  <div class="postShorten-meta post-meta">
-  
-    <time itemprop="datePublished" datetime="2017-05-27T14:46:09-07:00">
-      
-  May 27, 2017
-
-    </time>
-  
-  
-
-</div>
-
-</div>
-    
-  </div>
-
-
-      <div id="main" data-behavior="3"
-        class="hasCover
-               hasCoverMetaIn
-               ">
-        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
-          
-          
-          <div class="post-content markdown" itemprop="articleBody">
-            <div class="main-content-wrap">
-              <p>Resilience means the capacity to recover quickly from difficulties. Circuit breaker pattern is a good practice for resilience.</p>
-
-<p></p>
-
-<p>When working with distributed systems, you want resilience. If you&rsquo;re working with &ldquo;micro-services,&rdquo;
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="ie=edge"/><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/><style data-href="/app.5c292e386b6b26b6b927.css">code[class*=language-],pre[class*=language-]{color:#ccc;background:none;font-family:Consolas,Monaco,Andale Mono,Ubuntu Mono,monospace;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-ms-hyphens:none;hyphens:none}pre[class*=language-]{padding:1em;margin:.5em 0;overflow:auto}:not(pre)>code[class*=language-],pre[class*=language-]{background:#2d2d2d}:not(pre)>code[class*=language-]{padding:.1em;border-radius:.3em;white-space:normal}.token.block-comment,.token.cdata,.token.comment,.token.doctype,.token.prolog{color:#999}.token.punctuation{color:#ccc}.token.attr-name,.token.deleted,.token.namespace,.token.tag{color:#e2777a}.token.function-name{color:#6196cc}.token.boolean,.token.function,.token.number{color:#f08d49}.token.class-name,.token.constant,.token.property,.token.symbol{color:#f8c555}.token.atrule,.token.builtin,.token.important,.token.keyword,.token.selector{color:#cc99cd}.token.attr-value,.token.char,.token.regex,.token.string,.token.variable{color:#7ec699}.token.entity,.token.operator,.token.url{color:#67cdcc}.token.bold,.token.important{font-weight:700}.token.italic{font-style:italic}.token.entity{cursor:help}.token.inserted{color:green}@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:100;src:local("Montserrat Thin "),local("Montserrat-Thin"),url(/static/montserrat-latin-100-50d279861fb3cbfed809eae6ed8b9ac9.woff2) format("woff2"),url(/static/montserrat-latin-100-5e334eff013f12fbb8ed72c2a253f119.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:100;src:local("Montserrat Thin italic"),local("Montserrat-Thinitalic"),url(/static/montserrat-latin-100italic-8c0705336558194799a8729840d7ed9d.woff2) format("woff2"),url(/static/montserrat-latin-100italic-03e19243272affe738654a157625ec26.woff) format("woff")}@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:200;src:local("Montserrat Extra Light "),local("Montserrat-Extra Light"),url(/static/montserrat-latin-200-4343d3d91a9446226e7a8bbb024111ad.woff2) format("woff2"),url(/static/montserrat-latin-200-f2022ecd65a0703ec3edcb7641709a75.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:200;src:local("Montserrat Extra Light italic"),local("Montserrat-Extra Lightitalic"),url(/static/montserrat-latin-200italic-116c4c4b14ef76b0555da09854512022.woff2) format("woff2"),url(/static/montserrat-latin-200italic-89614a6008fc5c60739012463d0ee7e6.woff) format("woff")}@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:300;src:local("Montserrat Light "),local("Montserrat-Light"),url(/static/montserrat-latin-300-d2ad295b60682a6537c358e06ea80c61.woff2) format("woff2"),url(/static/montserrat-latin-300-3a371ee0d175f5c2b15ce1d6b981dc4e.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:300;src:local("Montserrat Light italic"),local("Montserrat-Lightitalic"),url(/static/montserrat-latin-300italic-f6b6bf2431003f8142e800f9df157989.woff2) format("woff2"),url(/static/montserrat-latin-300italic-16521668f5f238098329cdd7d27c391e.woff) format("woff")}@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:400;src:local("Montserrat Regular "),local("Montserrat-Regular"),url(/static/montserrat-latin-400-240a84447b78da0920fcb07e378f2c5f.woff2) format("woff2"),url(/static/montserrat-latin-400-b20cc131034316b1c85d0498fb9ed5c5.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:400;src:local("Montserrat Regular italic"),local("Montserrat-Regularitalic"),url(/static/montserrat-latin-400italic-86172bb829de6be08b92512096b6aca6.woff2) format("woff2"),url(/static/montserrat-latin-400italic-9405e78785a55cf0e4ea7669d4616ea9.woff) format("woff")}@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:500;src:local("Montserrat Medium "),local("Montserrat-Medium"),url(/static/montserrat-latin-500-fb8d6b71dbe8d9294be43082936f649e.woff2) format("woff2"),url(/static/montserrat-latin-500-50825d47af7ae47e055018eb689c6c99.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:500;src:local("Montserrat Medium italic"),local("Montserrat-Mediumitalic"),url(/static/montserrat-latin-500italic-c0a555a4f8e997385a3eebbd4da0b9ee.woff2) format("woff2"),url(/static/montserrat-latin-500italic-635de59c4be86285b1f70068c95b9816.woff) format("woff")}@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:600;src:local("Montserrat SemiBold "),local("Montserrat-SemiBold"),url(/static/montserrat-latin-600-d5615136a08cfee70deb4be1ee1651df.woff2) format("woff2"),url(/static/montserrat-latin-600-f300da4fb4fe00e23915f62b2c643681.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:600;src:local("Montserrat SemiBold italic"),local("Montserrat-SemiBolditalic"),url(/static/montserrat-latin-600italic-10f29d139edacde92df63374c5672568.woff2) format("woff2"),url(/static/montserrat-latin-600italic-2bc37d86a4ba12ce526c4af904a9946e.woff) format("woff")}@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:700;src:local("Montserrat Bold "),local("Montserrat-Bold"),url(/static/montserrat-latin-700-7d77e1f03eefc452dab14d7f89080083.woff2) format("woff2"),url(/static/montserrat-latin-700-81826529772e52f0f14a4c73c2f2c7f1.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:700;src:local("Montserrat Bold italic"),local("Montserrat-Bolditalic"),url(/static/montserrat-latin-700italic-1dd2b53f1567a29e0505de9b27c4352c.woff2) format("woff2"),url(/static/montserrat-latin-700italic-c162d257f5e9f9b108a96a604cfb2132.woff) format("woff")}@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:800;src:local("Montserrat ExtraBold "),local("Montserrat-ExtraBold"),url(/static/montserrat-latin-800-d4e7bf86bbd8e5f43ca73fa831218648.woff2) format("woff2"),url(/static/montserrat-latin-800-895aadbff357be35ac8dd107c7975ee7.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:800;src:local("Montserrat ExtraBold italic"),local("Montserrat-ExtraBolditalic"),url(/static/montserrat-latin-800italic-fc0cbe442f7b3733c91e982e825c4daa.woff2) format("woff2"),url(/static/montserrat-latin-800italic-b3362875067300abedb7a8fb97903258.woff) format("woff")}@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:900;src:local("Montserrat Black "),local("Montserrat-Black"),url(/static/montserrat-latin-900-c8bdd772c0d1347720ff7e3fb72719f3.woff2) format("woff2"),url(/static/montserrat-latin-900-1b99ef78e627dd9bbd0ca4b5c0789547.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:900;src:local("Montserrat Black italic"),local("Montserrat-Blackitalic"),url(/static/montserrat-latin-900italic-cb72c1f90f66c124fb897a75bec64c78.woff2) format("woff2"),url(/static/montserrat-latin-900italic-b78bb9f8ecec6c5a924c873f1818095f.woff) format("woff")}@font-face{font-family:Merriweather;font-style:normal;font-display:swap;font-weight:300;src:local("Merriweather Light "),local("Merriweather-Light"),url(/static/merriweather-latin-300-f015f1e9a46a3b9db4fd64564dacece4.woff2) format("woff2"),url(/static/merriweather-latin-300-92dfe81b725c342d31d962da975c07a6.woff) format("woff")}@font-face{font-family:Merriweather;font-style:italic;font-display:swap;font-weight:300;src:local("Merriweather Light italic"),local("Merriweather-Lightitalic"),url(/static/merriweather-latin-300italic-7fd86b32accf2df4403d1d4fa3a81502.woff2) format("woff2"),url(/static/merriweather-latin-300italic-878b76f59d5ba58dd1652dc8d2a0f4f9.woff) format("woff")}@font-face{font-family:Merriweather;font-style:normal;font-display:swap;font-weight:400;src:local("Merriweather Regular "),local("Merriweather-Regular"),url(/static/merriweather-latin-400-12dbf4c00ae43698f278b099e4b0ec9e.woff2) format("woff2"),url(/static/merriweather-latin-400-1fffad22b085a877995812dbf1d9ac08.woff) format("woff")}@font-face{font-family:Merriweather;font-style:italic;font-display:swap;font-weight:400;src:local("Merriweather Regular italic"),local("Merriweather-Regularitalic"),url(/static/merriweather-latin-400italic-1e0d3e8121d88969bfb153c8f174b758.woff2) format("woff2"),url(/static/merriweather-latin-400italic-de18d4c4e8e808a7248a185f866ff094.woff) format("woff")}@font-face{font-family:Merriweather;font-style:normal;font-display:swap;font-weight:700;src:local("Merriweather Bold "),local("Merriweather-Bold"),url(/static/merriweather-latin-700-dc8fec81a125fc63856587e6683da73b.woff2) format("woff2"),url(/static/merriweather-latin-700-d7d2ed8e58f303392cc3fc00ba3a9186.woff) format("woff")}@font-face{font-family:Merriweather;font-style:italic;font-display:swap;font-weight:700;src:local("Merriweather Bold italic"),local("Merriweather-Bolditalic"),url(/static/merriweather-latin-700italic-b7b7e5da4d7be8c12bd5a6c809edc8fc.woff2) format("woff2"),url(/static/merriweather-latin-700italic-6210a5fc1c54ca85a5d82aa85d7a9b5c.woff) format("woff")}@font-face{font-family:Merriweather;font-style:normal;font-display:swap;font-weight:900;src:local("Merriweather Black "),local("Merriweather-Black"),url(/static/merriweather-latin-900-43f870d543dd89fbeb66d417c0d97276.woff2) format("woff2"),url(/static/merriweather-latin-900-8f3806df74937c7b8b53f24ae1e725d1.woff) format("woff")}@font-face{font-family:Merriweather;font-style:italic;font-display:swap;font-weight:900;src:local("Merriweather Black italic"),local("Merriweather-Blackitalic"),url(/static/merriweather-latin-900italic-168c1ab28ed0e4e7d654334def288bc1.woff2) format("woff2"),url(/static/merriweather-latin-900italic-ae7778f01871e35ee142ef207b313b34.woff) format("woff")}</style><meta name="generator" content="Gatsby 2.0.75"/><link rel="alternate" type="application/rss+xml" href="/rss.xml"/><link rel="shortcut icon" href="/icons/icon-48x48.png"/><link rel="manifest" href="/manifest.webmanifest"/><meta name="theme-color" content="#663399"/><title data-react-helmet="true">Resilience with Disyuntor - Circuit Breaker | Hector Yeomans Blog</title><meta data-react-helmet="true" name="description" content="Resilience means the capacity to recover quickly from difficulties. Circuit breaker pattern is a good practice for resilience. When working with distributed…"/><meta data-react-helmet="true" property="og:title" content="Resilience with Disyuntor - Circuit Breaker"/><meta data-react-helmet="true" property="og:description" content="Resilience means the capacity to recover quickly from difficulties. Circuit breaker pattern is a good practice for resilience. When working with distributed…"/><meta data-react-helmet="true" property="og:type" content="website"/><meta data-react-helmet="true" name="twitter:card" content="summary"/><meta data-react-helmet="true" name="twitter:creator" content="Hector Yeomans"/><meta data-react-helmet="true" name="twitter:title" content="Resilience with Disyuntor - Circuit Breaker"/><meta data-react-helmet="true" name="twitter:description" content="Resilience means the capacity to recover quickly from difficulties. Circuit breaker pattern is a good practice for resilience. When working with distributed…"/><style id="typography.js">html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}article,aside,details,figcaption,figure,footer,header,main,menu,nav,section,summary{display:block}audio,canvas,progress,video{display:inline-block}audio:not([controls]){display:none;height:0}progress{vertical-align:baseline}[hidden],template{display:none}a{background-color:transparent;-webkit-text-decoration-skip:objects}a:active,a:hover{outline-width:0}abbr[title]{border-bottom:none;text-decoration:underline;text-decoration:underline dotted}b,strong{font-weight:inherit;font-weight:bolder}dfn{font-style:italic}h1{font-size:2em;margin:.67em 0}mark{background-color:#ff0;color:#000}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}img{border-style:none}svg:not(:root){overflow:hidden}code,kbd,pre,samp{font-family:monospace,monospace;font-size:1em}figure{margin:1em 40px}hr{box-sizing:content-box;height:0;overflow:visible}button,input,optgroup,select,textarea{font:inherit;margin:0}optgroup{font-weight:700}button,input{overflow:visible}button,select{text-transform:none}[type=reset],[type=submit],button,html [type=button]{-webkit-appearance:button}[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner,button::-moz-focus-inner{border-style:none;padding:0}[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[type=submit]:-moz-focusring,button:-moz-focusring{outline:1px dotted ButtonText}fieldset{border:1px solid silver;margin:0 2px;padding:.35em .625em .75em}legend{box-sizing:border-box;color:inherit;display:table;max-width:100%;padding:0;white-space:normal}textarea{overflow:auto}[type=checkbox],[type=radio]{box-sizing:border-box;padding:0}[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}[type=search]::-webkit-search-cancel-button,[type=search]::-webkit-search-decoration{-webkit-appearance:none}::-webkit-input-placeholder{color:inherit;opacity:.54}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}html{font:100%/1.75 'Merriweather','Georgia',serif;box-sizing:border-box;overflow-y:scroll;}*{box-sizing:inherit;}*:before{box-sizing:inherit;}*:after{box-sizing:inherit;}body{color:hsla(0,0%,0%,0.9);font-family:'Merriweather','Georgia',serif;font-weight:400;word-wrap:break-word;font-kerning:normal;-moz-font-feature-settings:"kern", "liga", "clig", "calt";-ms-font-feature-settings:"kern", "liga", "clig", "calt";-webkit-font-feature-settings:"kern", "liga", "clig", "calt";font-feature-settings:"kern", "liga", "clig", "calt";}img{max-width:100%;margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;}h1{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;color:inherit;font-family:Montserrat,sans-serif;font-weight:900;text-rendering:optimizeLegibility;font-size:2.5rem;line-height:1.1;}h2{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;color:inherit;font-family:'Merriweather','Georgia',serif;font-weight:900;text-rendering:optimizeLegibility;font-size:1.73286rem;line-height:1.1;}h3{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;color:inherit;font-family:'Merriweather','Georgia',serif;font-weight:900;text-rendering:optimizeLegibility;font-size:1.4427rem;line-height:1.1;}h4{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;color:inherit;font-family:'Merriweather','Georgia',serif;font-weight:900;text-rendering:optimizeLegibility;font-size:1rem;line-height:1.1;letter-spacing:0.140625em;text-transform:uppercase;}h5{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;color:inherit;font-family:'Merriweather','Georgia',serif;font-weight:900;text-rendering:optimizeLegibility;font-size:0.83255rem;line-height:1.1;}h6{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;color:inherit;font-family:'Merriweather','Georgia',serif;font-weight:900;text-rendering:optimizeLegibility;font-size:0.75966rem;line-height:1.1;font-style:italic;}hgroup{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;}ul{margin-left:1.75rem;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;list-style-position:outside;list-style-image:none;list-style:disc;}ol{margin-left:1.75rem;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;list-style-position:outside;list-style-image:none;}dl{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;}dd{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;}p{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;}figure{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;}pre{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;font-size:0.85rem;line-height:1.75rem;}table{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;font-size:1rem;line-height:1.75rem;border-collapse:collapse;width:100%;}fieldset{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;}blockquote{margin-left:-1.75rem;margin-right:1.75rem;margin-top:0;padding-bottom:0;padding-left:1.42188rem;padding-right:0;padding-top:0;margin-bottom:1.75rem;font-size:1.20112rem;line-height:1.75rem;color:hsla(0,0%,0%,0.59);font-style:italic;border-left:0.32813rem solid hsla(0,0%,0%,0.9);}form{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;}noscript{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;}iframe{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;}hr{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:calc(1.75rem - 1px);background:hsla(0,0%,0%,0.2);border:none;height:1px;}address{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;}b{font-weight:700;}strong{font-weight:700;}dt{font-weight:700;}th{font-weight:700;}li{margin-bottom:calc(1.75rem / 2);}ol li{padding-left:0;}ul li{padding-left:0;}li > ol{margin-left:1.75rem;margin-bottom:calc(1.75rem / 2);margin-top:calc(1.75rem / 2);}li > ul{margin-left:1.75rem;margin-bottom:calc(1.75rem / 2);margin-top:calc(1.75rem / 2);}blockquote *:last-child{margin-bottom:0;}li *:last-child{margin-bottom:0;}p *:last-child{margin-bottom:0;}li > p{margin-bottom:calc(1.75rem / 2);}code{font-size:0.85rem;line-height:1.75rem;}kbd{font-size:0.85rem;line-height:1.75rem;}samp{font-size:0.85rem;line-height:1.75rem;}abbr{border-bottom:1px dotted hsla(0,0%,0%,0.5);cursor:help;}acronym{border-bottom:1px dotted hsla(0,0%,0%,0.5);cursor:help;}abbr[title]{border-bottom:1px dotted hsla(0,0%,0%,0.5);cursor:help;text-decoration:none;}thead{text-align:left;}td,th{text-align:left;border-bottom:1px solid hsla(0,0%,0%,0.12);font-feature-settings:"tnum";-moz-font-feature-settings:"tnum";-ms-font-feature-settings:"tnum";-webkit-font-feature-settings:"tnum";padding-left:1.16667rem;padding-right:1.16667rem;padding-top:0.875rem;padding-bottom:calc(0.875rem - 1px);}th:first-child,td:first-child{padding-left:0;}th:last-child,td:last-child{padding-right:0;}blockquote > :last-child{margin-bottom:0;}blockquote cite{font-size:1rem;line-height:1.75rem;color:hsla(0,0%,0%,0.9);font-weight:400;}blockquote cite:before{content:"— ";}ul,ol{margin-left:0;}@media only screen and (max-width:480px){ul,ol{margin-left:1.75rem;}blockquote{margin-left:-1.3125rem;margin-right:0;padding-left:0.98438rem;}}h1,h2,h3,h4,h5,h6{margin-top:3.5rem;}a{box-shadow:0 1px 0 0 currentColor;color:#007acc;text-decoration:none;}a:hover,a:active{box-shadow:none;}mark,ins{background:#007acc;color:white;padding:0.10938rem 0.21875rem;text-decoration:none;}a.gatsby-resp-image-link{box-shadow:none;}</style><link as="script" rel="preload" href="/component---src-templates-blog-post-js-fbb9043dc37902e426b3.js"/><link as="script" rel="preload" href="/0-63927f4a3c1a96f94d84.js"/><link as="script" rel="preload" href="/app-19e9aa11150c85fadc63.js"/><link as="script" rel="preload" href="/webpack-runtime-90e8f318e8e236c6f35e.js"/><link as="fetch" rel="preload" href="/static/d/679/path---resilience-disyuntor-nodejs-circuit-breaker-bdf-1ad-gd17kmOAILtEJsKeU3zE5vFYpY.json" crossOrigin="use-credentials"/></head><body><div id="___gatsby"><div style="outline:none" tabindex="-1" role="group"><div style="margin-left:auto;margin-right:auto;max-width:42rem;padding:2.625rem 1.3125rem"><h3 style="font-family:Montserrat, sans-serif;margin-top:0;margin-bottom:-1.75rem"><a style="box-shadow:none;text-decoration:none;color:inherit" href="/">Hector Yeomans Blog</a></h3><h1>Resilience with Disyuntor - Circuit Breaker</h1><p style="font-size:0.83255rem;line-height:1.75rem;display:block;margin-bottom:1.75rem;margin-top:-1.75rem">May 27, 2017</p><div><p>Resilience means the capacity to recover quickly from difficulties. Circuit breaker pattern is a good practice for resilience.</p>
+<p>When working with distributed systems, you want resilience. If you’re working with “micro-services,”
 you probably have faced with the problem of a service going down. When X service goes down, and Y and Z depend on X,
-every internal exception could potentially start taking other services down.</p>
-
-<p>If you don&rsquo;t work with micro-services, you might still have an integration with a payment provider
+every internal exception could potentially start taking other services down. </p>
+<p>If you don’t work with micro-services, you might still have an integration with a payment provider
 (PayPal, Stripe, Google Play, etc.). What happens when any of those providers goes down?
 Imagine a request comes to your internal service, then your service makes a request to Stripe,
 then Stripe takes 30 seconds to tell you there was something wrong. How many requests have
 queued up in 30 seconds in your service?</p>
-
 <p>Circuit Breaker is a pattern that can help you with this problem. The Circuit Breaker pattern
 became famous after Release It! book. To be honest the first time I heard about this
 patterns was in 2011 on Dependency Injection in .NET.</p>
-
 <blockquote>
-<p>&ldquo;Circuit Breaker is a stability pattern because it adds robustness to an application by failing
+<p>“Circuit Breaker is a stability pattern because it adds robustness to an application by failing
 fast, instead of hanging and consuming resources while it hangs. This is a good example of a nonfunctional
-requirement and a true CROSS-CUTTING CONCERN, because it has little to do with the feature implemented with the out-of-process call.&rdquo;</p>
-
-<p>Excerpt From: Mark Seemann. &ldquo;Dependency Injection in .NET.&rdquo; 2011</p>
+requirement and a true CROSS-CUTTING CONCERN, because it has little to do with the feature implemented with the out-of-process call.”</p>
 </blockquote>
-
-<p>_</p>
-
 <blockquote>
-<p>&ldquo;Residential fuses have gone the way of the rotary dial telephone. Now, circuit breakers
+<p>Excerpt From: Mark Seemann. “Dependency Injection in .NET.” 2011</p>
+</blockquote>
+<p>_</p>
+<blockquote>
+<p>“Residential fuses have gone the way of the rotary dial telephone. Now, circuit breakers
 protect overeager gadget hounds from burning their houses down. The principle is the same:
 detect excess usage, fail first, and open the circuit. More abstractly, the circuit breaker exists
 to allow one subsystem (an electrical circuit) to fail (excessive current draw, possibly from a
 short-circuit) without destroying the entire system (the house). Furthermore, once the danger has
-passed, the circuit breaker can be reset to restore full function to the system.&rdquo;</p>
-
-<p>Excerpt From: Michael T. Nygard. &ldquo;Release It!&rdquo; 2007</p>
+passed, the circuit breaker can be reset to restore full function to the system.”</p>
 </blockquote>
-
+<blockquote>
+<p>Excerpt From: Michael T. Nygard. “Release It!” 2007</p>
+</blockquote>
 <p>There are three states on a Circuit Breaker implementation:</p>
-
 <ul>
 <li>Open</li>
 <li>Half-Open</li>
 <li>Closed</li>
 </ul>
-
 <p>The closed state represents a healthy system. Going back to the Stripe example,
 the closed state means requests come and go without the known existence of a Circuit breaker.</p>
-
 <p>Circuit breaker takes passive action when that HTTP call fails. On every failure,
 the circuit breaker is listening for failures. The Circuit Breaker opens when the
 threshold of failures, or rate of failures, is met.</p>
-
 <p>Once the circuit breaker is open, every HTTP call will fail immediately, bypassing
 the real call to Stripe. After a pre-defined period, the Circuit Breaker tries a
-real call to Stripe, leaving the Circuit Breaker on a half-open state.</p>
-
+real call to Stripe, leaving the Circuit Breaker on a half-open state. </p>
 <p>On a half-open state, if the request to Stripe succeeds, the Circuit Breaker returns
 to a closed state, if it fails it returns to an open state.</p>
-
 <p>Usually, an open state call is a custom exception. When using a Circuit Breaker
 implementation, make sure you log and monitor this kind of exceptions.</p>
-
-<h2 id="disyuntor">Disyuntor</h2>
-
+<h2>Disyuntor</h2>
 <p><a href="https://github.com/auth0/disyuntor">Disyuntor</a> is an implementation of Circuit Breaker in Node.js by <a href="https://auth0.com/">Auth0</a>. This npm package lets you wrap a critical function in a Circuit Breaker pattern.</p>
-
 <p>In this tutorial, you will create two services. One of them will be flaky for a deterministic
 period. The other will issue requests.</p>
-
 <p>After that, we will add Disyuntor and wrap the call in a Circuit Breaker pattern. You will see the three states in action.</p>
-
-<h3 id="pre-requisites">Pre-requisites</h3>
-
-<p>This is a Node.js tutorial, but also I will use yarn to install packages. Whenever you see <code>yarn add --exact {package}</code> can
-be replace with <code>npm install --exact {package}</code>. Also I&rsquo;m doing this in macOS Sierra, so this is a *nix OS. I will try my
+<h3>Pre-requisites</h3>
+<p>This is a Node.js tutorial, but also I will use yarn to install packages. Whenever you see <code class="language-text">yarn add --exact {package}</code> can
+be replace with <code class="language-text">npm install --exact {package}</code>. Also I’m doing this in macOS Sierra, so this is a *nix OS. I will try my
 best to make it cross-platform.</p>
-
-<p>Let&rsquo;s create a new project, open up your console and type:</p>
-
-<pre><code>$&gt; mkdir disyuntor-example &amp;&amp; cd $_
-$disyuntor-example&gt; yarn init -y #or npm init -y
-</code></pre>
-
+<p>Let’s create a new project, open up your console and type:</p>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">$&gt; mkdir disyuntor-example &amp;&amp; cd $_
+$disyuntor-example&gt; yarn init -y #or npm init -y</code></pre></div>
 <p>We will use Express.js to mock out our two services:</p>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">$disyuntor-example&gt; yarn add --exact express</code></pre></div>
+<p>Create the flaky server first: </p>
+<div class="gatsby-highlight" data-language="js"><pre class="language-js"><code class="language-js"><span class="token comment">// flaky.js</span>
+<span class="token keyword">const</span> app <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'express'</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-<pre><code>$disyuntor-example&gt; yarn add --exact express
-</code></pre>
+app<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span><span class="token string">'/:id'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>req<span class="token punctuation">,</span> res<span class="token punctuation">,</span> next<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> param <span class="token operator">=</span> req<span class="token punctuation">.</span>params<span class="token punctuation">.</span>id<span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>param <span class="token operator">===</span> <span class="token string">"0"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">blockFor</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    res<span class="token punctuation">.</span><span class="token function">sendStatus</span><span class="token punctuation">(</span><span class="token number">503</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+    res<span class="token punctuation">.</span><span class="token function">status</span><span class="token punctuation">(</span><span class="token number">200</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">send</span><span class="token punctuation">(</span><span class="token string">'I am ok now.'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-<p>Create the flaky server first:</p>
+<span class="token keyword">function</span> <span class="token function">blockFor</span><span class="token punctuation">(</span>seconds<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> waitTill <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> seconds <span class="token operator">*</span> <span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">while</span><span class="token punctuation">(</span>waitTill <span class="token operator">></span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span><span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
 
-<pre><code>// flaky.js
-const app = require('express')();
-
-app.get('/:id', (req, res, next) =&gt; {
-  var param = req.params.id;
-  if (param === &quot;0&quot;) {
-    blockFor(5);
-    res.sendStatus(503);
-  } else {
-    res.status(200).send('I am ok now.');
-  }
-});
-
-function blockFor(seconds) {
-  var waitTill = new Date(new Date().getTime() + seconds * 1000);
-  while(waitTill &gt; new Date()){}
-}
-
-app.listen(3000, () =&gt; console.log('Flaky app is listening on port 3000'));
-</code></pre>
-
-<p>For the sake of this tutorial you will use a simple parameter to control if the server is flaky or not. You will notice the function <code>blockFor(seconds)</code>, this was added to simulate a service that takes time to return.</p>
-
+app<span class="token punctuation">.</span><span class="token function">listen</span><span class="token punctuation">(</span><span class="token number">3000</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Flaky app is listening on port 3000'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></div>
+<p>For the sake of this tutorial you will use a simple parameter to control if the server is flaky or not. You will notice the function <code class="language-text">blockFor(seconds)</code>, this was added to simulate a service that takes time to return.</p>
 <p>Before creating the other service, you need to add npm packages to create http request to the flaky service. Also you will add a helper package to run both services from a single command:</p>
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash"><span class="token variable">$disyuntor</span>-example<span class="token operator">></span> yarn add --exact got bluebird concurrently</code></pre></div>
+<p>Now let’s create our consumer service:</p>
+<div class="gatsby-highlight" data-language="js"><pre class="language-js"><code class="language-js"><span class="token comment">// consumer.js</span>
+<span class="token keyword">const</span> app     <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'express'</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> got     <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'got'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-<pre><code>$disyuntor-example&gt; yarn add --exact got bluebird concurrently
-</code></pre>
+app<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span><span class="token string">'/:id'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>req<span class="token punctuation">,</span> res<span class="token punctuation">,</span> next<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> <span class="token function">got</span><span class="token punctuation">(</span><span class="token template-string"><span class="token string">`http://localhost:3000/</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>req<span class="token punctuation">.</span>params<span class="token punctuation">.</span>id<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">`</span></span><span class="token punctuation">)</span>
+    <span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+      res<span class="token punctuation">.</span><span class="token function">sendStatus</span><span class="token punctuation">(</span><span class="token number">200</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+    <span class="token punctuation">.</span><span class="token keyword">catch</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+      res<span class="token punctuation">.</span><span class="token function">sendStatus</span><span class="token punctuation">(</span><span class="token number">503</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-<p>Now let&rsquo;s create our consumer service:</p>
-
-<pre><code>// consumer.js
-const app     = require('express')();
-const got     = require('got');
-
-app.get('/:id', (req, res, next) =&gt; {
-  return got(`http://localhost:3000/${req.params.id}`)
-    .then(() =&gt; {
-      res.sendStatus(200);
-    })
-    .catch(() =&gt; {
-      res.sendStatus(503);
-    });
-});
-
-app.listen(4000, () =&gt; console.log('Consumer service is listening on port 4000'));
-</code></pre>
-
-<p>As a final step add a <code>start</code> under <code>scripts</code> into your <code>package.json</code>:</p>
-
-<pre><code>...
-&quot;scripts&quot;: {
-  &quot;start&quot;: &quot;concurrently \&quot;node flaky\&quot; \&quot;node consumer\&quot; &quot;
-},
-...
-</code></pre>
-
+app<span class="token punctuation">.</span><span class="token function">listen</span><span class="token punctuation">(</span><span class="token number">4000</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Consumer service is listening on port 4000'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></div>
+<p>As a final step add a <code class="language-text">start</code> under <code class="language-text">scripts</code> into your <code class="language-text">package.json</code>:</p>
+<div class="gatsby-highlight" data-language="json"><pre class="language-json"><code class="language-json">...
+<span class="token property">"scripts"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+  <span class="token property">"start"</span><span class="token operator">:</span> <span class="token string">"concurrently \"node flaky\" \"node consumer\" "</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span>
+...</code></pre></div>
 <p>Going back to your terminal window, you can type:</p>
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash"><span class="token variable">$disyuntor</span>-example<span class="token operator">></span> <span class="token function">npm</span> start
+<span class="token operator">></span> concurrently <span class="token string">"node flaky"</span> <span class="token string">"node consumer"</span>
 
-<pre><code>$disyuntor-example&gt; npm start
-&gt; concurrently &quot;node flaky&quot; &quot;node consumer&quot;
-
-[0] Flaky app is listening on port 3000
-[1] Consumer service is listening on port 4000
-</code></pre>
-
+<span class="token punctuation">[</span>0<span class="token punctuation">]</span> Flaky app is listening on port 3000
+<span class="token punctuation">[</span>1<span class="token punctuation">]</span> Consumer <span class="token function">service</span> is listening on port 4000</code></pre></div>
 <p>Both services are running, now in a different terminal window you can make a Curl request:</p>
-
-<pre><code>$disyuntor-example&gt; curl -I http://localhost:4000/1
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash"><span class="token variable">$disyuntor</span>-example<span class="token operator">></span> <span class="token function">curl</span> -I http://localhost:4000/1
 HTTP/1.1 200 OK
 X-Powered-By: Express
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain<span class="token punctuation">;</span> charset<span class="token operator">=</span>utf-8
 Content-Length: 2
-ETag: W/&quot;2-nOO9QiTIwXgNtWtBJezz8kv3SLc&quot;
-Connection: keep-alive
-
-</code></pre>
-
+ETag: W/<span class="token string">"2-nOO9QiTIwXgNtWtBJezz8kv3SLc"</span>
+Connection: keep-alive</code></pre></div>
 <p>Now try to do a request that you know it will return 503:</p>
-
-<pre><code>$disyuntor-example&gt; curl -I http://localhost:4000/0
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash"><span class="token variable">$disyuntor</span>-example<span class="token operator">></span> <span class="token function">curl</span> -I http://localhost:4000/0
 HTTP/1.1 503 Service Unavailable
 X-Powered-By: Express
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain<span class="token punctuation">;</span> charset<span class="token operator">=</span>utf-8
 Content-Length: 19
-ETag: W/&quot;13-/70LdyMNgL+PAJa+Q/RtnRF82z8&quot;
+ETag: W/<span class="token string">"13-/70LdyMNgL+PAJa+Q/RtnRF82z8"</span>
 Date: Sun, 28 May 2017 14:26:29 GMT
-Connection: keep-alive
-</code></pre>
-
-<p>Now imagine this is a production setup. Your flaky service is an internal service that has gone down. Your public service start swamping with requests your internal service. After a while your public service becomes unresponsive.</p>
-
+Connection: keep-alive</code></pre></div>
+<p>Now imagine this is a production setup. Your flaky service is an internal service that has gone down. Your public service start swamping with requests your internal service. After a while your public service becomes unresponsive. </p>
 <p>You can even reproduce that scenario with this command:</p>
-
-<pre><code>$disyuntor-example&gt; curl -I http://localhost:4000/0 &amp;&amp; curl -I http://localhost:4000/0 &amp;&amp; curl -I http://localhost:4000/0
-</code></pre>
-
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash"><span class="token variable">$disyuntor</span>-example<span class="token operator">></span> <span class="token function">curl</span> -I http://localhost:4000/0 <span class="token operator">&amp;&amp;</span> <span class="token function">curl</span> -I http://localhost:4000/0 <span class="token operator">&amp;&amp;</span> <span class="token function">curl</span> -I http://localhost:4000/0</code></pre></div>
 <p>You will notice that takes more than 10 seconds to finish all the requests.</p>
-
 <p>You can stop both services by pressing Ctrl+C.</p>
-
-<p>Let&rsquo;s add Disyuntor to circuit break this requests:</p>
-
-<pre><code>$disyuntor-example&gt; yarn add --exact disyuntor
-</code></pre>
-
+<p>Let’s add Disyuntor to circuit break this requests:</p>
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash"><span class="token variable">$disyuntor</span>-example<span class="token operator">></span> yarn add --exact disyuntor</code></pre></div>
 <p>Modify your consumer service:</p>
+<div class="gatsby-highlight" data-language="js"><pre class="language-js"><code class="language-js"><span class="token keyword">const</span> app       <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'express'</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> got       <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'got'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> disyuntor <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'disyuntor'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-<pre><code>const app       = require('express')();
-const got       = require('got');
-const disyuntor = require('disyuntor');
+<span class="token keyword">const</span> safeGot <span class="token operator">=</span> disyuntor<span class="token punctuation">.</span><span class="token function">promise</span><span class="token punctuation">(</span>got<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  name<span class="token punctuation">:</span> <span class="token string">'got.request'</span><span class="token punctuation">,</span>
+  timeout<span class="token punctuation">:</span> <span class="token string">'10s'</span><span class="token punctuation">,</span>
+  cooldown<span class="token punctuation">:</span> <span class="token string">'5s'</span><span class="token punctuation">,</span>
+  maxFailures<span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
+  onTrip<span class="token punctuation">:</span> <span class="token punctuation">(</span>err<span class="token punctuation">,</span> failures<span class="token punctuation">,</span> cooldown<span class="token punctuation">)</span> <span class="token operator">=></span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token string">`got.request triped because it failed </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>failures<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> times. Last error was </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>err<span class="token punctuation">.</span>message<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">! There will be no more attempts for </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>cooldown<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">ms`</span></span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-const safeGot = disyuntor.promise(got, {
-  name: 'got.request',
-  timeout: '10s',
-  cooldown: '5s',
-  maxFailures: 1,
-  onTrip: (err, failures, cooldown) =&gt; console.log(`got.request triped because it failed ${failures} times. Last error was ${err.message}! There will be no more attempts for ${cooldown}ms`)
-});
+app<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span><span class="token string">'/:id'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>req<span class="token punctuation">,</span> res<span class="token punctuation">,</span> next<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> <span class="token function">safeGot</span><span class="token punctuation">(</span><span class="token template-string"><span class="token string">`http://localhost:3000/</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>req<span class="token punctuation">.</span>params<span class="token punctuation">.</span>id<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">`</span></span><span class="token punctuation">)</span>
+    <span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+      res<span class="token punctuation">.</span><span class="token function">sendStatus</span><span class="token punctuation">(</span><span class="token number">200</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+    <span class="token punctuation">.</span><span class="token keyword">catch</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+      res<span class="token punctuation">.</span><span class="token function">sendStatus</span><span class="token punctuation">(</span><span class="token number">500</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-app.get('/:id', (req, res, next) =&gt; {
-  return safeGot(`http://localhost:3000/${req.params.id}`)
-    .then(() =&gt; {
-      res.sendStatus(200);
-    })
-    .catch(() =&gt; {
-      res.sendStatus(500);
-    });
-});
-
-app.listen(4000, () =&gt; console.log('Consumer service is listening on port 4000'));
-</code></pre>
-
-<p>Start both services again with <code>npm start</code>. Start sending requests with curl:</p>
-
-<pre><code>$disyuntor-example&gt; curl -I http://localhost:4000/0
-</code></pre>
-
+app<span class="token punctuation">.</span><span class="token function">listen</span><span class="token punctuation">(</span><span class="token number">4000</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Consumer service is listening on port 4000'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></div>
+<p>Start both services again with <code class="language-text">npm start</code>. Start sending requests with curl:</p>
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash"><span class="token variable">$disyuntor</span>-example<span class="token operator">></span> <span class="token function">curl</span> -I http://localhost:4000/0</code></pre></div>
 <p>You will see this message where you started your services:</p>
-
-<pre><code>[1] got.request triped because it failed 1 times. Last error was Response code 503 (Ser
-vice Unavailable)! There will be no more attempts for 5000ms
-</code></pre>
-
-<p>Let&rsquo;s try this:</p>
-
-<pre><code>$disyuntor-example&gt; curl -I http://localhost:4000/0 &amp;&amp; curl -I http://localhost:4000/0 &amp;&amp; curl -I http://localhost:4000/0
-</code></pre>
-
-<p>You will notice that the first request takes the expected 5 seconds but subsequent request fail immediatedly. This is the Circuit Breaker pattern in action.</p>
-
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash"><span class="token punctuation">[</span>1<span class="token punctuation">]</span> got.request triped because it failed 1 times. Last error was Response code 503 <span class="token punctuation">(</span>Ser
+vice Unavailable<span class="token punctuation">)</span><span class="token operator">!</span> There will be no <span class="token function">more</span> attempts <span class="token keyword">for</span> 5000ms</code></pre></div>
+<p>Let’s try this:</p>
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash"><span class="token variable">$disyuntor</span>-example<span class="token operator">></span> <span class="token function">curl</span> -I http://localhost:4000/0 <span class="token operator">&amp;&amp;</span> <span class="token function">curl</span> -I http://localhost:4000/0 <span class="token operator">&amp;&amp;</span> <span class="token function">curl</span> -I http://localhost:4000/0</code></pre></div>
+<p>You will notice that the first request takes the expected 5 seconds but subsequent request fail immediatedly. This is the Circuit Breaker pattern in action. </p>
 <p>After the first failure, the circuit becomes open. Then after the <em>cooldown</em> period the circuit becomes half-open. If we issue another request after 5 seconds, you will see that it tries again to contact the flaky service.</p>
-
-<h2 id="conclusion">Conclusion</h2>
-
-<p>When working with multiple external services &ndash; either a Db or http service &ndash; a good resilience practice is to add a circuit breaker.</p>
-
-<p>Disyuntor is a good circuit breaker library, it lacks of some features, but it gets the work done.</p>
-
-<p><strong>Picture by <a href="https://flic.kr/p/dXugFe">Parker Gyokeres</a></strong></p>
-              
-            </div>
-          </div>
-          <div id="post-footer" class="post-footer main-content-wrap">
-            
-              
-            
-            <div class="post-actions-wrap">
-  <nav>
-    <ul class="post-actions post-action-nav">
-      
-        <li class="post-action">
-          
-            <a class="post-action-btn btn btn--disabled">
-          
-            <i class="fa fa-angle-left"></i>
-            <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
-          </a>
-        </li>
-        <li class="post-action">
-          
-            <a class="post-action-btn btn btn--default tooltip--top" href="https://hyeomans.com/redis-stunnel-and-c/" data-tooltip="Redis, STunnel, and C#">
-          
-            <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
-            <i class="fa fa-angle-right"></i>
-          </a>
-        </li>
-      
-    </ul>
-  </nav>
-  <ul class="post-actions post-action-share">
-    
-      <li class="post-action hide-lg hide-md hide-sm">
-        <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
-          <i class="fa fa-share-alt"></i>
-        </a>
-      </li>
-      <li class="post-action hide-xs">
-        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https%3a%2f%2fhyeomans.com%2fresilience-disyuntor-nodejs-circuit-breaker%2f">
-          <i class="fa fa-google-plus"></i>
-        </a>
-      </li>
-      <li class="post-action hide-xs">
-        <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fhyeomans.com%2fresilience-disyuntor-nodejs-circuit-breaker%2f">
-          <i class="fa fa-facebook-official"></i>
-        </a>
-      </li>
-      <li class="post-action hide-xs">
-        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https%3a%2f%2fhyeomans.com%2fresilience-disyuntor-nodejs-circuit-breaker%2f">
-          <i class="fa fa-twitter"></i>
-        </a>
-      </li>
-    
-    
-    <li class="post-action">
-      
-        <a class="post-action-btn btn btn--default" href="#">
-      
-        <i class="fa fa-list"></i>
-      </a>
-    </li>
-  </ul>
-</div>
-
-
-            
-              
-            
-          </div>
-        </article>
-        <footer id="footer" class="main-content-wrap">
-  <span class="copyrights">
-    &copy; 2018 Hector Yeomans. All Rights Reserved
-  </span>
-</footer>
-
-      </div>
-      <div id="bottom-bar" class="post-bottom-bar" data-behavior="3">
-        <div class="post-actions-wrap">
-  <nav>
-    <ul class="post-actions post-action-nav">
-      
-        <li class="post-action">
-          
-            <a class="post-action-btn btn btn--disabled">
-          
-            <i class="fa fa-angle-left"></i>
-            <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
-          </a>
-        </li>
-        <li class="post-action">
-          
-            <a class="post-action-btn btn btn--default tooltip--top" href="https://hyeomans.com/redis-stunnel-and-c/" data-tooltip="Redis, STunnel, and C#">
-          
-            <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
-            <i class="fa fa-angle-right"></i>
-          </a>
-        </li>
-      
-    </ul>
-  </nav>
-  <ul class="post-actions post-action-share">
-    
-      <li class="post-action hide-lg hide-md hide-sm">
-        <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
-          <i class="fa fa-share-alt"></i>
-        </a>
-      </li>
-      <li class="post-action hide-xs">
-        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https%3a%2f%2fhyeomans.com%2fresilience-disyuntor-nodejs-circuit-breaker%2f">
-          <i class="fa fa-google-plus"></i>
-        </a>
-      </li>
-      <li class="post-action hide-xs">
-        <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fhyeomans.com%2fresilience-disyuntor-nodejs-circuit-breaker%2f">
-          <i class="fa fa-facebook-official"></i>
-        </a>
-      </li>
-      <li class="post-action hide-xs">
-        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https%3a%2f%2fhyeomans.com%2fresilience-disyuntor-nodejs-circuit-breaker%2f">
-          <i class="fa fa-twitter"></i>
-        </a>
-      </li>
-    
-    
-    <li class="post-action">
-      
-        <a class="post-action-btn btn btn--default" href="#">
-      
-        <i class="fa fa-list"></i>
-      </a>
-    </li>
-  </ul>
-</div>
-
-
-      </div>
-      <div id="share-options-bar" class="share-options-bar" data-behavior="3">
-  <ul class="share-options">
-    <li class="share-option">
-      <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=https%3a%2f%2fhyeomans.com%2fresilience-disyuntor-nodejs-circuit-breaker%2f">
-        <i class="fa fa-google-plus"></i><span>Share on Google Plus</span>
-      </a>
-    </li>
-    <li class="share-option">
-      <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fhyeomans.com%2fresilience-disyuntor-nodejs-circuit-breaker%2f">
-        <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
-      </a>
-    </li>
-    <li class="share-option">
-      <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3a%2f%2fhyeomans.com%2fresilience-disyuntor-nodejs-circuit-breaker%2f">
-        <i class="fa fa-twitter"></i><span>Share on Twitter</span>
-      </a>
-    </li>
-  </ul>
-</div>
-<div id="share-options-mask" class="share-options-mask"></div>
-    </div>
-    
-    <div id="about">
-  <div id="about-card">
-    <div id="about-btn-close">
-      <i class="fa fa-remove"></i>
-    </div>
-    
-      <img id="about-card-picture" src="//www.gravatar.com/avatar/3504447fb665c53d593ed79ca9fc0f38?s=110" alt="Author&#39;s picture" />
-    
-    <h4 id="about-card-name">Hector Yeomans</h4>
-    
-      <div id="about-card-bio">Senior Software Engineer</div>
-    
-    
-      <div id="about-card-job">
-        <i class="fa fa-briefcase"></i>
-        <br/>
-        Software Engineer
-      </div>
-    
-    
-      <div id="about-card-location">
-        <i class="fa fa-map-marker"></i>
-        <br/>
-        Mexico
-      </div>
-    
-  </div>
-</div>
-
-    <div id="algolia-search-modal" class="modal-container">
-  <div class="modal">
-    <div class="modal-header">
-      <span class="close-button"><i class="fa fa-close"></i></span>
-      <a href="https://algolia.com" target="_blank" class="searchby-algolia text-color-light link-unstyled">
-        <span class="searchby-algolia-text text-color-light text-small">by</span>
-        <img class="searchby-algolia-logo" src="https://www.algolia.com/static_assets/images/press/downloads/algolia-light.svg">
-      </a>
-      <i class="search-icon fa fa-search"></i>
-      <form id="algolia-search-form">
-        <input type="text" id="algolia-search-input" name="search"
-          class="form-control input--large search-input" placeholder="Search" />
-      </form>
-    </div>
-    <div class="modal-body">
-      <div class="no-result text-color-light text-center">no post found</div>
-      <div class="results">
-        
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="https://hyeomans.com/resilience-disyuntor-nodejs-circuit-breaker/">
-                <h3 class="media-heading">Resilience with Disyuntor - Circuit Breaker</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  May 5, 2017
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Resilience means the capacity to recover quickly from difficulties. Circuit breaker pattern is a good practice for resilience.</p>
-
-<p></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="https://hyeomans.com/redis-stunnel-and-c/">
-                <h3 class="media-heading">Redis, STunnel, and C#</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Jan 1, 2017
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>In this blog post, I will try to demonstrate how to setup a working environment with StackExchange.Redis package is communicating to a Redis box using SSL through STunel.</p>
-
-<p>By the end of this post, you will have a working environment on Vagrant like this:</p>
-
-<p></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="https://hyeomans.com/es6-arrow-functions/">
-                <h3 class="media-heading">ES6 Arrow functions</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Sep 9, 2015
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather">Last night I was reading this post: ES6 arrow functions, syntax and lexical scoping and going through the comments I saw this question:
-so arrow functions always inherit scope?  The answer was by Barney: always.
-I went to the console and typed:
-nvm use 4 node var doSome = () =&gt; { console.log(this.x) } doSome.call({x: 'hello'}); global.x = 'hello'; doSome.call({x: 'good bye'});  Could you guess what is going to be printed?</div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="https://hyeomans.com/post/">
-                <h3 class="media-heading">Posts</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  May 5, 2017
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-      </div>
-    </div>
-    <div class="modal-footer">
-      <p class="results-count text-medium"
-         data-message-zero="no post found"
-         data-message-one="1 post found"
-         data-message-other="{n} posts found">
-         4 posts found
-      </p>
-    </div>
-  </div>
-</div>
-    
+<h2>Conclusion</h2>
+<p>When working with multiple external services — either a Db or http service — a good resilience practice is to add a circuit breaker.</p>
+<p>Disyuntor is a good circuit breaker library, it lacks of some features, but it gets the work done. </p></div><hr style="margin-bottom:1.75rem"/><div style="display:flex;margin-bottom:4.375rem"><div class=" gatsby-image-wrapper" style="position:relative;overflow:hidden;display:inline-block;width:50px;height:50px;margin-right:0.875rem;margin-bottom:0;min-width:50px;border-radius:100%"><img src="data:image/jpeg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wgARCAAUABQDASIAAhEBAxEB/8QAGQABAQADAQAAAAAAAAAAAAAAAAIBAwQF/8QAFAEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEAMQAAAB765bMPPGiAkH/8QAGxAAAgIDAQAAAAAAAAAAAAAAAQIAAxAREhP/2gAIAQEAAQUCaMRPVJU3ZLhTY69sx3vH/8QAFBEBAAAAAAAAAAAAAAAAAAAAIP/aAAgBAwEBPwEf/8QAFBEBAAAAAAAAAAAAAAAAAAAAIP/aAAgBAgEBPwEf/8QAHhAAAQQBBQAAAAAAAAAAAAAAAQACETIQEiExQYH/2gAIAQEABj8CYMWhOmwW4hVB9Wrs85//xAAcEAACAgMBAQAAAAAAAAAAAAABEQBBITFRYRD/2gAIAQEAAT8hUnxcDCvwTqBCjia01nFRpS6LjI59iCMyDpcbvz//2gAMAwEAAgADAAAAEGDHPP/EABQRAQAAAAAAAAAAAAAAAAAAACD/2gAIAQMBAT8QH//EABQRAQAAAAAAAAAAAAAAAAAAACD/2gAIAQIBAT8QH//EAB4QAQACAgIDAQAAAAAAAAAAAAEAESExQWFRobHB/9oACAEBAAE/EMmgDymFlHFi9Y5lqiBSKh7I4DaQKXoP5GxdPY5fHcapmfwYg/YKwtdX6itWnjLHc//Z" alt="Hector Yeomans" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:1;transition:opacity 0.5s;transition-delay:0.25s"/><noscript><picture><source srcSet="/static/501c8835029bc4a789cda7304fd7435c/d2d31/profile-pic.jpg 1x,
+/static/501c8835029bc4a789cda7304fd7435c/0b804/profile-pic.jpg 1.5x,
+/static/501c8835029bc4a789cda7304fd7435c/753c3/profile-pic.jpg 2x,
+/static/501c8835029bc4a789cda7304fd7435c/31ca8/profile-pic.jpg 3x" /><img width="50" height="50" src="/static/501c8835029bc4a789cda7304fd7435c/d2d31/profile-pic.jpg" alt="Hector Yeomans" style="position:absolute;top:0;left:0;transition:opacity 0.5s;transition-delay:0.5s;opacity:1;width:100%;height:100%;object-fit:cover;object-position:center"/></picture></noscript></div><p>Written by <strong>Hector Yeomans</strong> who lives Mexico and works remotely for Invision.<!-- --> <a href="https://twitter.com/h_yeomans">Follow him on Twitter</a>, <a href="https://www.linkedin.com/in/hector-yeomans">or add him on LinkedIn.</a></p></div><ul style="display:flex;flex-wrap:wrap;justify-content:space-between;list-style:none;padding:0"><li><a rel="prev" href="/redis-stunnel-and-c/">← <!-- -->Redis, STunnel, and C#</a></li><li></li></ul></div></div></div><script>
   
-    
-    <div id="cover" style="background-image:url('https://res.cloudinary.com/hyeomans-blog/image/upload/c_scale,w_1980/v1515457084/blog/anders-jilden-24222.jpg');"></div>
   
-
-
-    
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.js"></script>
-
-
-<script src="https://hyeomans.com/js/script-wl33z0n6ocaypepiqrazthtivfrliqijej4rq8ek8gvrv1awftmgjuv8k4zc.min.js"></script>
-
-<script>
-$(document).ready(function() {
-  hljs.configure({ classPrefix: '', useBR: false });
-  $('pre.code-highlight').each(function(i, block) {
-    var code = "";
-    hljs.highlightAuto(block.innerText).value.split(/\r\n|\r|\n/).forEach(function(line) {
-      code += "<span class=\"line\">" + line + "</span><br>";
-    });
-    if (code.length > 0) {
-      block.innerHTML = code;  
-    }
-  });
-  $('pre > code').each(function(i, block) {
-    $(this).addClass('codeblock');
-    hljs.highlightBlock(block);
-  });
-});
-</script>
-
-  
-    
-  
-
-
-
-
-
-    
-  </body>
-</html>
-
+  if(true) {
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  }
+  if (typeof ga === "function") {
+    ga('create', 'undefined', 'auto', {});
+      
+      }
+      </script><script id="gatsby-script-loader">/*<![CDATA[*/window.page={"componentChunkName":"component---src-templates-blog-post-js","jsonName":"resilience-disyuntor-nodejs-circuit-breaker-bdf","path":"/resilience-disyuntor-nodejs-circuit-breaker/"};window.dataPath="679/path---resilience-disyuntor-nodejs-circuit-breaker-bdf-1ad-gd17kmOAILtEJsKeU3zE5vFYpY";/*]]>*/</script><script id="gatsby-chunk-mapping">/*<![CDATA[*/window.___chunkMapping={"app":["/app.5c292e386b6b26b6b927.css","/app-19e9aa11150c85fadc63.js"],"component---node-modules-gatsby-plugin-offline-app-shell-js":["/component---node-modules-gatsby-plugin-offline-app-shell-js-cb3fd38e85819e4a7d6d.js"],"component---src-templates-blog-post-js":["/component---src-templates-blog-post-js-fbb9043dc37902e426b3.js"],"component---src-pages-404-js":["/component---src-pages-404-js-3405d02dfd8c9428438d.js"],"component---src-pages-index-js":["/component---src-pages-index-js-99ac37a6ae4c9b7510a0.js"]};/*]]>*/</script><script src="/webpack-runtime-90e8f318e8e236c6f35e.js" async=""></script><script src="/app-19e9aa11150c85fadc63.js" async=""></script><script src="/0-63927f4a3c1a96f94d84.js" async=""></script><script src="/component---src-templates-blog-post-js-fbb9043dc37902e426b3.js" async=""></script></body></html>
