@@ -1,4 +1,174 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Hector Yeomans Blog]]></title><description><![CDATA[Personal blog.]]></description><link>https://hyeomans.com/</link><generator>RSS for Node</generator><lastBuildDate>Mon, 24 Dec 2018 21:09:10 GMT</lastBuildDate><item><title><![CDATA[Resilience with Disyuntor - Circuit Breaker]]></title><description><![CDATA[Resilience means the capacity to recover quickly from difficulties. Circuit breaker pattern is a good practice for resilience. When working…]]></description><link>https://hyeomans.com//resilience-disyuntor-nodejs-circuit-breaker/</link><guid isPermaLink="false">https://hyeomans.com//resilience-disyuntor-nodejs-circuit-breaker/</guid><pubDate>Sat, 27 May 2017 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;Resilience means the capacity to recover quickly from difficulties. Circuit breaker pattern is a good practice for resilience.&lt;/p&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Hector Yeomans Blog]]></title><description><![CDATA[Personal blog.]]></description><link>https://hyeomans.com/</link><generator>RSS for Node</generator><lastBuildDate>Wed, 26 Dec 2018 22:11:52 GMT</lastBuildDate><item><title><![CDATA[Software as stitching]]></title><description><![CDATA[
+ Photo by Alexander Andrews on Unsplash   Lately, I’ve been thinking that most of the software I’ve done consist of stitching of API’s…]]></description><link>https://hyeomans.com//software-as-stitching/</link><guid isPermaLink="false">https://hyeomans.com//software-as-stitching/</guid><pubDate>Thu, 27 Dec 2018 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/24a6e2a24d74e8ec13f4897ecfa5c226/f78cd/stitching.jpg&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 630px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 66.73841059602648%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/jpeg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wgARCAANABQDASIAAhEBAxEB/8QAGAAAAgMAAAAAAAAAAAAAAAAAAAECAwX/xAAVAQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEAMQAAABx63FAQf/xAAXEAADAQAAAAAAAAAAAAAAAAABEBEh/9oACAEBAAEFAgMVf//EABQRAQAAAAAAAAAAAAAAAAAAABD/2gAIAQMBAT8BP//EABQRAQAAAAAAAAAAAAAAAAAAABD/2gAIAQIBAT8BP//EABQQAQAAAAAAAAAAAAAAAAAAACD/2gAIAQEABj8CX//EABgQAAMBAQAAAAAAAAAAAAAAAAABESEQ/9oACAEBAAE/IdOVoaIYRef/2gAMAwEAAgADAAAAEAzf/8QAFBEBAAAAAAAAAAAAAAAAAAAAEP/aAAgBAwEBPxA//8QAFBEBAAAAAAAAAAAAAAAAAAAAEP/aAAgBAgEBPxA//8QAGRABAQEBAQEAAAAAAAAAAAAAAQARIUFx/9oACAEBAAE/ECd11B5kiq8+WLSBLtb/2Q==&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;stitching&quot;
+        title=&quot;&quot;
+        src=&quot;/static/24a6e2a24d74e8ec13f4897ecfa5c226/af57e/stitching.jpg&quot;
+        srcset=&quot;/static/24a6e2a24d74e8ec13f4897ecfa5c226/847f7/stitching.jpg 158w,
+/static/24a6e2a24d74e8ec13f4897ecfa5c226/93973/stitching.jpg 315w,
+/static/24a6e2a24d74e8ec13f4897ecfa5c226/af57e/stitching.jpg 630w,
+/static/24a6e2a24d74e8ec13f4897ecfa5c226/28cf9/stitching.jpg 945w,
+/static/24a6e2a24d74e8ec13f4897ecfa5c226/0d474/stitching.jpg 1260w,
+/static/24a6e2a24d74e8ec13f4897ecfa5c226/66f39/stitching.jpg 1890w,
+/static/24a6e2a24d74e8ec13f4897ecfa5c226/f78cd/stitching.jpg 6040w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    
+&lt;sub&gt;&lt;sup&gt;Photo by Alexander Andrews on Unsplash&lt;/sup&gt;&lt;/sub&gt; &lt;/p&gt;
+&lt;p&gt;Lately, I’ve been thinking that most of the software I’ve done consist of stitching of API’s. Imagine you work on
+the team that is in charge of handling payments. It doesn’t matter if you’re working on the front-end or the back-end,
+it usually goes like this:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;We (the company you work for) have a new payment provider.&lt;/li&gt;
+&lt;li&gt;We must integrate with their API.&lt;/li&gt;
+&lt;li&gt;We must accommodate our business logic to their API.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;You have to take consideration of several layers in between, this list includes but is not limited to: validation, logging, error handling, persistence, a source of truth, actual business logic. Almost everything becomes a cross-cutting concern, authentication, logging, caching; however, in the end, the hardest part is making sense or making an abstraction of
+the new API to conform to the company business logic.&lt;/p&gt;
+&lt;p&gt;This is where my idea of stitching comes to mind; you don’t know from the beginning how everything has to be laid out. Just as you stitch, you don’t know for sure if the combination of API call is going to work as you’re picturing it in your head.&lt;/p&gt;
+&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/da64eed371676f699d4370e31f05d4a7/3d77c/stitching-2.jpg&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 630px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 56.233333333333334%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/jpeg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wgARCAALABQDASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAIFAwT/xAAVAQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEAMQAAAB4kqRzIcs/8QAGhAAAwADAQAAAAAAAAAAAAAAAQIDABESIf/aAAgBAQABBQIwdcK8pvWUJEmJJp5T/8QAFBEBAAAAAAAAAAAAAAAAAAAAEP/aAAgBAwEBPwE//8QAFBEBAAAAAAAAAAAAAAAAAAAAEP/aAAgBAgEBPwE//8QAHBABAAIBBQAAAAAAAAAAAAAAAQARAhAhMVFx/9oACAEBAAY/AtyzsZY86ekwuM//xAAaEAEAAwEBAQAAAAAAAAAAAAABABEhMVGh/9oACAEBAAE/IfqIKh3IfeMFiGUa6y1l4EIE4M//2gAMAwEAAgADAAAAEEvv/8QAGBEAAgMAAAAAAAAAAAAAAAAAAAERITH/2gAIAQMBAT8QhG2f/8QAFxEBAAMAAAAAAAAAAAAAAAAAAAERMf/aAAgBAgEBPxCbY//EABsQAQEBAAMBAQAAAAAAAAAAAAERACExQVFx/9oACAEBAAE/ELwfKkD9TS4LhVD0mMQpzmBroe6s6DL3L9xvxAG//9k=&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;stitching 2&quot;
+        title=&quot;&quot;
+        src=&quot;/static/da64eed371676f699d4370e31f05d4a7/af57e/stitching-2.jpg&quot;
+        srcset=&quot;/static/da64eed371676f699d4370e31f05d4a7/847f7/stitching-2.jpg 158w,
+/static/da64eed371676f699d4370e31f05d4a7/93973/stitching-2.jpg 315w,
+/static/da64eed371676f699d4370e31f05d4a7/af57e/stitching-2.jpg 630w,
+/static/da64eed371676f699d4370e31f05d4a7/28cf9/stitching-2.jpg 945w,
+/static/da64eed371676f699d4370e31f05d4a7/0d474/stitching-2.jpg 1260w,
+/static/da64eed371676f699d4370e31f05d4a7/66f39/stitching-2.jpg 1890w,
+/static/da64eed371676f699d4370e31f05d4a7/3d77c/stitching-2.jpg 3000w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    
+&lt;sub&gt;&lt;sup&gt;Photo by Dương Trần Quốc on Unsplash&lt;/sup&gt;&lt;/sub&gt; &lt;/p&gt;
+&lt;p&gt;I’m not saying that software stitching is easy, but it can become repetitive.&lt;/p&gt;
+&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/b25a7c4164645ed54b1b8e9e0fc83c0f/11e54/stitching-3.jpg&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 630px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 66.66666666666666%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/webp;base64,UklGRuAAAABXRUJQVlA4INQAAABwBACdASoUAA0APm0qkUWkIqGYBABABsSygE6NcAHnCRAcKFkQUjysuathgAD+uFVyK/+89761B0OsrBXboxk9e1oV0HZk+9mdRt3PdP7gKQggG+d2AWNbh9lRxrJsUOF/+Mg7R788PYjXJLvsIL2g6198HzD3/C3ei+aOWmlwt3Avu1nOH9jUZ+pqHDuUnU8pqa/7hfuD45/7K/o2CpF/1OUf/5/gjoRGK8HigBa8kP9M7h0jjJJHjgJXE/mWo1B4xkwb2Lli3FcyYBgLdUS8WQAAAA==&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;stitching 3&quot;
+        title=&quot;&quot;
+        src=&quot;/static/b25a7c4164645ed54b1b8e9e0fc83c0f/af57e/stitching-3.jpg&quot;
+        srcset=&quot;/static/b25a7c4164645ed54b1b8e9e0fc83c0f/847f7/stitching-3.jpg 158w,
+/static/b25a7c4164645ed54b1b8e9e0fc83c0f/93973/stitching-3.jpg 315w,
+/static/b25a7c4164645ed54b1b8e9e0fc83c0f/af57e/stitching-3.jpg 630w,
+/static/b25a7c4164645ed54b1b8e9e0fc83c0f/28cf9/stitching-3.jpg 945w,
+/static/b25a7c4164645ed54b1b8e9e0fc83c0f/11e54/stitching-3.jpg 1200w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;</content:encoded></item><item><title><![CDATA[Kafka Notes]]></title><description><![CDATA[Topics and Partitions Topic formed of multiple partitions Topics a particular stream of data Similar to a table in a db YOu can have as many…]]></description><link>https://hyeomans.com//kafka-notes/</link><guid isPermaLink="false">https://hyeomans.com//kafka-notes/</guid><pubDate>Tue, 25 Dec 2018 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;Topics and Partitions&lt;/p&gt;
+&lt;p&gt;Topic formed of multiple partitions&lt;/p&gt;
+&lt;p&gt;Topics a particular stream of data&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Similar to a table in a db&lt;/li&gt;
+&lt;li&gt;YOu can have as many topics as you want&lt;/li&gt;
+&lt;li&gt;Topic is identified by its name&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Topics are split in partitions&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Each partition is ordered&lt;/li&gt;
+&lt;li&gt;Each message within a partition gets an incremental id, called &lt;strong&gt;offset&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Each partition have their own offset&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ul&gt;
+&lt;li&gt;Offset  only have meanining in a partition.&lt;/li&gt;
+&lt;li&gt;Order is only guaranteed only within a partition, offsets are independent.&lt;/li&gt;
+&lt;li&gt;Default is kept for one week, offsets dissapear.&lt;/li&gt;
+&lt;li&gt;Once the data is writter to a partition, it can’t be changed.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Brokers&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Kafka cluster is composed of multiple brokers (servers)&lt;/li&gt;
+&lt;li&gt;Each broker is identified with its ID (integer)&lt;/li&gt;
+&lt;li&gt;Each broker contains certain topic partitions&lt;/li&gt;
+&lt;li&gt;After connecting to any broker (called a bootstrap brooker), you will be connected to the entire cluster.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;[ Broker 1      ] 
+[ [Topic 1]     ]
+[ [Partition 0] ]
+[               ]
+[ [Topic 2]     ]
+[ [Partition 1] ]
+
+[ Broker 2      ] 
+[ [Topic 1]     ]
+[ [Partition 2] ]
+[               ]
+[ [Topic 2]     ]
+[ [Partition 0] ]
+
+[ Broker 3      ] 
+[ [Topic 1]     ]
+[ [Partition 1] ]
+[               ]
+[               ]
+[               ]&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Not every broker has every topic.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Resilience with Disyuntor - Circuit Breaker]]></title><description><![CDATA[Resilience means the capacity to recover quickly from difficulties. Circuit breaker pattern is a good practice for resilience. When working…]]></description><link>https://hyeomans.com//resilience-disyuntor-nodejs-circuit-breaker/</link><guid isPermaLink="false">https://hyeomans.com//resilience-disyuntor-nodejs-circuit-breaker/</guid><pubDate>Sat, 27 May 2017 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;Resilience means the capacity to recover quickly from difficulties. Circuit breaker pattern is a good practice for resilience.&lt;/p&gt;
 &lt;p&gt;When working with distributed systems, you want resilience. If you’re working with “micro-services,”
 you probably have faced with the problem of a service going down. When X service goes down, and Y and Z depend on X,
 every internal exception could potentially start taking other services down. &lt;/p&gt;
@@ -274,7 +444,7 @@ redis-ser 7131 redis    4u  IPv4  16619      0t0  TCP redis-stunnel:6379 (LISTEN
 &lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/static/74607d60838e0229041f5cbaf9e8f147/fe6c6/cert-file.png&quot;
+    href=&quot;/static/74607d60838e0229041f5cbaf9e8f147/a5378/cert-file.png&quot;
     style=&quot;display: block&quot;
     target=&quot;_blank&quot;
     rel=&quot;noopener&quot;
@@ -293,10 +463,10 @@ redis-ser 7131 redis    4u  IPv4  16619      0t0  TCP redis-stunnel:6379 (LISTEN
         style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
         alt=&quot;cert file&quot;
         title=&quot;&quot;
-        src=&quot;/static/74607d60838e0229041f5cbaf9e8f147/fe6c6/cert-file.png&quot;
-        srcset=&quot;/static/74607d60838e0229041f5cbaf9e8f147/34b8e/cert-file.png 148w,
-/static/74607d60838e0229041f5cbaf9e8f147/caddc/cert-file.png 295w,
-/static/74607d60838e0229041f5cbaf9e8f147/fe6c6/cert-file.png 545w&quot;
+        src=&quot;/static/74607d60838e0229041f5cbaf9e8f147/a5378/cert-file.png&quot;
+        srcset=&quot;/static/74607d60838e0229041f5cbaf9e8f147/dd256/cert-file.png 158w,
+/static/74607d60838e0229041f5cbaf9e8f147/d92c4/cert-file.png 315w,
+/static/74607d60838e0229041f5cbaf9e8f147/a5378/cert-file.png 545w&quot;
         sizes=&quot;(max-width: 545px) 100vw, 545px&quot;
       /&gt;
     &lt;/span&gt;
@@ -322,7 +492,7 @@ redis-ser 7131 redis    4u  IPv4  16619      0t0  TCP redis-stunnel:6379 (LISTEN
 &lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/static/fadf52fea2dd239a19f0ef019d910345/4d898/import-cert.png&quot;
+    href=&quot;/static/fadf52fea2dd239a19f0ef019d910345/547e9/import-cert.png&quot;
     style=&quot;display: block&quot;
     target=&quot;_blank&quot;
     rel=&quot;noopener&quot;
@@ -330,7 +500,7 @@ redis-ser 7131 redis    4u  IPv4  16619      0t0  TCP redis-stunnel:6379 (LISTEN
   
   &lt;span
     class=&quot;gatsby-resp-image-wrapper&quot;
-    style=&quot;position: relative; display: block;  max-width: 590px; margin-left: auto; margin-right: auto;&quot;
+    style=&quot;position: relative; display: block;  max-width: 630px; margin-left: auto; margin-right: auto;&quot;
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
@@ -341,14 +511,14 @@ redis-ser 7131 redis    4u  IPv4  16619      0t0  TCP redis-stunnel:6379 (LISTEN
         style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
         alt=&quot;import cert&quot;
         title=&quot;&quot;
-        src=&quot;/static/fadf52fea2dd239a19f0ef019d910345/fb8a0/import-cert.png&quot;
-        srcset=&quot;/static/fadf52fea2dd239a19f0ef019d910345/1a291/import-cert.png 148w,
-/static/fadf52fea2dd239a19f0ef019d910345/2bc4a/import-cert.png 295w,
-/static/fadf52fea2dd239a19f0ef019d910345/fb8a0/import-cert.png 590w,
-/static/fadf52fea2dd239a19f0ef019d910345/526de/import-cert.png 885w,
-/static/fadf52fea2dd239a19f0ef019d910345/fa2eb/import-cert.png 1180w,
-/static/fadf52fea2dd239a19f0ef019d910345/4d898/import-cert.png 1410w&quot;
-        sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
+        src=&quot;/static/fadf52fea2dd239a19f0ef019d910345/082ce/import-cert.png&quot;
+        srcset=&quot;/static/fadf52fea2dd239a19f0ef019d910345/c7cb1/import-cert.png 158w,
+/static/fadf52fea2dd239a19f0ef019d910345/93041/import-cert.png 315w,
+/static/fadf52fea2dd239a19f0ef019d910345/082ce/import-cert.png 630w,
+/static/fadf52fea2dd239a19f0ef019d910345/c4006/import-cert.png 945w,
+/static/fadf52fea2dd239a19f0ef019d910345/85e68/import-cert.png 1260w,
+/static/fadf52fea2dd239a19f0ef019d910345/547e9/import-cert.png 1410w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
       /&gt;
     &lt;/span&gt;
   &lt;/span&gt;
@@ -371,7 +541,7 @@ Go to Visual Studio and click on &lt;em&gt;File -&gt; New -&gt; Project -&gt; Co
 &lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/static/a7f3caa69a68c8a7188333a4311bb9a4/4244b/redis-ssl-start.png&quot;
+    href=&quot;/static/a7f3caa69a68c8a7188333a4311bb9a4/3296f/redis-ssl-start.png&quot;
     style=&quot;display: block&quot;
     target=&quot;_blank&quot;
     rel=&quot;noopener&quot;
@@ -379,7 +549,7 @@ Go to Visual Studio and click on &lt;em&gt;File -&gt; New -&gt; Project -&gt; Co
   
   &lt;span
     class=&quot;gatsby-resp-image-wrapper&quot;
-    style=&quot;position: relative; display: block;  max-width: 590px; margin-left: auto; margin-right: auto;&quot;
+    style=&quot;position: relative; display: block;  max-width: 630px; margin-left: auto; margin-right: auto;&quot;
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
@@ -390,13 +560,12 @@ Go to Visual Studio and click on &lt;em&gt;File -&gt; New -&gt; Project -&gt; Co
         style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
         alt=&quot;redis ssl start&quot;
         title=&quot;&quot;
-        src=&quot;/static/a7f3caa69a68c8a7188333a4311bb9a4/fb8a0/redis-ssl-start.png&quot;
-        srcset=&quot;/static/a7f3caa69a68c8a7188333a4311bb9a4/1a291/redis-ssl-start.png 148w,
-/static/a7f3caa69a68c8a7188333a4311bb9a4/2bc4a/redis-ssl-start.png 295w,
-/static/a7f3caa69a68c8a7188333a4311bb9a4/fb8a0/redis-ssl-start.png 590w,
-/static/a7f3caa69a68c8a7188333a4311bb9a4/526de/redis-ssl-start.png 885w,
-/static/a7f3caa69a68c8a7188333a4311bb9a4/4244b/redis-ssl-start.png 944w&quot;
-        sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
+        src=&quot;/static/a7f3caa69a68c8a7188333a4311bb9a4/082ce/redis-ssl-start.png&quot;
+        srcset=&quot;/static/a7f3caa69a68c8a7188333a4311bb9a4/c7cb1/redis-ssl-start.png 158w,
+/static/a7f3caa69a68c8a7188333a4311bb9a4/93041/redis-ssl-start.png 315w,
+/static/a7f3caa69a68c8a7188333a4311bb9a4/082ce/redis-ssl-start.png 630w,
+/static/a7f3caa69a68c8a7188333a4311bb9a4/3296f/redis-ssl-start.png 944w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
       /&gt;
     &lt;/span&gt;
   &lt;/span&gt;
@@ -491,7 +660,7 @@ always got an exception if &lt;strong&gt;I didn’t install the certificate firs
 &lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/static/13eb17c1aadf060b8a818db464cdde86/67fb6/redis-cli-result.png&quot;
+    href=&quot;/static/13eb17c1aadf060b8a818db464cdde86/c995b/redis-cli-result.png&quot;
     style=&quot;display: block&quot;
     target=&quot;_blank&quot;
     rel=&quot;noopener&quot;
@@ -510,10 +679,9 @@ always got an exception if &lt;strong&gt;I didn’t install the certificate firs
         style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
         alt=&quot;redis cli result&quot;
         title=&quot;&quot;
-        src=&quot;/static/13eb17c1aadf060b8a818db464cdde86/67fb6/redis-cli-result.png&quot;
-        srcset=&quot;/static/13eb17c1aadf060b8a818db464cdde86/ee8a1/redis-cli-result.png 148w,
-/static/13eb17c1aadf060b8a818db464cdde86/b8043/redis-cli-result.png 295w,
-/static/13eb17c1aadf060b8a818db464cdde86/67fb6/redis-cli-result.png 307w&quot;
+        src=&quot;/static/13eb17c1aadf060b8a818db464cdde86/c995b/redis-cli-result.png&quot;
+        srcset=&quot;/static/13eb17c1aadf060b8a818db464cdde86/dd81b/redis-cli-result.png 158w,
+/static/13eb17c1aadf060b8a818db464cdde86/c995b/redis-cli-result.png 307w&quot;
         sizes=&quot;(max-width: 307px) 100vw, 307px&quot;
       /&gt;
     &lt;/span&gt;
