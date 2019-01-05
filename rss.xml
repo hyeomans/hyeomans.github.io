@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Hector Yeomans Blog]]></title><description><![CDATA[Personal blog.]]></description><link>https://hyeomans.com/</link><generator>RSS for Node</generator><lastBuildDate>Wed, 26 Dec 2018 23:57:22 GMT</lastBuildDate><item><title><![CDATA[Software as stitching]]></title><description><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Hector Yeomans Blog]]></title><description><![CDATA[Personal blog.]]></description><link>https://hyeomans.com/</link><generator>RSS for Node</generator><lastBuildDate>Sat, 05 Jan 2019 18:11:15 GMT</lastBuildDate><item><title><![CDATA[Software as stitching]]></title><description><![CDATA[
  Photo by Alexander Andrews on Unsplash   Lately, I’ve been thinking that most of the software I’ve done consist of stitching of API’s…]]></description><link>https://hyeomans.com//software-as-stitching/</link><guid isPermaLink="false">https://hyeomans.com//software-as-stitching/</guid><pubDate>Thu, 27 Dec 2018 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
@@ -121,54 +121,7 @@ the new API to conform to the company business logic.&lt;/p&gt;
   &lt;/span&gt;
   
   &lt;/a&gt;
-    &lt;/p&gt;</content:encoded></item><item><title><![CDATA[Kafka Notes]]></title><description><![CDATA[Topics and Partitions Topic formed of multiple partitions Topics a particular stream of data Similar to a table in a db YOu can have as many…]]></description><link>https://hyeomans.com//kafka-notes/</link><guid isPermaLink="false">https://hyeomans.com//kafka-notes/</guid><pubDate>Tue, 25 Dec 2018 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;Topics and Partitions&lt;/p&gt;
-&lt;p&gt;Topic formed of multiple partitions&lt;/p&gt;
-&lt;p&gt;Topics a particular stream of data&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Similar to a table in a db&lt;/li&gt;
-&lt;li&gt;YOu can have as many topics as you want&lt;/li&gt;
-&lt;li&gt;Topic is identified by its name&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Topics are split in partitions&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Each partition is ordered&lt;/li&gt;
-&lt;li&gt;Each message within a partition gets an incremental id, called &lt;strong&gt;offset&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;Each partition have their own offset&lt;/li&gt;
-&lt;/ul&gt;
-&lt;ul&gt;
-&lt;li&gt;Offset  only have meanining in a partition.&lt;/li&gt;
-&lt;li&gt;Order is only guaranteed only within a partition, offsets are independent.&lt;/li&gt;
-&lt;li&gt;Default is kept for one week, offsets dissapear.&lt;/li&gt;
-&lt;li&gt;Once the data is writter to a partition, it can’t be changed.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Brokers&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Kafka cluster is composed of multiple brokers (servers)&lt;/li&gt;
-&lt;li&gt;Each broker is identified with its ID (integer)&lt;/li&gt;
-&lt;li&gt;Each broker contains certain topic partitions&lt;/li&gt;
-&lt;li&gt;After connecting to any broker (called a bootstrap brooker), you will be connected to the entire cluster.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;[ Broker 1      ] 
-[ [Topic 1]     ]
-[ [Partition 0] ]
-[               ]
-[ [Topic 2]     ]
-[ [Partition 1] ]
-
-[ Broker 2      ] 
-[ [Topic 1]     ]
-[ [Partition 2] ]
-[               ]
-[ [Topic 2]     ]
-[ [Partition 0] ]
-
-[ Broker 3      ] 
-[ [Topic 1]     ]
-[ [Partition 1] ]
-[               ]
-[               ]
-[               ]&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Not every broker has every topic.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Resilience with Disyuntor - Circuit Breaker]]></title><description><![CDATA[Resilience means the capacity to recover quickly from difficulties. Circuit breaker pattern is a good practice for resilience. When working…]]></description><link>https://hyeomans.com//resilience-disyuntor-nodejs-circuit-breaker/</link><guid isPermaLink="false">https://hyeomans.com//resilience-disyuntor-nodejs-circuit-breaker/</guid><pubDate>Sat, 27 May 2017 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;Resilience means the capacity to recover quickly from difficulties. Circuit breaker pattern is a good practice for resilience.&lt;/p&gt;
+    &lt;/p&gt;</content:encoded></item><item><title><![CDATA[Resilience with Disyuntor - Circuit Breaker]]></title><description><![CDATA[Resilience means the capacity to recover quickly from difficulties. Circuit breaker pattern is a good practice for resilience. When working…]]></description><link>https://hyeomans.com//resilience-disyuntor-nodejs-circuit-breaker/</link><guid isPermaLink="false">https://hyeomans.com//resilience-disyuntor-nodejs-circuit-breaker/</guid><pubDate>Sat, 27 May 2017 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;Resilience means the capacity to recover quickly from difficulties. Circuit breaker pattern is a good practice for resilience.&lt;/p&gt;
 &lt;p&gt;When working with distributed systems, you want resilience. If you’re working with “micro-services,”
 you probably have faced with the problem of a service going down. When X service goes down, and Y and Z depend on X,
 every internal exception could potentially start taking other services down. &lt;/p&gt;
