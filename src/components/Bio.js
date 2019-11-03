@@ -28,7 +28,7 @@ function Bio() {
               }}
             />
             <p>
-              Written by <strong>{author}</strong> who lives Mexico and works remotely for Invision.
+              Written by <strong>{author}</strong> who lives in Mexico and works remotely for Invision.
               {` `}
               <a href={`https://twitter.com/${social.twitter}`}>
                 Follow him on Twitter
