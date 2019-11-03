@@ -26,42 +26,44 @@ workbox.clientsClaim();
  */
 self.__precacheManifest = [
   {
-    "url": "webpack-runtime-4a4ba2552f70e50acec8.js"
+    "url": "webpack-runtime-84cc13ebea88a1f6b7bc.js"
   },
   {
-    "url": "app.5c292e386b6b26b6b927.css"
+    "url": "styles.043b84177264aa98bdec.css"
   },
   {
-    "url": "app-63eda24c928c3911f8a3.js"
+    "url": "styles-ca73e2d2fcbe88d6d48b.js"
   },
   {
-    "url": "component---node-modules-gatsby-plugin-offline-app-shell-js-cb3fd38e85819e4a7d6d.js"
+    "url": "app-fa41b1a7655183c761dd.js"
+  },
+  {
+    "url": "component---node-modules-gatsby-plugin-offline-app-shell-js-9035a74694fba55fdd6c.js"
   },
   {
     "url": "offline-plugin-app-shell-fallback/index.html",
-    "revision": "749fe06cbf631ed8031ba740f06c8df0"
+    "revision": "0f68dd4931cebc228cfe842c63b96720"
   },
   {
-    "url": "component---src-pages-404-js-3405d02dfd8c9428438d.js"
+    "url": "component---src-pages-404-js-fcb70b636a4b5a27898e.js"
   },
   {
-    "url": "0-63927f4a3c1a96f94d84.js"
+    "url": "0-88a8c353d919453ac28b.js"
   },
   {
-    "url": "static/d/164/path---404-html-516-62a-NZuapzHg3X9TaN1iIixfv1W23E.json"
-  },
-  {
-    "url": "static/d/520/path---offline-plugin-app-shell-fallback-a-30-c5a-NZuapzHg3X9TaN1iIixfv1W23E.json"
+    "url": "page-data/404.html/page-data.json",
+    "revision": "3b3514f73fb6aa12e739e4aa2d41e571"
   },
   {
     "url": "manifest.webmanifest",
-    "revision": "74ba4b11a1fd577d3d37167bb4cf70ef"
+    "revision": "97e73a02ab21843c0d5e417cf8b00c7c"
   }
 ].concat(self.__precacheManifest || []);
 workbox.precaching.suppressWarnings();
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
 
 workbox.routing.registerRoute(/(\.js$|\.css$|static\/)/, workbox.strategies.cacheFirst(), 'GET');
+workbox.routing.registerRoute(/^https?:.*\page-data\/.*\/page-data\.json/, workbox.strategies.networkFirst(), 'GET');
 workbox.routing.registerRoute(/^https?:.*\.(png|jpg|jpeg|webp|svg|gif|tiff|js|woff|woff2|json|css)$/, workbox.strategies.staleWhileRevalidate(), 'GET');
 workbox.routing.registerRoute(/^https?:\/\/fonts\.googleapis\.com\/css/, workbox.strategies.staleWhileRevalidate(), 'GET');
 
@@ -80,20 +82,23 @@ const navigationRoute = new workbox.routing.NavigationRoute(({ event }) => {
       const cacheName = workbox.core.cacheNames.precache
 
       return caches.match(offlineShell, { cacheName }).then(cachedResponse => {
-        if (!cachedResponse) {
-          return fetch(offlineShell).then(response => {
-            if (response.ok) {
-              return caches.open(cacheName).then(cache =>
-                // Clone is needed because put() consumes the response body.
-                cache.put(offlineShell, response.clone()).then(() => response)
-              )
-            } else {
-              return fetch(event.request)
-            }
-          })
-        }
+        if (cachedResponse) return cachedResponse
 
-        return cachedResponse
+        console.error(
+          `The offline shell (${offlineShell}) was not found ` +
+            `while attempting to serve a response for ${pathname}`
+        )
+
+        return fetch(offlineShell).then(response => {
+          if (response.ok) {
+            return caches.open(cacheName).then(cache =>
+              // Clone is needed because put() consumes the response body.
+              cache.put(offlineShell, response.clone()).then(() => response)
+            )
+          } else {
+            return fetch(event.request)
+          }
+        })
       })
     }
 
