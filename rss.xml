@@ -1,4 +1,136 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Hector Yeomans Blog]]></title><description><![CDATA[Personal blog.]]></description><link>https://hyeomans.com/</link><generator>RSS for Node</generator><lastBuildDate>Sun, 03 Nov 2019 18:05:33 GMT</lastBuildDate><item><title><![CDATA[Typescript, Jest and Axios]]></title><description><![CDATA[I found different posts that tell you how to mock Axios using Jest & Typescript. The only difference in this post is that, when I use Axios…]]></description><link>https://hyeomans.com//typescript_jest_axios/</link><guid isPermaLink="false">https://hyeomans.com//typescript_jest_axios/</guid><pubDate>Sun, 03 Nov 2019 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;I found different posts that tell you how to mock Axios using Jest &amp;#x26; Typescript. The only difference in this post is that, when I use Axios, I like to use it as a function rather than calling &lt;code class=&quot;language-text&quot;&gt;axios.get&lt;/code&gt; or &lt;code class=&quot;language-text&quot;&gt;axios.post&lt;/code&gt;.&lt;/p&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Hector Yeomans Blog]]></title><description><![CDATA[Personal blog.]]></description><link>https://hyeomans.com/</link><generator>RSS for Node</generator><lastBuildDate>Sun, 19 Jan 2020 01:45:21 GMT</lastBuildDate><item><title><![CDATA[Golang and interfaces misuse]]></title><description><![CDATA[One of my favorite things about Golang is the concept of interface. It’s also one of my grievances every time I see them used as C#/Java…]]></description><link>https://hyeomans.com//golang-and-interfaces-misuse/</link><guid isPermaLink="false">https://hyeomans.com//golang-and-interfaces-misuse/</guid><pubDate>Sat, 18 Jan 2020 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;One of my favorite things about Golang is the concept of interface. It’s also one of my grievances every time I see them used as C#/Java interfaces.&lt;/p&gt;
+&lt;p&gt;It’s typical to see a colossal interface defined at a package level file, for example, a package that defines CRUD operations for a User.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;go&quot;&gt;&lt;pre class=&quot;language-go&quot;&gt;&lt;code class=&quot;language-go&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;package&lt;/span&gt; db
+
+&lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;context&quot;&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;// User --&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;type&lt;/span&gt; User &lt;span class=&quot;token keyword&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+ ID &lt;span class=&quot;token builtin&quot;&gt;int&lt;/span&gt;
+ Email &lt;span class=&quot;token builtin&quot;&gt;string&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;// UsersDb pointless interface&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;type&lt;/span&gt; UsersDb &lt;span class=&quot;token keyword&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+ &lt;span class=&quot;token function&quot;&gt;Get&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;ctx context&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;Context&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; id &lt;span class=&quot;token builtin&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; User
+ &lt;span class=&quot;token function&quot;&gt;Create&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;ctx context&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;Context&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; user User&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; User
+ &lt;span class=&quot;token function&quot;&gt;Update&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;ctx context&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;Context&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; id &lt;span class=&quot;token builtin&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; user User&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; User
+ &lt;span class=&quot;token function&quot;&gt;Delete&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;ctx context&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;Context&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; id &lt;span class=&quot;token builtin&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token builtin&quot;&gt;bool&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token comment&quot;&gt;//... then we have the actual struct that &quot;implements&quot; the interface&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;What benefit does this bring to the package? Some say mocking capabilities. From what I’ve seen to mock that kind of package, you need a generator that generates and updates the mocks.&lt;/p&gt;
+&lt;p&gt;A better approach is to follow what Golang wiki describes:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Go interfaces generally belong in the package that uses values of the interface type, not the package that implements those values.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;In the case of our &lt;code class=&quot;language-text&quot;&gt;db&lt;/code&gt; package, we defined an interface without knowing if another consumer implements it. But how do we test? And I think that’s the wrong question to ask, the right question is, how does my business logic require User information?&lt;/p&gt;
+&lt;p&gt;Let’s assume that we have a simple business requirement: when retrieving the name, the name its always uppercase.&lt;/p&gt;
+&lt;p&gt;You define a dumb &lt;code class=&quot;language-text&quot;&gt;business&lt;/code&gt; package, so you follow separation of concerns and get something like:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;go&quot;&gt;&lt;pre class=&quot;language-go&quot;&gt;&lt;code class=&quot;language-go&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;package&lt;/span&gt; business
+
+&lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;
+ &lt;span class=&quot;token string&quot;&gt;&quot;context&quot;&lt;/span&gt;
+ &lt;span class=&quot;token string&quot;&gt;&quot;strings&quot;&lt;/span&gt;
+
+ &lt;span class=&quot;token string&quot;&gt;&quot;github.com/hyeomans/interface-misuses/db&quot;&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;// User --&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;type&lt;/span&gt; User &lt;span class=&quot;token keyword&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+ Name &lt;span class=&quot;token builtin&quot;&gt;string&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;// Service --&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;type&lt;/span&gt; Service &lt;span class=&quot;token keyword&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+ &lt;span class=&quot;token comment&quot;&gt;//Here you will have logging&lt;/span&gt;
+ &lt;span class=&quot;token comment&quot;&gt;//Counts, etc&lt;/span&gt;
+ userService db&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;UserService
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;// NewService --&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;NewService&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;userService db&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;UserService&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; Service &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+ &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; Service&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+ userService&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; userService&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+ &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;// GetUser --&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;s Service&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;GetUser&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;ctx context&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;Context&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; id &lt;span class=&quot;token builtin&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; User &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+ dbUser &lt;span class=&quot;token operator&quot;&gt;:=&lt;/span&gt; s&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;userService&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;Get&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;ctx&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; id&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+ &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; User&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;Name&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; strings&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;ToUpper&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;dbUser&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;Name&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;You followed dependency injection and because you defined an &lt;code class=&quot;language-text&quot;&gt;interface&lt;/code&gt; of &lt;code class=&quot;language-text&quot;&gt;db.UserService&lt;/code&gt; you can generate mocks and get testing.&lt;/p&gt;
+&lt;p&gt;However, there is much boilerplate code to get testing and mocking. There is a more straightforward way to do it, taking advantage of what Golang wiki says:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Do not define interfaces on the implementor side of an API “for mocking”; instead, design the API so that it can be tested using the public API of the real implementation.
+&lt;a href=&quot;https://github.com/golang/go/wiki/CodeReviewComments#interfaces&quot;&gt;https://github.com/golang/go/wiki/CodeReviewComments#interfaces&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Let’s define an interface with only &lt;em&gt;one&lt;/em&gt; method in &lt;code class=&quot;language-text&quot;&gt;business.Service&lt;/code&gt;, then instead of injecting the whole &lt;code class=&quot;language-text&quot;&gt;db.UserService&lt;/code&gt;, substitute that with your new interface.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;go&quot;&gt;&lt;pre class=&quot;language-go&quot;&gt;&lt;code class=&quot;language-go&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;package&lt;/span&gt; business
+
+&lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;
+ &lt;span class=&quot;token string&quot;&gt;&quot;context&quot;&lt;/span&gt;
+ &lt;span class=&quot;token string&quot;&gt;&quot;strings&quot;&lt;/span&gt;
+
+ &lt;span class=&quot;token string&quot;&gt;&quot;github.com/hyeomans/interface-misuses/db&quot;&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;// User --&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;type&lt;/span&gt; User &lt;span class=&quot;token keyword&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+ Name &lt;span class=&quot;token builtin&quot;&gt;string&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;// UserGetter &amp;lt;---- This interface is defined in the&lt;/span&gt;
+&lt;span class=&quot;token comment&quot;&gt;// consumer side.&lt;/span&gt;
+&lt;span class=&quot;token comment&quot;&gt;// &quot;Do not define interfaces before they are used&quot;&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;type&lt;/span&gt; UserGetter &lt;span class=&quot;token keyword&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+ &lt;span class=&quot;token function&quot;&gt;Get&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;ctx context&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;Context&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; id &lt;span class=&quot;token builtin&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; db&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;User
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;// Service --&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;type&lt;/span&gt; Service &lt;span class=&quot;token keyword&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+ userGetter UserGetter &lt;span class=&quot;token comment&quot;&gt;// &amp;lt;--- Change this&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;// NewService --&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;NewService&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;userGetter UserGetter&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; Service &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+ &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; Service&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+ userGetter&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; userGetter&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// &amp;lt;----- Change this&lt;/span&gt;
+ &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;// GetUser --&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;s Service&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;GetUser&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;ctx context&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;Context&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; id &lt;span class=&quot;token builtin&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; User &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+ dbUser &lt;span class=&quot;token operator&quot;&gt;:=&lt;/span&gt; s&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;userGetter&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;Get&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;ctx&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; id&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// You still get a dbUser&lt;/span&gt;
+ &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; User&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;Name&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; strings&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;ToUpper&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;dbUser&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;Name&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Your &lt;code class=&quot;language-text&quot;&gt;main.go&lt;/code&gt; file looks something like:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;go&quot;&gt;&lt;pre class=&quot;language-go&quot;&gt;&lt;code class=&quot;language-go&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;package&lt;/span&gt; main
+
+&lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;
+ &lt;span class=&quot;token string&quot;&gt;&quot;context&quot;&lt;/span&gt;
+ &lt;span class=&quot;token string&quot;&gt;&quot;fmt&quot;&lt;/span&gt;
+
+ &lt;span class=&quot;token string&quot;&gt;&quot;github.com/hyeomans/interface-misuses/business&quot;&lt;/span&gt;
+ &lt;span class=&quot;token string&quot;&gt;&quot;github.com/hyeomans/interface-misuses/db&quot;&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;token keyword&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+ ctx &lt;span class=&quot;token operator&quot;&gt;:=&lt;/span&gt; context&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;Background&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+ userService &lt;span class=&quot;token operator&quot;&gt;:=&lt;/span&gt; db&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;NewUserService&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+ service &lt;span class=&quot;token operator&quot;&gt;:=&lt;/span&gt; business&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;NewService&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;userService&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+
+ user &lt;span class=&quot;token operator&quot;&gt;:=&lt;/span&gt; service&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;GetUser&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;ctx&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+ fmt&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;Println&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;user&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;Name&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;Golang allows the perfect inversion of control, thanks to this pattern. In its essence, it is abstract, but once you start playing with it, it’s powerful.&lt;/p&gt;
+&lt;p&gt;If you need more information about this pattern, there are other great blog posts:&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/golang/go/wiki/CodeReviewComments#interfaces&quot;&gt;https://github.com/golang/go/wiki/CodeReviewComments#interfaces&lt;/a&gt;
+&lt;a href=&quot;https://dave.cheney.net/2016/08/20/solid-go-design&quot;&gt;https://dave.cheney.net/2016/08/20/solid-go-design&lt;/a&gt;
+&lt;a href=&quot;https://twitter.com/davecheney/status/1030790804011245569?lang=en&quot;&gt;https://twitter.com/davecheney/status/1030790804011245569?lang=en&lt;/a&gt;
+&lt;a href=&quot;https://www.ardanlabs.com/blog/2017/07/interface-semantics.html&quot;&gt;https://www.ardanlabs.com/blog/2017/07/interface-semantics.html&lt;/a&gt;
+&lt;a href=&quot;https://github.com/ardanlabs/gotraining/blob/master/topics/go/design/composition/pollution/example1/example1.go&quot;&gt;https://github.com/ardanlabs/gotraining/blob/master/topics/go/design/composition/pollution/example1/example1.go&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Typescript, Jest and Axios]]></title><description><![CDATA[I found different posts that tell you how to mock Axios using Jest & Typescript. The only difference in this post is that, when I use Axios…]]></description><link>https://hyeomans.com//typescript_jest_axios/</link><guid isPermaLink="false">https://hyeomans.com//typescript_jest_axios/</guid><pubDate>Sun, 03 Nov 2019 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;I found different posts that tell you how to mock Axios using Jest &amp;#x26; Typescript. The only difference in this post is that, when I use Axios, I like to use it as a function rather than calling &lt;code class=&quot;language-text&quot;&gt;axios.get&lt;/code&gt; or &lt;code class=&quot;language-text&quot;&gt;axios.post&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;Imagine you have this Axios request that you want to mock in your tests:&lt;/p&gt;
 &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;typescript&quot;&gt;&lt;pre class=&quot;language-typescript&quot;&gt;&lt;code class=&quot;language-typescript&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;//src/index.ts&lt;/span&gt;
 &lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; axios &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;axios&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
