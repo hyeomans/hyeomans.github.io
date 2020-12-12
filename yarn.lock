@@ -468,6 +468,11 @@ has@^1.0.3:
   dependencies:
     function-bind "^1.1.1"
 
+hexo-canonical-link@2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/hexo-canonical-link/-/hexo-canonical-link-2.0.0.tgz#9f65475864a5863673d98388ea4f062d566f2105"
+  integrity sha512-ARisU4KCE2D1AbXSpTG1NGp6F3oDyp/jigt5kbYve3rGH547kA4BvQJwx7DfyvcSTkAjbGu7MxKMfinoh488yg==
+
 hexo-cli@^4.0.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/hexo-cli/-/hexo-cli-4.2.0.tgz#74647bc72a90b9cebf04af5bc70839ab281a305d"
