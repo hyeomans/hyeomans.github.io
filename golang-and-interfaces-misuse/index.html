@@ -1,309 +1,153 @@
-<!DOCTYPE html>
-<html lang=en>
-<head>
-    <!-- so meta -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="HandheldFriendly" content="True">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="One of my favorite things about Golang is the concept of interface. It’s also one of my grievances every time I see them used as C#&#x2F;Java interfaces. It’s typical to see a colossal interface defined at">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Golang and interfaces misuse">
-<meta property="og:url" content="https://hyeomans.com/golang-and-interfaces-misuse/index.html">
-<meta property="og:site_name" content="Hector Yeomans">
-<meta property="og:description" content="One of my favorite things about Golang is the concept of interface. It’s also one of my grievances every time I see them used as C#&#x2F;Java interfaces. It’s typical to see a colossal interface defined at">
-<meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2020-01-18T00:00:00.000Z">
-<meta property="article:modified_time" content="2020-01-18T00:00:00.000Z">
-<meta property="article:author" content="Hector Yeomans">
-<meta name="twitter:card" content="summary">
-    
-    
-      
-        
-          <link rel="shortcut icon" href="/images/favicon.ico">
-        
-      
-      
-        
-          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
-        
-      
-      
-        
-          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-        
-      
-    
-    <!-- title -->
-    <title>Golang and interfaces misuse</title>
-    <!-- styles -->
-    
-<link rel="stylesheet" href="/css/style.css">
-
-    <!-- persian styles -->
-    
-      
-<link rel="stylesheet" href="/css/rtl.css">
-
-    
-    <!-- rss -->
-    
-    
-    <link rel="canonical" href="https://hyeomans.com/golang-and-interfaces-misuse/"/>
-<meta name="generator" content="Hexo 5.2.0"></head>
-
-<body class="max-width mx-auto px3 ltr">
-    
-      <div id="header-post">
-  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
-  <span id="menu">
-    <span id="nav">
-      <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/archives/">Writing</a></li>
-         
-          <li><a target="_blank" rel="noopener" href="http://github.com/hyeomans">Projects</a></li>
-        
-      </ul>
-    </span>
-    <br/>
-    <span id="actions">
-      <ul>
-        
-        <li><a class="icon" href="/migrate-node-package-typescript-rollup/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
-        
-        
-        <li><a class="icon" href="/typescript_jest_axios/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
-        
-        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
-        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
-      </ul>
-      <span id="i-prev" class="info" style="display:none;">Previous post</span>
-      <span id="i-next" class="info" style="display:none;">Next post</span>
-      <span id="i-top" class="info" style="display:none;">Back to top</span>
-      <span id="i-share" class="info" style="display:none;">Share post</span>
-    </span>
-    <br/>
-    <div id="share" style="display: none">
-      <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://hyeomans.com/golang-and-interfaces-misuse/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://hyeomans.com/golang-and-interfaces-misuse/&text=Golang and interfaces misuse"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://hyeomans.com/golang-and-interfaces-misuse/&title=Golang and interfaces misuse"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://hyeomans.com/golang-and-interfaces-misuse/&is_video=false&description=Golang and interfaces misuse"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=Golang and interfaces misuse&body=Check out this article: https://hyeomans.com/golang-and-interfaces-misuse/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://hyeomans.com/golang-and-interfaces-misuse/&title=Golang and interfaces misuse"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://hyeomans.com/golang-and-interfaces-misuse/&title=Golang and interfaces misuse"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://hyeomans.com/golang-and-interfaces-misuse/&title=Golang and interfaces misuse"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://hyeomans.com/golang-and-interfaces-misuse/&title=Golang and interfaces misuse"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://hyeomans.com/golang-and-interfaces-misuse/&name=Golang and interfaces misuse&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://hyeomans.com/golang-and-interfaces-misuse/&t=Golang and interfaces misuse"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
-</ul>
-
-    </div>
-    <div id="toc">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Conclusion"><span class="toc-number">1.</span> <span class="toc-text">Conclusion</span></a></li></ol>
-    </div>
-  </span>
-</div>
-
-    
-    <div class="content index py4">
-        
-        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-  <header>
-    
-    <h1 class="posttitle" itemprop="name headline">
-        Golang and interfaces misuse
-    </h1>
-
-
-
-    <div class="meta">
-      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
-        <span itemprop="name">Hector Yeomans</span>
-      </span>
-      
-    <div class="postdate">
-      
-        <time datetime="2020-01-18T00:00:00.000Z" itemprop="datePublished">2020-01-17</time>
-        
-      
-    </div>
-
-
-      
-
-      
-
-    </div>
-  </header>
-  
-
-  <div class="content" itemprop="articleBody">
-    <p>One of my favorite things about Golang is the concept of interface. It’s also one of my grievances every time I see them used as C#/Java interfaces.</p>
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="ie=edge"/><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/><style id="typography.js">html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}article,aside,details,figcaption,figure,footer,header,main,menu,nav,section,summary{display:block}audio,canvas,progress,video{display:inline-block}audio:not([controls]){display:none;height:0}progress{vertical-align:baseline}[hidden],template{display:none}a{background-color:transparent;-webkit-text-decoration-skip:objects}a:active,a:hover{outline-width:0}abbr[title]{border-bottom:none;text-decoration:underline;text-decoration:underline dotted}b,strong{font-weight:inherit;font-weight:bolder}dfn{font-style:italic}h1{font-size:2em;margin:.67em 0}mark{background-color:#ff0;color:#000}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}img{border-style:none}svg:not(:root){overflow:hidden}code,kbd,pre,samp{font-family:monospace,monospace;font-size:1em}figure{margin:1em 40px}hr{box-sizing:content-box;height:0;overflow:visible}button,input,optgroup,select,textarea{font:inherit;margin:0}optgroup{font-weight:700}button,input{overflow:visible}button,select{text-transform:none}[type=reset],[type=submit],button,html [type=button]{-webkit-appearance:button}[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner,button::-moz-focus-inner{border-style:none;padding:0}[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[type=submit]:-moz-focusring,button:-moz-focusring{outline:1px dotted ButtonText}fieldset{border:1px solid silver;margin:0 2px;padding:.35em .625em .75em}legend{box-sizing:border-box;color:inherit;display:table;max-width:100%;padding:0;white-space:normal}textarea{overflow:auto}[type=checkbox],[type=radio]{box-sizing:border-box;padding:0}[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}[type=search]::-webkit-search-cancel-button,[type=search]::-webkit-search-decoration{-webkit-appearance:none}::-webkit-input-placeholder{color:inherit;opacity:.54}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}html{font:100%/1.75 'Merriweather','Georgia',serif;box-sizing:border-box;overflow-y:scroll;}*{box-sizing:inherit;}*:before{box-sizing:inherit;}*:after{box-sizing:inherit;}body{color:hsla(0,0%,0%,0.9);font-family:'Merriweather','Georgia',serif;font-weight:400;word-wrap:break-word;font-kerning:normal;-moz-font-feature-settings:"kern", "liga", "clig", "calt";-ms-font-feature-settings:"kern", "liga", "clig", "calt";-webkit-font-feature-settings:"kern", "liga", "clig", "calt";font-feature-settings:"kern", "liga", "clig", "calt";}img{max-width:100%;margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;}h1{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;color:inherit;font-family:Montserrat,sans-serif;font-weight:900;text-rendering:optimizeLegibility;font-size:2.5rem;line-height:1.1;}h2{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;color:inherit;font-family:'Merriweather','Georgia',serif;font-weight:900;text-rendering:optimizeLegibility;font-size:1.73286rem;line-height:1.1;}h3{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;color:inherit;font-family:'Merriweather','Georgia',serif;font-weight:900;text-rendering:optimizeLegibility;font-size:1.4427rem;line-height:1.1;}h4{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;color:inherit;font-family:'Merriweather','Georgia',serif;font-weight:900;text-rendering:optimizeLegibility;font-size:1rem;line-height:1.1;letter-spacing:0.140625em;text-transform:uppercase;}h5{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;color:inherit;font-family:'Merriweather','Georgia',serif;font-weight:900;text-rendering:optimizeLegibility;font-size:0.83255rem;line-height:1.1;}h6{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;color:inherit;font-family:'Merriweather','Georgia',serif;font-weight:900;text-rendering:optimizeLegibility;font-size:0.75966rem;line-height:1.1;font-style:italic;}hgroup{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;}ul{margin-left:1.75rem;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;list-style-position:outside;list-style-image:none;list-style:disc;}ol{margin-left:1.75rem;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;list-style-position:outside;list-style-image:none;}dl{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;}dd{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;}p{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;}figure{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;}pre{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;font-size:0.85rem;line-height:1.75rem;}table{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;font-size:1rem;line-height:1.75rem;border-collapse:collapse;width:100%;}fieldset{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;}blockquote{margin-left:-1.75rem;margin-right:1.75rem;margin-top:0;padding-bottom:0;padding-left:1.42188rem;padding-right:0;padding-top:0;margin-bottom:1.75rem;font-size:1.20112rem;line-height:1.75rem;color:hsla(0,0%,0%,0.59);font-style:italic;border-left:0.32813rem solid hsla(0,0%,0%,0.9);}form{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;}noscript{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;}iframe{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;}hr{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:calc(1.75rem - 1px);background:hsla(0,0%,0%,0.2);border:none;height:1px;}address{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;}b{font-weight:700;}strong{font-weight:700;}dt{font-weight:700;}th{font-weight:700;}li{margin-bottom:calc(1.75rem / 2);}ol li{padding-left:0;}ul li{padding-left:0;}li > ol{margin-left:1.75rem;margin-bottom:calc(1.75rem / 2);margin-top:calc(1.75rem / 2);}li > ul{margin-left:1.75rem;margin-bottom:calc(1.75rem / 2);margin-top:calc(1.75rem / 2);}blockquote *:last-child{margin-bottom:0;}li *:last-child{margin-bottom:0;}p *:last-child{margin-bottom:0;}li > p{margin-bottom:calc(1.75rem / 2);}code{font-size:0.85rem;line-height:1.75rem;}kbd{font-size:0.85rem;line-height:1.75rem;}samp{font-size:0.85rem;line-height:1.75rem;}abbr{border-bottom:1px dotted hsla(0,0%,0%,0.5);cursor:help;}acronym{border-bottom:1px dotted hsla(0,0%,0%,0.5);cursor:help;}abbr[title]{border-bottom:1px dotted hsla(0,0%,0%,0.5);cursor:help;text-decoration:none;}thead{text-align:left;}td,th{text-align:left;border-bottom:1px solid hsla(0,0%,0%,0.12);font-feature-settings:"tnum";-moz-font-feature-settings:"tnum";-ms-font-feature-settings:"tnum";-webkit-font-feature-settings:"tnum";padding-left:1.16667rem;padding-right:1.16667rem;padding-top:0.875rem;padding-bottom:calc(0.875rem - 1px);}th:first-child,td:first-child{padding-left:0;}th:last-child,td:last-child{padding-right:0;}blockquote > :last-child{margin-bottom:0;}blockquote cite{font-size:1rem;line-height:1.75rem;color:hsla(0,0%,0%,0.9);font-weight:400;}blockquote cite:before{content:"— ";}ul,ol{margin-left:0;}@media only screen and (max-width:480px){ul,ol{margin-left:1.75rem;}blockquote{margin-left:-1.3125rem;margin-right:0;padding-left:0.98438rem;}}h1,h2,h3,h4,h5,h6{margin-top:3.5rem;}a{box-shadow:0 1px 0 0 currentColor;color:#007acc;text-decoration:none;}a:hover,a:active{box-shadow:none;}mark,ins{background:#007acc;color:white;padding:0.10938rem 0.21875rem;text-decoration:none;}a.gatsby-resp-image-link{box-shadow:none;}</style><style data-href="/styles.043b84177264aa98bdec.css">code[class*=language-],pre[class*=language-]{color:#ccc;background:none;font-family:Consolas,Monaco,Andale Mono,Ubuntu Mono,monospace;font-size:1em;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-ms-hyphens:none;hyphens:none}pre[class*=language-]{padding:1em;margin:.5em 0;overflow:auto}:not(pre)>code[class*=language-],pre[class*=language-]{background:#2d2d2d}:not(pre)>code[class*=language-]{padding:.1em;border-radius:.3em;white-space:normal}.token.block-comment,.token.cdata,.token.comment,.token.doctype,.token.prolog{color:#999}.token.punctuation{color:#ccc}.token.attr-name,.token.deleted,.token.namespace,.token.tag{color:#e2777a}.token.function-name{color:#6196cc}.token.boolean,.token.function,.token.number{color:#f08d49}.token.class-name,.token.constant,.token.property,.token.symbol{color:#f8c555}.token.atrule,.token.builtin,.token.important,.token.keyword,.token.selector{color:#cc99cd}.token.attr-value,.token.char,.token.regex,.token.string,.token.variable{color:#7ec699}.token.entity,.token.operator,.token.url{color:#67cdcc}.token.bold,.token.important{font-weight:700}.token.italic{font-style:italic}.token.entity{cursor:help}.token.inserted{color:green}@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:100;src:local("Montserrat Thin "),local("Montserrat-Thin"),url(/static/montserrat-latin-100-50d279861fb3cbfed809eae6ed8b9ac9.woff2) format("woff2"),url(/static/montserrat-latin-100-5e334eff013f12fbb8ed72c2a253f119.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:100;src:local("Montserrat Thin italic"),local("Montserrat-Thinitalic"),url(/static/montserrat-latin-100italic-8c0705336558194799a8729840d7ed9d.woff2) format("woff2"),url(/static/montserrat-latin-100italic-03e19243272affe738654a157625ec26.woff) format("woff")}@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:200;src:local("Montserrat Extra Light "),local("Montserrat-Extra Light"),url(/static/montserrat-latin-200-4343d3d91a9446226e7a8bbb024111ad.woff2) format("woff2"),url(/static/montserrat-latin-200-f2022ecd65a0703ec3edcb7641709a75.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:200;src:local("Montserrat Extra Light italic"),local("Montserrat-Extra Lightitalic"),url(/static/montserrat-latin-200italic-116c4c4b14ef76b0555da09854512022.woff2) format("woff2"),url(/static/montserrat-latin-200italic-89614a6008fc5c60739012463d0ee7e6.woff) format("woff")}@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:300;src:local("Montserrat Light "),local("Montserrat-Light"),url(/static/montserrat-latin-300-d2ad295b60682a6537c358e06ea80c61.woff2) format("woff2"),url(/static/montserrat-latin-300-3a371ee0d175f5c2b15ce1d6b981dc4e.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:300;src:local("Montserrat Light italic"),local("Montserrat-Lightitalic"),url(/static/montserrat-latin-300italic-f6b6bf2431003f8142e800f9df157989.woff2) format("woff2"),url(/static/montserrat-latin-300italic-16521668f5f238098329cdd7d27c391e.woff) format("woff")}@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:400;src:local("Montserrat Regular "),local("Montserrat-Regular"),url(/static/montserrat-latin-400-240a84447b78da0920fcb07e378f2c5f.woff2) format("woff2"),url(/static/montserrat-latin-400-b20cc131034316b1c85d0498fb9ed5c5.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:400;src:local("Montserrat Regular italic"),local("Montserrat-Regularitalic"),url(/static/montserrat-latin-400italic-86172bb829de6be08b92512096b6aca6.woff2) format("woff2"),url(/static/montserrat-latin-400italic-9405e78785a55cf0e4ea7669d4616ea9.woff) format("woff")}@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:500;src:local("Montserrat Medium "),local("Montserrat-Medium"),url(/static/montserrat-latin-500-fb8d6b71dbe8d9294be43082936f649e.woff2) format("woff2"),url(/static/montserrat-latin-500-50825d47af7ae47e055018eb689c6c99.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:500;src:local("Montserrat Medium italic"),local("Montserrat-Mediumitalic"),url(/static/montserrat-latin-500italic-c0a555a4f8e997385a3eebbd4da0b9ee.woff2) format("woff2"),url(/static/montserrat-latin-500italic-635de59c4be86285b1f70068c95b9816.woff) format("woff")}@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:600;src:local("Montserrat SemiBold "),local("Montserrat-SemiBold"),url(/static/montserrat-latin-600-d5615136a08cfee70deb4be1ee1651df.woff2) format("woff2"),url(/static/montserrat-latin-600-f300da4fb4fe00e23915f62b2c643681.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:600;src:local("Montserrat SemiBold italic"),local("Montserrat-SemiBolditalic"),url(/static/montserrat-latin-600italic-10f29d139edacde92df63374c5672568.woff2) format("woff2"),url(/static/montserrat-latin-600italic-2bc37d86a4ba12ce526c4af904a9946e.woff) format("woff")}@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:700;src:local("Montserrat Bold "),local("Montserrat-Bold"),url(/static/montserrat-latin-700-7d77e1f03eefc452dab14d7f89080083.woff2) format("woff2"),url(/static/montserrat-latin-700-81826529772e52f0f14a4c73c2f2c7f1.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:700;src:local("Montserrat Bold italic"),local("Montserrat-Bolditalic"),url(/static/montserrat-latin-700italic-1dd2b53f1567a29e0505de9b27c4352c.woff2) format("woff2"),url(/static/montserrat-latin-700italic-c162d257f5e9f9b108a96a604cfb2132.woff) format("woff")}@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:800;src:local("Montserrat ExtraBold "),local("Montserrat-ExtraBold"),url(/static/montserrat-latin-800-d4e7bf86bbd8e5f43ca73fa831218648.woff2) format("woff2"),url(/static/montserrat-latin-800-895aadbff357be35ac8dd107c7975ee7.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:800;src:local("Montserrat ExtraBold italic"),local("Montserrat-ExtraBolditalic"),url(/static/montserrat-latin-800italic-fc0cbe442f7b3733c91e982e825c4daa.woff2) format("woff2"),url(/static/montserrat-latin-800italic-b3362875067300abedb7a8fb97903258.woff) format("woff")}@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:900;src:local("Montserrat Black "),local("Montserrat-Black"),url(/static/montserrat-latin-900-c8bdd772c0d1347720ff7e3fb72719f3.woff2) format("woff2"),url(/static/montserrat-latin-900-1b99ef78e627dd9bbd0ca4b5c0789547.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:900;src:local("Montserrat Black italic"),local("Montserrat-Blackitalic"),url(/static/montserrat-latin-900italic-cb72c1f90f66c124fb897a75bec64c78.woff2) format("woff2"),url(/static/montserrat-latin-900italic-b78bb9f8ecec6c5a924c873f1818095f.woff) format("woff")}@font-face{font-family:Merriweather;font-style:normal;font-display:swap;font-weight:300;src:local("Merriweather Light "),local("Merriweather-Light"),url(/static/merriweather-latin-300-f015f1e9a46a3b9db4fd64564dacece4.woff2) format("woff2"),url(/static/merriweather-latin-300-92dfe81b725c342d31d962da975c07a6.woff) format("woff")}@font-face{font-family:Merriweather;font-style:italic;font-display:swap;font-weight:300;src:local("Merriweather Light italic"),local("Merriweather-Lightitalic"),url(/static/merriweather-latin-300italic-7fd86b32accf2df4403d1d4fa3a81502.woff2) format("woff2"),url(/static/merriweather-latin-300italic-878b76f59d5ba58dd1652dc8d2a0f4f9.woff) format("woff")}@font-face{font-family:Merriweather;font-style:normal;font-display:swap;font-weight:400;src:local("Merriweather Regular "),local("Merriweather-Regular"),url(/static/merriweather-latin-400-12dbf4c00ae43698f278b099e4b0ec9e.woff2) format("woff2"),url(/static/merriweather-latin-400-1fffad22b085a877995812dbf1d9ac08.woff) format("woff")}@font-face{font-family:Merriweather;font-style:italic;font-display:swap;font-weight:400;src:local("Merriweather Regular italic"),local("Merriweather-Regularitalic"),url(/static/merriweather-latin-400italic-1e0d3e8121d88969bfb153c8f174b758.woff2) format("woff2"),url(/static/merriweather-latin-400italic-de18d4c4e8e808a7248a185f866ff094.woff) format("woff")}@font-face{font-family:Merriweather;font-style:normal;font-display:swap;font-weight:700;src:local("Merriweather Bold "),local("Merriweather-Bold"),url(/static/merriweather-latin-700-dc8fec81a125fc63856587e6683da73b.woff2) format("woff2"),url(/static/merriweather-latin-700-d7d2ed8e58f303392cc3fc00ba3a9186.woff) format("woff")}@font-face{font-family:Merriweather;font-style:italic;font-display:swap;font-weight:700;src:local("Merriweather Bold italic"),local("Merriweather-Bolditalic"),url(/static/merriweather-latin-700italic-b7b7e5da4d7be8c12bd5a6c809edc8fc.woff2) format("woff2"),url(/static/merriweather-latin-700italic-6210a5fc1c54ca85a5d82aa85d7a9b5c.woff) format("woff")}@font-face{font-family:Merriweather;font-style:normal;font-display:swap;font-weight:900;src:local("Merriweather Black "),local("Merriweather-Black"),url(/static/merriweather-latin-900-43f870d543dd89fbeb66d417c0d97276.woff2) format("woff2"),url(/static/merriweather-latin-900-8f3806df74937c7b8b53f24ae1e725d1.woff) format("woff")}@font-face{font-family:Merriweather;font-style:italic;font-display:swap;font-weight:900;src:local("Merriweather Black italic"),local("Merriweather-Blackitalic"),url(/static/merriweather-latin-900italic-168c1ab28ed0e4e7d654334def288bc1.woff2) format("woff2"),url(/static/merriweather-latin-900italic-ae7778f01871e35ee142ef207b313b34.woff) format("woff")}</style><meta name="generator" content="Gatsby 2.23.11"/><link rel="preconnect dns-prefetch" href="https://www.google-analytics.com"/><link rel="alternate" type="application/rss+xml" href="/rss.xml"/><link rel="icon" href="/favicon-32x32.png?v=87868a0928b57e25c4ddce9e4a8a226c"/><link rel="manifest" href="/manifest.webmanifest"/><meta name="theme-color" content="#663399"/><link rel="apple-touch-icon" sizes="48x48" href="/icons/icon-48x48.png?v=87868a0928b57e25c4ddce9e4a8a226c"/><link rel="apple-touch-icon" sizes="72x72" href="/icons/icon-72x72.png?v=87868a0928b57e25c4ddce9e4a8a226c"/><link rel="apple-touch-icon" sizes="96x96" href="/icons/icon-96x96.png?v=87868a0928b57e25c4ddce9e4a8a226c"/><link rel="apple-touch-icon" sizes="144x144" href="/icons/icon-144x144.png?v=87868a0928b57e25c4ddce9e4a8a226c"/><link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192x192.png?v=87868a0928b57e25c4ddce9e4a8a226c"/><link rel="apple-touch-icon" sizes="256x256" href="/icons/icon-256x256.png?v=87868a0928b57e25c4ddce9e4a8a226c"/><link rel="apple-touch-icon" sizes="384x384" href="/icons/icon-384x384.png?v=87868a0928b57e25c4ddce9e4a8a226c"/><link rel="apple-touch-icon" sizes="512x512" href="/icons/icon-512x512.png?v=87868a0928b57e25c4ddce9e4a8a226c"/><title data-react-helmet="true">Golang and interfaces misuse | Hector Yeomans Blog</title><meta data-react-helmet="true" name="description" content="One of my favorite things about Golang is the concept of interface. It’s also one of my grievances every time I see them used as C#/Java interfaces. It’s…"/><meta data-react-helmet="true" property="og:title" content="Golang and interfaces misuse"/><meta data-react-helmet="true" property="og:description" content="One of my favorite things about Golang is the concept of interface. It’s also one of my grievances every time I see them used as C#/Java interfaces. It’s…"/><meta data-react-helmet="true" property="og:type" content="website"/><meta data-react-helmet="true" name="twitter:card" content="summary"/><meta data-react-helmet="true" name="twitter:creator" content="Hector Yeomans"/><meta data-react-helmet="true" name="twitter:title" content="Golang and interfaces misuse"/><meta data-react-helmet="true" name="twitter:description" content="One of my favorite things about Golang is the concept of interface. It’s also one of my grievances every time I see them used as C#/Java interfaces. It’s…"/><link as="script" rel="preload" href="/webpack-runtime-8a4177c8dab90579a24f.js"/><link as="script" rel="preload" href="/framework-5fc6169171e885c3b522.js"/><link as="script" rel="preload" href="/styles-cd63080e784be7b7e7cf.js"/><link as="script" rel="preload" href="/app-ec0443be98f6cdfa558f.js"/><link as="script" rel="preload" href="/d5d7a013bc6c1e2b6d7db819052c16d7efea5559-57831105da7b10a119ce.js"/><link as="script" rel="preload" href="/cd7d5f864fc9e15ed8adef086269b0aeff617554-034434e94fa07313e65e.js"/><link as="script" rel="preload" href="/component---src-templates-blog-post-js-0143863c511669032f7c.js"/><link as="fetch" rel="preload" href="/page-data/golang-and-interfaces-misuse/page-data.json" crossorigin="anonymous"/><link as="fetch" rel="preload" href="/page-data/app-data.json" crossorigin="anonymous"/></head><body><div id="___gatsby"><div style="outline:none" tabindex="-1" id="gatsby-focus-wrapper"><div style="margin-left:auto;margin-right:auto;max-width:42rem;padding:2.625rem 1.3125rem"><h3 style="font-family:Montserrat, sans-serif;margin-top:0;margin-bottom:-1.75rem"><a style="box-shadow:none;text-decoration:none;color:inherit" href="/">Hector Yeomans Blog</a></h3><h1>Golang and interfaces misuse</h1><p style="font-size:0.83255rem;line-height:1.75rem;display:block;margin-bottom:1.75rem;margin-top:-1.75rem">January 18, 2020</p><div><p>One of my favorite things about Golang is the concept of interface. It’s also one of my grievances every time I see them used as C#/Java interfaces.</p>
 <p>It’s typical to see a colossal interface defined at a package level file, for example, a package that defines CRUD operations for a User.</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> db</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;context&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// User --</span></span><br><span class="line"><span class="keyword">type</span> User <span class="keyword">struct</span> &#123;</span><br><span class="line"> ID <span class="keyword">int</span></span><br><span class="line"> Email <span class="keyword">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// UsersDb pointless interface</span></span><br><span class="line"><span class="keyword">type</span> UsersDb <span class="keyword">interface</span> &#123;</span><br><span class="line"> Get(ctx context.Context, id <span class="keyword">int</span>) User</span><br><span class="line"> Create(ctx context.Context, user User) User</span><br><span class="line"> Update(ctx context.Context, id <span class="keyword">int</span>, user User) User</span><br><span class="line"> Delete(ctx context.Context, id <span class="keyword">int</span>) <span class="keyword">bool</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//... then we have the actual struct that &quot;implements&quot; the interface</span></span><br></pre></td></tr></table></figure>
+<div class="gatsby-highlight" data-language="go"><pre class="language-go"><code class="language-go"><span class="token keyword">package</span> db
 
+<span class="token keyword">import</span> <span class="token string">"context"</span>
+
+<span class="token comment">// User --</span>
+<span class="token keyword">type</span> User <span class="token keyword">struct</span> <span class="token punctuation">{</span>
+ ID <span class="token builtin">int</span>
+ Email <span class="token builtin">string</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// UsersDb pointless interface</span>
+<span class="token keyword">type</span> UsersDb <span class="token keyword">interface</span> <span class="token punctuation">{</span>
+ <span class="token function">Get</span><span class="token punctuation">(</span>ctx context<span class="token punctuation">.</span>Context<span class="token punctuation">,</span> id <span class="token builtin">int</span><span class="token punctuation">)</span> User
+ <span class="token function">Create</span><span class="token punctuation">(</span>ctx context<span class="token punctuation">.</span>Context<span class="token punctuation">,</span> user User<span class="token punctuation">)</span> User
+ <span class="token function">Update</span><span class="token punctuation">(</span>ctx context<span class="token punctuation">.</span>Context<span class="token punctuation">,</span> id <span class="token builtin">int</span><span class="token punctuation">,</span> user User<span class="token punctuation">)</span> User
+ <span class="token function">Delete</span><span class="token punctuation">(</span>ctx context<span class="token punctuation">.</span>Context<span class="token punctuation">,</span> id <span class="token builtin">int</span><span class="token punctuation">)</span> <span class="token builtin">bool</span>
+<span class="token punctuation">}</span>
+<span class="token comment">//... then we have the actual struct that "implements" the interface</span></code></pre></div>
 <p>What benefit does this bring to the package? Some say mocking capabilities. From what I’ve seen to mock that kind of package, you need a generator that generates and updates the mocks.</p>
 <p>A better approach is to follow what Golang wiki describes:</p>
 <blockquote>
 <p>Go interfaces generally belong in the package that uses values of the interface type, not the package that implements those values.</p>
 </blockquote>
-<p>In the case of our <code>db</code> package, we defined an interface without knowing if another consumer implements it. But how do we test? And I think that’s the wrong question to ask, the right question is, how does my business logic require User information?</p>
+<p>In the case of our <code class="language-text">db</code> package, we defined an interface without knowing if another consumer implements it. But how do we test? And I think that’s the wrong question to ask, the right question is, how does my business logic require User information?</p>
 <p>Let’s assume that we have a simple business requirement: when retrieving the name, the name its always uppercase.</p>
-<p>You define a dumb <code>business</code> package, so you follow separation of concerns and get something like:</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> business</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line"> <span class="string">&quot;context&quot;</span></span><br><span class="line"> <span class="string">&quot;strings&quot;</span></span><br><span class="line"></span><br><span class="line"> <span class="string">&quot;github.com/hyeomans/interface-misuses/db&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">// User --</span></span><br><span class="line"><span class="keyword">type</span> User <span class="keyword">struct</span> &#123;</span><br><span class="line"> Name <span class="keyword">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Service --</span></span><br><span class="line"><span class="keyword">type</span> Service <span class="keyword">struct</span> &#123;</span><br><span class="line"> <span class="comment">//Here you will have logging</span></span><br><span class="line"> <span class="comment">//Counts, etc</span></span><br><span class="line"> userService db.UserService</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// NewService --</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewService</span><span class="params">(userService db.UserService)</span> <span class="title">Service</span></span> &#123;</span><br><span class="line"> <span class="keyword">return</span> Service&#123;</span><br><span class="line"> userService: userService,</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// GetUser --</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s Service)</span> <span class="title">GetUser</span><span class="params">(ctx context.Context, id <span class="keyword">int</span>)</span> <span class="title">User</span></span> &#123;</span><br><span class="line"> dbUser := s.userService.Get(ctx, id)</span><br><span class="line"> <span class="keyword">return</span> User&#123;Name: strings.ToUpper(dbUser.Name)&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>You define a dumb <code class="language-text">business</code> package, so you follow separation of concerns and get something like:</p>
+<div class="gatsby-highlight" data-language="go"><pre class="language-go"><code class="language-go"><span class="token keyword">package</span> business
 
-<p>You followed dependency injection and because you defined an <code>interface</code> of <code>db.UserService</code> you can generate mocks and get testing.</p>
+<span class="token keyword">import</span> <span class="token punctuation">(</span>
+ <span class="token string">"context"</span>
+ <span class="token string">"strings"</span>
+
+ <span class="token string">"github.com/hyeomans/interface-misuses/db"</span>
+<span class="token punctuation">)</span>
+
+<span class="token comment">// User --</span>
+<span class="token keyword">type</span> User <span class="token keyword">struct</span> <span class="token punctuation">{</span>
+ Name <span class="token builtin">string</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// Service --</span>
+<span class="token keyword">type</span> Service <span class="token keyword">struct</span> <span class="token punctuation">{</span>
+ <span class="token comment">//Here you will have logging</span>
+ <span class="token comment">//Counts, etc</span>
+ userService db<span class="token punctuation">.</span>UserService
+<span class="token punctuation">}</span>
+
+<span class="token comment">// NewService --</span>
+<span class="token keyword">func</span> <span class="token function">NewService</span><span class="token punctuation">(</span>userService db<span class="token punctuation">.</span>UserService<span class="token punctuation">)</span> Service <span class="token punctuation">{</span>
+ <span class="token keyword">return</span> Service<span class="token punctuation">{</span>
+ userService<span class="token punctuation">:</span> userService<span class="token punctuation">,</span>
+ <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// GetUser --</span>
+<span class="token keyword">func</span> <span class="token punctuation">(</span>s Service<span class="token punctuation">)</span> <span class="token function">GetUser</span><span class="token punctuation">(</span>ctx context<span class="token punctuation">.</span>Context<span class="token punctuation">,</span> id <span class="token builtin">int</span><span class="token punctuation">)</span> User <span class="token punctuation">{</span>
+ dbUser <span class="token operator">:=</span> s<span class="token punctuation">.</span>userService<span class="token punctuation">.</span><span class="token function">Get</span><span class="token punctuation">(</span>ctx<span class="token punctuation">,</span> id<span class="token punctuation">)</span>
+ <span class="token keyword">return</span> User<span class="token punctuation">{</span>Name<span class="token punctuation">:</span> strings<span class="token punctuation">.</span><span class="token function">ToUpper</span><span class="token punctuation">(</span>dbUser<span class="token punctuation">.</span>Name<span class="token punctuation">)</span><span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre></div>
+<p>You followed dependency injection and because you defined an <code class="language-text">interface</code> of <code class="language-text">db.UserService</code> you can generate mocks and get testing.</p>
 <p>However, there is much boilerplate code to get testing and mocking. There is a more straightforward way to do it, taking advantage of what Golang wiki says:</p>
 <blockquote>
-<p>Do not define interfaces on the implementor side of an API “for mocking”; instead, design the API so that it can be tested using the public API of the real implementation.<br><a target="_blank" rel="noopener" href="https://github.com/golang/go/wiki/CodeReviewComments#interfaces">https://github.com/golang/go/wiki/CodeReviewComments#interfaces</a></p>
+<p>Do not define interfaces on the implementor side of an API “for mocking”; instead, design the API so that it can be tested using the public API of the real implementation.
+<a href="https://github.com/golang/go/wiki/CodeReviewComments#interfaces">https://github.com/golang/go/wiki/CodeReviewComments#interfaces</a></p>
 </blockquote>
-<p>Let’s define an interface with only <em>one</em> method in <code>business.Service</code>, then instead of injecting the whole <code>db.UserService</code>, substitute that with your new interface.</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> business</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line"> <span class="string">&quot;context&quot;</span></span><br><span class="line"> <span class="string">&quot;strings&quot;</span></span><br><span class="line"></span><br><span class="line"> <span class="string">&quot;github.com/hyeomans/interface-misuses/db&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">// User --</span></span><br><span class="line"><span class="keyword">type</span> User <span class="keyword">struct</span> &#123;</span><br><span class="line"> Name <span class="keyword">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// UserGetter &lt;---- This interface is defined in the</span></span><br><span class="line"><span class="comment">// consumer side.</span></span><br><span class="line"><span class="comment">// &quot;Do not define interfaces before they are used&quot;</span></span><br><span class="line"><span class="keyword">type</span> UserGetter <span class="keyword">interface</span> &#123;</span><br><span class="line"> Get(ctx context.Context, id <span class="keyword">int</span>) db.User</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Service --</span></span><br><span class="line"><span class="keyword">type</span> Service <span class="keyword">struct</span> &#123;</span><br><span class="line"> userGetter UserGetter <span class="comment">// &lt;--- Change this</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// NewService --</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewService</span><span class="params">(userGetter UserGetter)</span> <span class="title">Service</span></span> &#123;</span><br><span class="line"> <span class="keyword">return</span> Service&#123;</span><br><span class="line"> userGetter: userGetter, <span class="comment">// &lt;----- Change this</span></span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// GetUser --</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s Service)</span> <span class="title">GetUser</span><span class="params">(ctx context.Context, id <span class="keyword">int</span>)</span> <span class="title">User</span></span> &#123;</span><br><span class="line"> dbUser := s.userGetter.Get(ctx, id) <span class="comment">// You still get a dbUser</span></span><br><span class="line"> <span class="keyword">return</span> User&#123;Name: strings.ToUpper(dbUser.Name)&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Let’s define an interface with only <em>one</em> method in <code class="language-text">business.Service</code>, then instead of injecting the whole <code class="language-text">db.UserService</code>, substitute that with your new interface.</p>
+<div class="gatsby-highlight" data-language="go"><pre class="language-go"><code class="language-go"><span class="token keyword">package</span> business
 
-<p>Your <code>main.go</code> file looks something like:</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line"> <span class="string">&quot;context&quot;</span></span><br><span class="line"> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"> <span class="string">&quot;github.com/hyeomans/interface-misuses/business&quot;</span></span><br><span class="line"> <span class="string">&quot;github.com/hyeomans/interface-misuses/db&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line"> ctx := context.Background()</span><br><span class="line"> userService := db.NewUserService()</span><br><span class="line"> service := business.NewService(userService)</span><br><span class="line"></span><br><span class="line"> user := service.GetUser(ctx, <span class="number">1</span>)</span><br><span class="line"> fmt.Println(user.Name)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<span class="token keyword">import</span> <span class="token punctuation">(</span>
+ <span class="token string">"context"</span>
+ <span class="token string">"strings"</span>
 
-<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>Golang allows the perfect inversion of control, thanks to this pattern. In its essence, it is abstract, but once you start playing with it, it’s powerful.</p>
+ <span class="token string">"github.com/hyeomans/interface-misuses/db"</span>
+<span class="token punctuation">)</span>
+
+<span class="token comment">// User --</span>
+<span class="token keyword">type</span> User <span class="token keyword">struct</span> <span class="token punctuation">{</span>
+ Name <span class="token builtin">string</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// UserGetter &lt;---- This interface is defined in the</span>
+<span class="token comment">// consumer side.</span>
+<span class="token comment">// "Do not define interfaces before they are used"</span>
+<span class="token keyword">type</span> UserGetter <span class="token keyword">interface</span> <span class="token punctuation">{</span>
+ <span class="token function">Get</span><span class="token punctuation">(</span>ctx context<span class="token punctuation">.</span>Context<span class="token punctuation">,</span> id <span class="token builtin">int</span><span class="token punctuation">)</span> db<span class="token punctuation">.</span>User
+<span class="token punctuation">}</span>
+
+<span class="token comment">// Service --</span>
+<span class="token keyword">type</span> Service <span class="token keyword">struct</span> <span class="token punctuation">{</span>
+ userGetter UserGetter <span class="token comment">// &lt;--- Change this</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// NewService --</span>
+<span class="token keyword">func</span> <span class="token function">NewService</span><span class="token punctuation">(</span>userGetter UserGetter<span class="token punctuation">)</span> Service <span class="token punctuation">{</span>
+ <span class="token keyword">return</span> Service<span class="token punctuation">{</span>
+ userGetter<span class="token punctuation">:</span> userGetter<span class="token punctuation">,</span> <span class="token comment">// &lt;----- Change this</span>
+ <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// GetUser --</span>
+<span class="token keyword">func</span> <span class="token punctuation">(</span>s Service<span class="token punctuation">)</span> <span class="token function">GetUser</span><span class="token punctuation">(</span>ctx context<span class="token punctuation">.</span>Context<span class="token punctuation">,</span> id <span class="token builtin">int</span><span class="token punctuation">)</span> User <span class="token punctuation">{</span>
+ dbUser <span class="token operator">:=</span> s<span class="token punctuation">.</span>userGetter<span class="token punctuation">.</span><span class="token function">Get</span><span class="token punctuation">(</span>ctx<span class="token punctuation">,</span> id<span class="token punctuation">)</span> <span class="token comment">// You still get a dbUser</span>
+ <span class="token keyword">return</span> User<span class="token punctuation">{</span>Name<span class="token punctuation">:</span> strings<span class="token punctuation">.</span><span class="token function">ToUpper</span><span class="token punctuation">(</span>dbUser<span class="token punctuation">.</span>Name<span class="token punctuation">)</span><span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre></div>
+<p>Your <code class="language-text">main.go</code> file looks something like:</p>
+<div class="gatsby-highlight" data-language="go"><pre class="language-go"><code class="language-go"><span class="token keyword">package</span> main
+
+<span class="token keyword">import</span> <span class="token punctuation">(</span>
+ <span class="token string">"context"</span>
+ <span class="token string">"fmt"</span>
+
+ <span class="token string">"github.com/hyeomans/interface-misuses/business"</span>
+ <span class="token string">"github.com/hyeomans/interface-misuses/db"</span>
+<span class="token punctuation">)</span>
+
+<span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+ ctx <span class="token operator">:=</span> context<span class="token punctuation">.</span><span class="token function">Background</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+ userService <span class="token operator">:=</span> db<span class="token punctuation">.</span><span class="token function">NewUserService</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+ service <span class="token operator">:=</span> business<span class="token punctuation">.</span><span class="token function">NewService</span><span class="token punctuation">(</span>userService<span class="token punctuation">)</span>
+
+ user <span class="token operator">:=</span> service<span class="token punctuation">.</span><span class="token function">GetUser</span><span class="token punctuation">(</span>ctx<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span>
+ fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span>user<span class="token punctuation">.</span>Name<span class="token punctuation">)</span>
+<span class="token punctuation">}</span></code></pre></div>
+<h2>Conclusion</h2>
+<p>Golang allows the perfect inversion of control, thanks to this pattern. In its essence, it is abstract, but once you start playing with it, it’s powerful.</p>
 <p>If you need more information about this pattern, there are other great blog posts:</p>
-<p><a target="_blank" rel="noopener" href="https://github.com/golang/go/wiki/CodeReviewComments#interfaces">https://github.com/golang/go/wiki/CodeReviewComments#interfaces</a><br><a target="_blank" rel="noopener" href="https://dave.cheney.net/2016/08/20/solid-go-design">https://dave.cheney.net/2016/08/20/solid-go-design</a><br><a target="_blank" rel="noopener" href="https://twitter.com/davecheney/status/1030790804011245569?lang=en">https://twitter.com/davecheney/status/1030790804011245569?lang=en</a><br><a target="_blank" rel="noopener" href="https://www.ardanlabs.com/blog/2017/07/interface-semantics.html">https://www.ardanlabs.com/blog/2017/07/interface-semantics.html</a><br><a target="_blank" rel="noopener" href="https://github.com/ardanlabs/gotraining/blob/master/topics/go/design/composition/pollution/example1/example1.go">https://github.com/ardanlabs/gotraining/blob/master/topics/go/design/composition/pollution/example1/example1.go</a></p>
-
-  </div>
-</article>
-
-
-
-        
-          <div id="footer-post-container">
-  <div id="footer-post">
-
-    <div id="nav-footer" style="display: none">
-      <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/archives/">Writing</a></li>
-         
-          <li><a target="_blank" rel="noopener" href="http://github.com/hyeomans">Projects</a></li>
-        
-      </ul>
-    </div>
-
-    <div id="toc-footer" style="display: none">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Conclusion"><span class="toc-number">1.</span> <span class="toc-text">Conclusion</span></a></li></ol>
-    </div>
-
-    <div id="share-footer" style="display: none">
-      <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://hyeomans.com/golang-and-interfaces-misuse/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://hyeomans.com/golang-and-interfaces-misuse/&text=Golang and interfaces misuse"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://hyeomans.com/golang-and-interfaces-misuse/&title=Golang and interfaces misuse"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://hyeomans.com/golang-and-interfaces-misuse/&is_video=false&description=Golang and interfaces misuse"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=Golang and interfaces misuse&body=Check out this article: https://hyeomans.com/golang-and-interfaces-misuse/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://hyeomans.com/golang-and-interfaces-misuse/&title=Golang and interfaces misuse"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://hyeomans.com/golang-and-interfaces-misuse/&title=Golang and interfaces misuse"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://hyeomans.com/golang-and-interfaces-misuse/&title=Golang and interfaces misuse"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://hyeomans.com/golang-and-interfaces-misuse/&title=Golang and interfaces misuse"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://hyeomans.com/golang-and-interfaces-misuse/&name=Golang and interfaces misuse&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://hyeomans.com/golang-and-interfaces-misuse/&t=Golang and interfaces misuse"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
-</ul>
-
-    </div>
-
-    <div id="actions-footer">
-        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
-        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
-        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
-        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
-    </div>
-
-  </div>
-</div>
-
-        
-        <footer id="footer">
-  <div class="footer-left">
-    Copyright &copy;
-    
-    
-    2016-2020
-    Hector Yeomans
-  </div>
-  <div class="footer-right">
-    <nav>
-      <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/archives/">Writing</a></li>
-         
-          <li><a target="_blank" rel="noopener" href="http://github.com/hyeomans">Projects</a></li>
-        
-      </ul>
-    </nav>
-  </div>
-</footer>
-
-    </div>
-    <!-- styles -->
-
-<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
-
-
-<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
-
-
-    <!-- jquery -->
-
-<script src="/lib/jquery/jquery.min.js"></script>
-
-
-<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
-
-<!-- clipboard -->
-
+<p><a href="https://github.com/golang/go/wiki/CodeReviewComments#interfaces">https://github.com/golang/go/wiki/CodeReviewComments#interfaces</a>
+<a href="https://dave.cheney.net/2016/08/20/solid-go-design">https://dave.cheney.net/2016/08/20/solid-go-design</a>
+<a href="https://twitter.com/davecheney/status/1030790804011245569?lang=en">https://twitter.com/davecheney/status/1030790804011245569?lang=en</a>
+<a href="https://www.ardanlabs.com/blog/2017/07/interface-semantics.html">https://www.ardanlabs.com/blog/2017/07/interface-semantics.html</a>
+<a href="https://github.com/ardanlabs/gotraining/blob/master/topics/go/design/composition/pollution/example1/example1.go">https://github.com/ardanlabs/gotraining/blob/master/topics/go/design/composition/pollution/example1/example1.go</a></p></div><hr style="margin-bottom:1.75rem"/><div style="display:flex;margin-bottom:4.375rem"><div class=" gatsby-image-wrapper" style="position:relative;overflow:hidden;display:inline-block;width:50px;height:50px;margin-right:0.875rem;margin-bottom:0;min-width:50px;border-radius:100%"><img aria-hidden="true" src="data:image/jpeg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wgARCAAUABQDASIAAhEBAxEB/8QAGQABAQADAQAAAAAAAAAAAAAAAAIBAwQF/8QAFAEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEAMQAAAB765bMPPGiAkH/8QAGxAAAgIDAQAAAAAAAAAAAAAAAQIAAxAREhP/2gAIAQEAAQUCaMRPVJU3ZLhTY69sx3vH/8QAFBEBAAAAAAAAAAAAAAAAAAAAIP/aAAgBAwEBPwEf/8QAFBEBAAAAAAAAAAAAAAAAAAAAIP/aAAgBAgEBPwEf/8QAHhAAAQQBBQAAAAAAAAAAAAAAAQACETIQEiExQYH/2gAIAQEABj8CYMWhOmwW4hVB9Wrs85//xAAcEAACAgMBAQAAAAAAAAAAAAABEQBBITFRYRD/2gAIAQEAAT8hUnxcDCvwTqBCjia01nFRpS6LjI59iCMyDpcbvz//2gAMAwEAAgADAAAAEGDHPP/EABQRAQAAAAAAAAAAAAAAAAAAACD/2gAIAQMBAT8QH//EABQRAQAAAAAAAAAAAAAAAAAAACD/2gAIAQIBAT8QH//EAB4QAQACAgIDAQAAAAAAAAAAAAEAESExQWFRobHB/9oACAEBAAE/EMmgDymFlHFi9Y5lqiBSKh7I4DaQKXoP5GxdPY5fHcapmfwYg/YKwtdX6itWnjLHc//Z" alt="Hector Yeomans" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:1;transition-delay:500ms"/><noscript><picture><source srcset="/static/501c8835029bc4a789cda7304fd7435c/99438/profile-pic.jpg 1x,
+/static/501c8835029bc4a789cda7304fd7435c/aba1d/profile-pic.jpg 1.5x,
+/static/501c8835029bc4a789cda7304fd7435c/b315d/profile-pic.jpg 2x" /><img loading="lazy" width="50" height="50" srcset="/static/501c8835029bc4a789cda7304fd7435c/99438/profile-pic.jpg 1x,
+/static/501c8835029bc4a789cda7304fd7435c/aba1d/profile-pic.jpg 1.5x,
+/static/501c8835029bc4a789cda7304fd7435c/b315d/profile-pic.jpg 2x" src="/static/501c8835029bc4a789cda7304fd7435c/99438/profile-pic.jpg" alt="Hector Yeomans" style="position:absolute;top:0;left:0;opacity:1;width:100%;height:100%;object-fit:cover;object-position:center"/></picture></noscript></div><p>Written by <strong>Hector Yeomans</strong> who lives in Mexico and works remotely for Invision.<!-- --> <a href="https://twitter.com/h_yeomans">Follow him on Twitter</a>, <a href="https://www.linkedin.com/in/hector-yeomans">or add him on LinkedIn.</a></p></div><ul style="display:flex;flex-wrap:wrap;justify-content:space-between;list-style:none;padding:0"><li><a rel="prev" href="/typescript_jest_axios/">← <!-- -->Typescript, Jest and Axios</a></li><li><a rel="next" href="/migrate-node-package-typescript-rollup/">Convert node package with Typescript and Rollup<!-- --> →</a></li></ul></div></div><div id="gatsby-announcer" style="position:absolute;top:0;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;border:0" aria-live="assertive" aria-atomic="true"></div></div><script>
   
-<script src="/lib/clipboard/clipboard.min.js"></script>
-
-  <script type="text/javascript">
-  $(function() {
-    // copy-btn HTML
-    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
-    btn += '<i class="far fa-clone"></i>';
-    btn += '</span>'; 
-    // mount it!
-    $(".highlight table").before(btn);
-    var clip = new ClipboardJS('.btn-copy', {
-      text: function(trigger) {
-        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
-      }
-    });
-    clip.on('success', function(e) {
-      e.trigger.setAttribute('aria-label', "Copied!");
-      e.clearSelection();
-    })
-  })
-  </script>
-
-
-<script src="/js/main.js"></script>
-
-<!-- search -->
-
-<!-- Google Analytics -->
-
-<!-- Baidu Analytics -->
-
-<!-- Umami Analytics -->
-
-<!-- Disqus Comments -->
-
-
-</body>
-</html>
+  
+  if(true) {
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  }
+  if (typeof ga === "function") {
+    ga('create', 'UA-49713985-1', 'auto', {});
+      
+      
+      
+      
+      
+      }</script><script id="gatsby-script-loader">/*<![CDATA[*/window.pagePath="/golang-and-interfaces-misuse/";/*]]>*/</script><script id="gatsby-chunk-mapping">/*<![CDATA[*/window.___chunkMapping={"app":["/app-ec0443be98f6cdfa558f.js"],"component---node-modules-gatsby-plugin-offline-app-shell-js":["/component---node-modules-gatsby-plugin-offline-app-shell-js-fda762d692133a373e8f.js"],"component---src-pages-404-js":["/component---src-pages-404-js-466a4228a73d103cd5c1.js"],"component---src-pages-index-js":["/component---src-pages-index-js-65dcd5a95c67c45aed55.js"],"component---src-templates-blog-post-js":["/component---src-templates-blog-post-js-0143863c511669032f7c.js"]};/*]]>*/</script><script src="/component---src-templates-blog-post-js-0143863c511669032f7c.js" async=""></script><script src="/cd7d5f864fc9e15ed8adef086269b0aeff617554-034434e94fa07313e65e.js" async=""></script><script src="/d5d7a013bc6c1e2b6d7db819052c16d7efea5559-57831105da7b10a119ce.js" async=""></script><script src="/app-ec0443be98f6cdfa558f.js" async=""></script><script src="/styles-cd63080e784be7b7e7cf.js" async=""></script><script src="/framework-5fc6169171e885c3b522.js" async=""></script><script src="/webpack-runtime-8a4177c8dab90579a24f.js" async=""></script></body></html>

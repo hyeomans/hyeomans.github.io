@@ -1,0 +1,978 @@
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Hector Yeomans Blog]]></title><description><![CDATA[Personal blog.]]></description><link>https://hyeomans.com</link><generator>GatsbyJS</generator><lastBuildDate>Thu, 28 Jan 2021 22:10:40 GMT</lastBuildDate><item><title><![CDATA[Convert node package with Typescript and Rollup]]></title><description><![CDATA[I already had a library that I wanted to convert to Typescript. I picked Rollup.js to do my build process. First I installed the following…]]></description><link>https://hyeomans.com/migrate-node-package-typescript-rollup/</link><guid isPermaLink="false">https://hyeomans.com/migrate-node-package-typescript-rollup/</guid><pubDate>Sat, 30 May 2020 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;I already had &lt;a href=&quot;https://github.com/hyeomans/zuora-js&quot;&gt;a library&lt;/a&gt; that I wanted to convert to Typescript. I picked Rollup.js to do my build process.&lt;/p&gt;
+&lt;p&gt;First I installed the following packages:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;npm&lt;/span&gt; i -E -D rollup typescript @rollup/plugin-commonjs @rollup/plugin-node-resolve rollup-plugin-typescript2 rollup-plugin-peer-deps-external&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I ended up with:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;* rollup-plugin-typescript2@0.27.1
+* rollup@2.11.2
+* typescript@3.9.3
+* rollup-plugin-peer-deps-external@2.2.2
+* @rollup/plugin-node-resolve@8.0.0
+* @rollup/plugin-commonjs@12.0.0&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Then I created a &lt;code class=&quot;language-text&quot;&gt;tsconfig.json&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;json&quot;&gt;&lt;pre class=&quot;language-json&quot;&gt;&lt;code class=&quot;language-json&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;token property&quot;&gt;&quot;compilerOptions&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;token property&quot;&gt;&quot;outDir&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;build&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;token property&quot;&gt;&quot;module&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;esnext&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;token property&quot;&gt;&quot;target&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;es5&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;token property&quot;&gt;&quot;lib&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;es6&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;dom&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;es2016&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;es2017&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;token property&quot;&gt;&quot;sourceMap&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;token property&quot;&gt;&quot;allowJs&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;token property&quot;&gt;&quot;declaration&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;token property&quot;&gt;&quot;moduleResolution&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;node&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;token property&quot;&gt;&quot;forceConsistentCasingInFileNames&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;token property&quot;&gt;&quot;noImplicitReturns&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;token property&quot;&gt;&quot;noImplicitThis&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;token property&quot;&gt;&quot;noImplicitAny&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;token property&quot;&gt;&quot;strictNullChecks&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;token property&quot;&gt;&quot;suppressImplicitAnyIndexErrors&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;token property&quot;&gt;&quot;noUnusedLocals&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;token property&quot;&gt;&quot;noUnusedParameters&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;token property&quot;&gt;&quot;esModuleInterop&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;token property&quot;&gt;&quot;allowSyntheticDefaultImports&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;token property&quot;&gt;&quot;include&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;src&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;token property&quot;&gt;&quot;exclude&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;node_modules&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;build&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Also a &lt;code class=&quot;language-text&quot;&gt;rollup.config.js&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;js&quot;&gt;&lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; typescript &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;rollup-plugin-typescript2&apos;&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; external &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;rollup-plugin-peer-deps-external&apos;&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; commonjs &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;@rollup/plugin-commonjs&apos;&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; resolve &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;@rollup/plugin-node-resolve&apos;&lt;/span&gt;
+
+&lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; pkg &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;./package.json&apos;&lt;/span&gt;
+
+&lt;span class=&quot;token keyword&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;default&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+  input&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;src/index.ts&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+  output&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+      file&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; pkg&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;main&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+      format&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;cjs&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+      exports&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;named&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+      sourcemap&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+      file&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; pkg&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;module&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+      format&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;es&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+      exports&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;named&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+      sourcemap&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+  plugins&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;
+    &lt;span class=&quot;token function&quot;&gt;external&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;token function&quot;&gt;resolve&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;token function&quot;&gt;typescript&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+      rollupCommonJSResolveHack&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+      exclude&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;**/__tests__/**&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+      clean&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;token function&quot;&gt;commonjs&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+      include&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;node_modules/**&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Modified my &lt;code class=&quot;language-text&quot;&gt;package.json&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;json&quot;&gt;&lt;pre class=&quot;language-json&quot;&gt;&lt;code class=&quot;language-json&quot;&gt;  &lt;span class=&quot;token property&quot;&gt;&quot;main&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;build/index.js&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;token property&quot;&gt;&quot;module&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;build/index.es.js&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;token property&quot;&gt;&quot;jsnext:main&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;build/index.es.js&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;token property&quot;&gt;&quot;files&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;build&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;token property&quot;&gt;&quot;scripts&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;token property&quot;&gt;&quot;build&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;rollup -c&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    ...
+  &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Finally I created a dummy &lt;code class=&quot;language-text&quot;&gt;index.ts&lt;/code&gt; for testing:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;ts&quot;&gt;&lt;pre class=&quot;language-ts&quot;&gt;&lt;code class=&quot;language-ts&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;token builtin&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;hello world&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And ran:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;npm&lt;/span&gt; run build&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;ESLINT&lt;/h3&gt;
+&lt;p&gt;I had to update eslint packages:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token function&quot;&gt;npm&lt;/span&gt; i -E -D @typescript-eslint/parser @typescript-eslint/eslint-plugin&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Ended up with:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;* @typescript-eslint/parser@3.0.2
+* @typescript-eslint/eslint-plugin@3.0.2&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And then modified my &lt;code class=&quot;language-text&quot;&gt;.eslintrc.js&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;js&quot;&gt;&lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token operator&quot;&gt;...&lt;/span&gt;
+parser&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;@typescript-eslint/parser&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;extends&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;
+    &lt;span class=&quot;token string&quot;&gt;&apos;standard&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;token string&quot;&gt;&apos;eslint:recommended&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;token string&quot;&gt;&apos;plugin:@typescript-eslint/recommended&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+  plugins&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;@typescript-eslint&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;token operator&quot;&gt;...&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;You can see the resulting branch here:&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/hyeomans/zuora-js/tree/ts-rollup&quot;&gt;https://github.com/hyeomans/zuora-js/tree/ts-rollup&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Thanks for reading!&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Golang and interfaces misuse]]></title><description><![CDATA[One of my favorite things about Golang is the concept of interface. It’s also one of my grievances every time I see them used as C#/Java…]]></description><link>https://hyeomans.com/golang-and-interfaces-misuse/</link><guid isPermaLink="false">https://hyeomans.com/golang-and-interfaces-misuse/</guid><pubDate>Sat, 18 Jan 2020 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;One of my favorite things about Golang is the concept of interface. It’s also one of my grievances every time I see them used as C#/Java interfaces.&lt;/p&gt;
+&lt;p&gt;It’s typical to see a colossal interface defined at a package level file, for example, a package that defines CRUD operations for a User.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;go&quot;&gt;&lt;pre class=&quot;language-go&quot;&gt;&lt;code class=&quot;language-go&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;package&lt;/span&gt; db
+
+&lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;context&quot;&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;// User --&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;type&lt;/span&gt; User &lt;span class=&quot;token keyword&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+ ID &lt;span class=&quot;token builtin&quot;&gt;int&lt;/span&gt;
+ Email &lt;span class=&quot;token builtin&quot;&gt;string&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;// UsersDb pointless interface&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;type&lt;/span&gt; UsersDb &lt;span class=&quot;token keyword&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+ &lt;span class=&quot;token function&quot;&gt;Get&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;ctx context&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;Context&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; id &lt;span class=&quot;token builtin&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; User
+ &lt;span class=&quot;token function&quot;&gt;Create&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;ctx context&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;Context&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; user User&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; User
+ &lt;span class=&quot;token function&quot;&gt;Update&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;ctx context&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;Context&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; id &lt;span class=&quot;token builtin&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; user User&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; User
+ &lt;span class=&quot;token function&quot;&gt;Delete&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;ctx context&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;Context&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; id &lt;span class=&quot;token builtin&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token builtin&quot;&gt;bool&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token comment&quot;&gt;//... then we have the actual struct that &quot;implements&quot; the interface&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;What benefit does this bring to the package? Some say mocking capabilities. From what I’ve seen to mock that kind of package, you need a generator that generates and updates the mocks.&lt;/p&gt;
+&lt;p&gt;A better approach is to follow what Golang wiki describes:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Go interfaces generally belong in the package that uses values of the interface type, not the package that implements those values.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;In the case of our &lt;code class=&quot;language-text&quot;&gt;db&lt;/code&gt; package, we defined an interface without knowing if another consumer implements it. But how do we test? And I think that’s the wrong question to ask, the right question is, how does my business logic require User information?&lt;/p&gt;
+&lt;p&gt;Let’s assume that we have a simple business requirement: when retrieving the name, the name its always uppercase.&lt;/p&gt;
+&lt;p&gt;You define a dumb &lt;code class=&quot;language-text&quot;&gt;business&lt;/code&gt; package, so you follow separation of concerns and get something like:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;go&quot;&gt;&lt;pre class=&quot;language-go&quot;&gt;&lt;code class=&quot;language-go&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;package&lt;/span&gt; business
+
+&lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;
+ &lt;span class=&quot;token string&quot;&gt;&quot;context&quot;&lt;/span&gt;
+ &lt;span class=&quot;token string&quot;&gt;&quot;strings&quot;&lt;/span&gt;
+
+ &lt;span class=&quot;token string&quot;&gt;&quot;github.com/hyeomans/interface-misuses/db&quot;&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;// User --&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;type&lt;/span&gt; User &lt;span class=&quot;token keyword&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+ Name &lt;span class=&quot;token builtin&quot;&gt;string&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;// Service --&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;type&lt;/span&gt; Service &lt;span class=&quot;token keyword&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+ &lt;span class=&quot;token comment&quot;&gt;//Here you will have logging&lt;/span&gt;
+ &lt;span class=&quot;token comment&quot;&gt;//Counts, etc&lt;/span&gt;
+ userService db&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;UserService
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;// NewService --&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;NewService&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;userService db&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;UserService&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; Service &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+ &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; Service&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+ userService&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; userService&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+ &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;// GetUser --&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;s Service&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;GetUser&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;ctx context&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;Context&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; id &lt;span class=&quot;token builtin&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; User &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+ dbUser &lt;span class=&quot;token operator&quot;&gt;:=&lt;/span&gt; s&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;userService&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;Get&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;ctx&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; id&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+ &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; User&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;Name&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; strings&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;ToUpper&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;dbUser&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;Name&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;You followed dependency injection and because you defined an &lt;code class=&quot;language-text&quot;&gt;interface&lt;/code&gt; of &lt;code class=&quot;language-text&quot;&gt;db.UserService&lt;/code&gt; you can generate mocks and get testing.&lt;/p&gt;
+&lt;p&gt;However, there is much boilerplate code to get testing and mocking. There is a more straightforward way to do it, taking advantage of what Golang wiki says:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Do not define interfaces on the implementor side of an API “for mocking”; instead, design the API so that it can be tested using the public API of the real implementation.
+&lt;a href=&quot;https://github.com/golang/go/wiki/CodeReviewComments#interfaces&quot;&gt;https://github.com/golang/go/wiki/CodeReviewComments#interfaces&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Let’s define an interface with only &lt;em&gt;one&lt;/em&gt; method in &lt;code class=&quot;language-text&quot;&gt;business.Service&lt;/code&gt;, then instead of injecting the whole &lt;code class=&quot;language-text&quot;&gt;db.UserService&lt;/code&gt;, substitute that with your new interface.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;go&quot;&gt;&lt;pre class=&quot;language-go&quot;&gt;&lt;code class=&quot;language-go&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;package&lt;/span&gt; business
+
+&lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;
+ &lt;span class=&quot;token string&quot;&gt;&quot;context&quot;&lt;/span&gt;
+ &lt;span class=&quot;token string&quot;&gt;&quot;strings&quot;&lt;/span&gt;
+
+ &lt;span class=&quot;token string&quot;&gt;&quot;github.com/hyeomans/interface-misuses/db&quot;&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;// User --&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;type&lt;/span&gt; User &lt;span class=&quot;token keyword&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+ Name &lt;span class=&quot;token builtin&quot;&gt;string&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;// UserGetter &amp;lt;---- This interface is defined in the&lt;/span&gt;
+&lt;span class=&quot;token comment&quot;&gt;// consumer side.&lt;/span&gt;
+&lt;span class=&quot;token comment&quot;&gt;// &quot;Do not define interfaces before they are used&quot;&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;type&lt;/span&gt; UserGetter &lt;span class=&quot;token keyword&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+ &lt;span class=&quot;token function&quot;&gt;Get&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;ctx context&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;Context&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; id &lt;span class=&quot;token builtin&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; db&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;User
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;// Service --&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;type&lt;/span&gt; Service &lt;span class=&quot;token keyword&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+ userGetter UserGetter &lt;span class=&quot;token comment&quot;&gt;// &amp;lt;--- Change this&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;// NewService --&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;NewService&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;userGetter UserGetter&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; Service &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+ &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; Service&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+ userGetter&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; userGetter&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// &amp;lt;----- Change this&lt;/span&gt;
+ &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;// GetUser --&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;s Service&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;GetUser&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;ctx context&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;Context&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; id &lt;span class=&quot;token builtin&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; User &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+ dbUser &lt;span class=&quot;token operator&quot;&gt;:=&lt;/span&gt; s&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;userGetter&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;Get&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;ctx&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; id&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// You still get a dbUser&lt;/span&gt;
+ &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; User&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;Name&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; strings&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;ToUpper&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;dbUser&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;Name&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Your &lt;code class=&quot;language-text&quot;&gt;main.go&lt;/code&gt; file looks something like:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;go&quot;&gt;&lt;pre class=&quot;language-go&quot;&gt;&lt;code class=&quot;language-go&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;package&lt;/span&gt; main
+
+&lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;
+ &lt;span class=&quot;token string&quot;&gt;&quot;context&quot;&lt;/span&gt;
+ &lt;span class=&quot;token string&quot;&gt;&quot;fmt&quot;&lt;/span&gt;
+
+ &lt;span class=&quot;token string&quot;&gt;&quot;github.com/hyeomans/interface-misuses/business&quot;&lt;/span&gt;
+ &lt;span class=&quot;token string&quot;&gt;&quot;github.com/hyeomans/interface-misuses/db&quot;&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;token keyword&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+ ctx &lt;span class=&quot;token operator&quot;&gt;:=&lt;/span&gt; context&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;Background&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+ userService &lt;span class=&quot;token operator&quot;&gt;:=&lt;/span&gt; db&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;NewUserService&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+ service &lt;span class=&quot;token operator&quot;&gt;:=&lt;/span&gt; business&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;NewService&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;userService&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+
+ user &lt;span class=&quot;token operator&quot;&gt;:=&lt;/span&gt; service&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;GetUser&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;ctx&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+ fmt&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;Println&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;user&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;Name&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;Golang allows the perfect inversion of control, thanks to this pattern. In its essence, it is abstract, but once you start playing with it, it’s powerful.&lt;/p&gt;
+&lt;p&gt;If you need more information about this pattern, there are other great blog posts:&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/golang/go/wiki/CodeReviewComments#interfaces&quot;&gt;https://github.com/golang/go/wiki/CodeReviewComments#interfaces&lt;/a&gt;
+&lt;a href=&quot;https://dave.cheney.net/2016/08/20/solid-go-design&quot;&gt;https://dave.cheney.net/2016/08/20/solid-go-design&lt;/a&gt;
+&lt;a href=&quot;https://twitter.com/davecheney/status/1030790804011245569?lang=en&quot;&gt;https://twitter.com/davecheney/status/1030790804011245569?lang=en&lt;/a&gt;
+&lt;a href=&quot;https://www.ardanlabs.com/blog/2017/07/interface-semantics.html&quot;&gt;https://www.ardanlabs.com/blog/2017/07/interface-semantics.html&lt;/a&gt;
+&lt;a href=&quot;https://github.com/ardanlabs/gotraining/blob/master/topics/go/design/composition/pollution/example1/example1.go&quot;&gt;https://github.com/ardanlabs/gotraining/blob/master/topics/go/design/composition/pollution/example1/example1.go&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Typescript, Jest and Axios]]></title><description><![CDATA[I found different posts that tell you how to mock Axios using Jest & Typescript. The only difference in this post is that, when I use Axios…]]></description><link>https://hyeomans.com/typescript_jest_axios/</link><guid isPermaLink="false">https://hyeomans.com/typescript_jest_axios/</guid><pubDate>Sun, 03 Nov 2019 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;I found different posts that tell you how to mock Axios using Jest &amp;#x26; Typescript. The only difference in this post is that, when I use Axios, I like to use it as a function rather than calling &lt;code class=&quot;language-text&quot;&gt;axios.get&lt;/code&gt; or &lt;code class=&quot;language-text&quot;&gt;axios.post&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Imagine you have this Axios request that you want to mock in your tests:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;typescript&quot;&gt;&lt;pre class=&quot;language-typescript&quot;&gt;&lt;code class=&quot;language-typescript&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;//src/index.ts&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; axios &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;axios&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;token keyword&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Post&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+ userId&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token builtin&quot;&gt;number&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+ id&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token builtin&quot;&gt;number&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+ title&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token builtin&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+ body&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token builtin&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; DummyRequest &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;id&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token builtin&quot;&gt;number&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token builtin&quot;&gt;Promise&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;Post&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+ &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;axios&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+ method&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;GET&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+ url&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token template-string&quot;&gt;&lt;span class=&quot;token template-punctuation string&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;https://jsonplaceholder.typicode.com/posts/&lt;/span&gt;&lt;span class=&quot;token interpolation&quot;&gt;&lt;span class=&quot;token interpolation-punctuation punctuation&quot;&gt;${&lt;/span&gt;id&lt;span class=&quot;token interpolation-punctuation punctuation&quot;&gt;}&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token template-punctuation string&quot;&gt;`&lt;/span&gt;&lt;/span&gt;
+ &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;then&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token parameter&quot;&gt;response&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+ &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;...&lt;/span&gt;response&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;data &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+ &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;token keyword&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;default&lt;/span&gt; DummyRequest&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Install jest and jest-ts and initialize jest-ts&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt;npm i -D ts-jest jest
+&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt;npx ts-jest config:init&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This last command will create a &lt;code class=&quot;language-text&quot;&gt;jest.config.js&lt;/code&gt; file:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;js&quot;&gt;&lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;//jest.config.js&lt;/span&gt;
+module&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;exports &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+  preset&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;ts-jest&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+  testEnvironment&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;node&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;In your tsconfig.json file, make &lt;strong&gt;sure that your tests are excluded from the compiler&lt;/strong&gt;:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;json&quot;&gt;&lt;pre class=&quot;language-json&quot;&gt;&lt;code class=&quot;language-json&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;//tsconfig.json&lt;/span&gt;
+...
+&lt;span class=&quot;token property&quot;&gt;&quot;exclude&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;
+      &lt;span class=&quot;token string&quot;&gt;&quot;test/**/*&quot;&lt;/span&gt; &amp;lt;--Add this to your exclude array
+ &lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+...&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now we can create a test for our DummyRequest.ts, create this file under &lt;code class=&quot;language-text&quot;&gt;test/index.test.ts&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;typescript&quot;&gt;&lt;pre class=&quot;language-typescript&quot;&gt;&lt;code class=&quot;language-typescript&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; axios&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; AxiosResponse &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;axios&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; DummyRequest &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;../src&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; mocked &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;ts-jest/dist/util/testing&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;//&amp;lt;-- This allows to mock results&lt;/span&gt;
+
+jest&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;mock&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;axios&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;//This is needed to allow jest to modify axios at runtime&lt;/span&gt;
+
+&lt;span class=&quot;token function&quot;&gt;it&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;returns a post&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;token comment&quot;&gt;//Arrange&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; axiosResponse&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; AxiosResponse &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    data&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    userId&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    id&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    title&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token string&quot;&gt;&quot;sunt aut facere repellat provident occaecati excepturi optioreprehenderit&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    body&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token string&quot;&gt;&quot;quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto&quot;&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    status&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;200&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    statusText&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;OK&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    config&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    headers&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+  &lt;span class=&quot;token function&quot;&gt;mocked&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;axios&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;mockResolvedValue&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;axiosResponse&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;//Mocking axios function rather than a method&lt;/span&gt;
+  
+  &lt;span class=&quot;token comment&quot;&gt;//Act&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; result &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;DummyRequest&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+  &lt;span class=&quot;token comment&quot;&gt;//Assert&lt;/span&gt;
+  &lt;span class=&quot;token function&quot;&gt;expect&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;result&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;toBe&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    userId&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    id&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    title&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token string&quot;&gt;&quot;sunt aut facere repellat provident occaecati excepturi optioreprehenderit&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    body&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token string&quot;&gt;&quot;quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto&quot;&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now you can mock the whole Axios function rather than specific methods.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Software as stitching]]></title><description><![CDATA[Photo by Alexander Andrews on Unsplash  Lately, I’ve been thinking that most of the software I’ve done consist of stitching of API’s…]]></description><link>https://hyeomans.com/software-as-stitching/</link><guid isPermaLink="false">https://hyeomans.com/software-as-stitching/</guid><pubDate>Thu, 27 Dec 2018 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/24a6e2a24d74e8ec13f4897ecfa5c226/afea9/stitching.jpg&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 630px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 66.45569620253164%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/jpeg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wgARCAANABQDASIAAhEBAxEB/8QAGAAAAgMAAAAAAAAAAAAAAAAAAAECAwX/xAAVAQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEAMQAAABx63FAQf/xAAXEAADAQAAAAAAAAAAAAAAAAABEBEh/9oACAEBAAEFAgMVf//EABQRAQAAAAAAAAAAAAAAAAAAABD/2gAIAQMBAT8BP//EABQRAQAAAAAAAAAAAAAAAAAAABD/2gAIAQIBAT8BP//EABQQAQAAAAAAAAAAAAAAAAAAACD/2gAIAQEABj8CX//EABgQAAMBAQAAAAAAAAAAAAAAAAABESEQ/9oACAEBAAE/IdOVoaIYRef/2gAMAwEAAgADAAAAEATf/8QAFBEBAAAAAAAAAAAAAAAAAAAAEP/aAAgBAwEBPxA//8QAFBEBAAAAAAAAAAAAAAAAAAAAEP/aAAgBAgEBPxA//8QAGRABAQEBAQEAAAAAAAAAAAAAAQARIUFx/9oACAEBAAE/ECd11B5kiq8+WLSBLtb/2Q==&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;stitching&quot;
+        title=&quot;&quot;
+        src=&quot;/static/24a6e2a24d74e8ec13f4897ecfa5c226/828fb/stitching.jpg&quot;
+        srcset=&quot;/static/24a6e2a24d74e8ec13f4897ecfa5c226/ff44c/stitching.jpg 158w,
+/static/24a6e2a24d74e8ec13f4897ecfa5c226/a6688/stitching.jpg 315w,
+/static/24a6e2a24d74e8ec13f4897ecfa5c226/828fb/stitching.jpg 630w,
+/static/24a6e2a24d74e8ec13f4897ecfa5c226/0ede0/stitching.jpg 945w,
+/static/24a6e2a24d74e8ec13f4897ecfa5c226/3ac88/stitching.jpg 1260w,
+/static/24a6e2a24d74e8ec13f4897ecfa5c226/afea9/stitching.jpg 6040w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    
+&lt;sub&gt;&lt;sup&gt;Photo by Alexander Andrews on Unsplash&lt;/sup&gt;&lt;/sub&gt; &lt;/p&gt;
+&lt;p&gt;Lately, I’ve been thinking that most of the software I’ve done consist of stitching of API’s. Imagine you work on
+the team that is in charge of handling payments. It doesn’t matter if you’re working on the front-end or the back-end,
+it usually goes like this:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;We (the company you work for) have a new payment provider.&lt;/li&gt;
+&lt;li&gt;We must integrate with their API.&lt;/li&gt;
+&lt;li&gt;We must accommodate our business logic to their API.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;You have to take consideration of several layers in between, this list includes but is not limited to: validation, logging, error handling, persistence, a source of truth, actual business logic. Almost everything becomes a cross-cutting concern, authentication, logging, caching; however, in the end, the hardest part is making sense or making an abstraction of
+the new API to conform to the company business logic.&lt;/p&gt;
+&lt;p&gt;This is where my idea of stitching comes to mind; you don’t know from the beginning how everything has to be laid out. Just as you stitch, you don’t know for sure if the combination of API call is going to work as you’re picturing it in your head.&lt;/p&gt;
+&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/da64eed371676f699d4370e31f05d4a7/12609/stitching-2.jpg&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 630px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 56.32911392405063%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/jpeg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wgARCAALABQDASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAIFAwT/xAAVAQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEAMQAAAB4kqRzIcs/8QAGhAAAwADAQAAAAAAAAAAAAAAAQIDABESIf/aAAgBAQABBQIwdcK8pvWUJEmJJp5T/8QAFBEBAAAAAAAAAAAAAAAAAAAAEP/aAAgBAwEBPwE//8QAFBEBAAAAAAAAAAAAAAAAAAAAEP/aAAgBAgEBPwE//8QAHBABAAIBBQAAAAAAAAAAAAAAAQARAhAhMVFx/9oACAEBAAY/AtyzsZY86ekwuM//xAAaEAEAAwEBAQAAAAAAAAAAAAABABEhMVGh/9oACAEBAAE/IfqIKh3IfeMFiGUa6y1l4EIE4M//2gAMAwEAAgADAAAAEEvv/8QAGBEAAgMAAAAAAAAAAAAAAAAAAAERITH/2gAIAQMBAT8QhG2f/8QAFREBAQAAAAAAAAAAAAAAAAAAARD/2gAIAQIBAT8QWf/EABsQAQEBAAMBAQAAAAAAAAAAAAERACExQVFx/9oACAEBAAE/ELwfKkD9TS4LhVD0mMQpzmBroe6s6DL3L9xrxAG//9k=&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;stitching 2&quot;
+        title=&quot;&quot;
+        src=&quot;/static/da64eed371676f699d4370e31f05d4a7/828fb/stitching-2.jpg&quot;
+        srcset=&quot;/static/da64eed371676f699d4370e31f05d4a7/ff44c/stitching-2.jpg 158w,
+/static/da64eed371676f699d4370e31f05d4a7/a6688/stitching-2.jpg 315w,
+/static/da64eed371676f699d4370e31f05d4a7/828fb/stitching-2.jpg 630w,
+/static/da64eed371676f699d4370e31f05d4a7/0ede0/stitching-2.jpg 945w,
+/static/da64eed371676f699d4370e31f05d4a7/3ac88/stitching-2.jpg 1260w,
+/static/da64eed371676f699d4370e31f05d4a7/12609/stitching-2.jpg 3000w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    
+&lt;sub&gt;&lt;sup&gt;Photo by Dương Trần Quốc on Unsplash&lt;/sup&gt;&lt;/sub&gt; &lt;/p&gt;
+&lt;p&gt;I’m not saying that software stitching is easy, but it can become repetitive.&lt;/p&gt;
+&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/b25a7c4164645ed54b1b8e9e0fc83c0f/e5166/stitching-3.jpg&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 630px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 66.45569620253164%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/jpeg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wgARCAANABQDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAIDBP/EABYBAQEBAAAAAAAAAAAAAAAAAAEAAv/aAAwDAQACEAMQAAABk2ZHNSAX/8QAGhAAAgMBAQAAAAAAAAAAAAAAAQIAAxESIf/aAAgBAQABBQJryTRZxGLWNvhyK+T/xAAUEQEAAAAAAAAAAAAAAAAAAAAQ/9oACAEDAQE/AT//xAAUEQEAAAAAAAAAAAAAAAAAAAAQ/9oACAECAQE/AT//xAAdEAACAgEFAAAAAAAAAAAAAAAAAQIRQRIxUXGR/9oACAEBAAY/AnxZqwOUbS7EjYz6f//EABoQAQADAQEBAAAAAAAAAAAAAAEAESExQcH/2gAIAQEAAT8h0P2AeQNtpXdiwWOHEboPLgR9RShTbyk//9oADAMBAAIAAwAAABCwP//EABURAQEAAAAAAAAAAAAAAAAAAAAR/9oACAEDAQE/EKr/xAAVEQEBAAAAAAAAAAAAAAAAAAAAIf/aAAgBAgEBPxBH/8QAHRABAQACAgMBAAAAAAAAAAAAAREAITFxUWGRsf/aAAgBAQABPxC0ryYASb9t7uB13UKhx3G01PjvHMmhIAu5i6cjlWfmQIFQo3n/2Q==&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;stitching 3&quot;
+        title=&quot;&quot;
+        src=&quot;/static/b25a7c4164645ed54b1b8e9e0fc83c0f/828fb/stitching-3.jpg&quot;
+        srcset=&quot;/static/b25a7c4164645ed54b1b8e9e0fc83c0f/ff44c/stitching-3.jpg 158w,
+/static/b25a7c4164645ed54b1b8e9e0fc83c0f/a6688/stitching-3.jpg 315w,
+/static/b25a7c4164645ed54b1b8e9e0fc83c0f/828fb/stitching-3.jpg 630w,
+/static/b25a7c4164645ed54b1b8e9e0fc83c0f/0ede0/stitching-3.jpg 945w,
+/static/b25a7c4164645ed54b1b8e9e0fc83c0f/e5166/stitching-3.jpg 1200w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;</content:encoded></item><item><title><![CDATA[Resilience with Disyuntor - Circuit Breaker]]></title><description><![CDATA[Resilience means the capacity to recover quickly from difficulties. Circuit breaker pattern is a good practice for resilience. When working…]]></description><link>https://hyeomans.com/resilience-disyuntor-nodejs-circuit-breaker/</link><guid isPermaLink="false">https://hyeomans.com/resilience-disyuntor-nodejs-circuit-breaker/</guid><pubDate>Sat, 27 May 2017 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;Resilience means the capacity to recover quickly from difficulties. Circuit breaker pattern is a good practice for resilience.&lt;/p&gt;
+&lt;p&gt;When working with distributed systems, you want resilience. If you’re working with “micro-services,”
+you probably have faced with the problem of a service going down. When X service goes down, and Y and Z depend on X,
+every internal exception could potentially start taking other services down. &lt;/p&gt;
+&lt;p&gt;If you don’t work with micro-services, you might still have an integration with a payment provider
+(PayPal, Stripe, Google Play, etc.). What happens when any of those providers goes down?
+Imagine a request comes to your internal service, then your service makes a request to Stripe,
+then Stripe takes 30 seconds to tell you there was something wrong. How many requests have
+queued up in 30 seconds in your service?&lt;/p&gt;
+&lt;p&gt;Circuit Breaker is a pattern that can help you with this problem. The Circuit Breaker pattern
+became famous after Release It! book. To be honest the first time I heard about this
+patterns was in 2011 on Dependency Injection in .NET.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;“Circuit Breaker is a stability pattern because it adds robustness to an application by failing
+fast, instead of hanging and consuming resources while it hangs. This is a good example of a nonfunctional
+requirement and a true CROSS-CUTTING CONCERN, because it has little to do with the feature implemented with the out-of-process call.”&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Excerpt From: Mark Seemann. “Dependency Injection in .NET.” 2011&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;_&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;“Residential fuses have gone the way of the rotary dial telephone. Now, circuit breakers
+protect overeager gadget hounds from burning their houses down. The principle is the same:
+detect excess usage, fail first, and open the circuit. More abstractly, the circuit breaker exists
+to allow one subsystem (an electrical circuit) to fail (excessive current draw, possibly from a
+short-circuit) without destroying the entire system (the house). Furthermore, once the danger has
+passed, the circuit breaker can be reset to restore full function to the system.”&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Excerpt From: Michael T. Nygard. “Release It!” 2007&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;There are three states on a Circuit Breaker implementation:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Open&lt;/li&gt;
+&lt;li&gt;Half-Open&lt;/li&gt;
+&lt;li&gt;Closed&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The closed state represents a healthy system. Going back to the Stripe example,
+the closed state means requests come and go without the known existence of a Circuit breaker.&lt;/p&gt;
+&lt;p&gt;Circuit breaker takes passive action when that HTTP call fails. On every failure,
+the circuit breaker is listening for failures. The Circuit Breaker opens when the
+threshold of failures, or rate of failures, is met.&lt;/p&gt;
+&lt;p&gt;Once the circuit breaker is open, every HTTP call will fail immediately, bypassing
+the real call to Stripe. After a pre-defined period, the Circuit Breaker tries a
+real call to Stripe, leaving the Circuit Breaker on a half-open state. &lt;/p&gt;
+&lt;p&gt;On a half-open state, if the request to Stripe succeeds, the Circuit Breaker returns
+to a closed state, if it fails it returns to an open state.&lt;/p&gt;
+&lt;p&gt;Usually, an open state call is a custom exception. When using a Circuit Breaker
+implementation, make sure you log and monitor this kind of exceptions.&lt;/p&gt;
+&lt;h2&gt;Disyuntor&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/auth0/disyuntor&quot;&gt;Disyuntor&lt;/a&gt; is an implementation of Circuit Breaker in Node.js by &lt;a href=&quot;https://auth0.com/&quot;&gt;Auth0&lt;/a&gt;. This npm package lets you wrap a critical function in a Circuit Breaker pattern.&lt;/p&gt;
+&lt;p&gt;In this tutorial, you will create two services. One of them will be flaky for a deterministic
+period. The other will issue requests.&lt;/p&gt;
+&lt;p&gt;After that, we will add Disyuntor and wrap the call in a Circuit Breaker pattern. You will see the three states in action.&lt;/p&gt;
+&lt;h3&gt;Pre-requisites&lt;/h3&gt;
+&lt;p&gt;This is a Node.js tutorial, but also I will use yarn to install packages. Whenever you see &lt;code class=&quot;language-text&quot;&gt;yarn add --exact {package}&lt;/code&gt; can
+be replace with &lt;code class=&quot;language-text&quot;&gt;npm install --exact {package}&lt;/code&gt;. Also I’m doing this in macOS Sierra, so this is a *nix OS. I will try my
+best to make it cross-platform.&lt;/p&gt;
+&lt;p&gt;Let’s create a new project, open up your console and type:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;$&amp;gt; mkdir disyuntor-example &amp;amp;&amp;amp; cd $_
+$disyuntor-example&amp;gt; yarn init -y #or npm init -y&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We will use Express.js to mock out our two services:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;$disyuntor-example&amp;gt; yarn add --exact express&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Create the flaky server first: &lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;js&quot;&gt;&lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;// flaky.js&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; app &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;express&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+app&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;/:id&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token parameter&quot;&gt;req&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; res&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; next&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt; param &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; req&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;params&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;id&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;param &lt;span class=&quot;token operator&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;0&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;token function&quot;&gt;blockFor&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+    res&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;sendStatus&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;503&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    res&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;status&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;200&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;send&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;I am ok now.&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;blockFor&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token parameter&quot;&gt;seconds&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt; waitTill &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Date&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Date&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;getTime&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt; seconds &lt;span class=&quot;token operator&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;1000&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;while&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;waitTill &lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Date&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+app&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;listen&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;3000&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; console&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;Flaky app is listening on port 3000&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;For the sake of this tutorial you will use a simple parameter to control if the server is flaky or not. You will notice the function &lt;code class=&quot;language-text&quot;&gt;blockFor(seconds)&lt;/code&gt;, this was added to simulate a service that takes time to return.&lt;/p&gt;
+&lt;p&gt;Before creating the other service, you need to add npm packages to create http request to the flaky service. Also you will add a helper package to run both services from a single command:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token variable&quot;&gt;$disyuntor&lt;/span&gt;-example&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;yarn&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;add&lt;/span&gt; --exact got bluebird concurrently&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now let’s create our consumer service:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;js&quot;&gt;&lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;// consumer.js&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; app     &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;express&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; got     &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;got&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+app&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;/:id&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token parameter&quot;&gt;req&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; res&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; next&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;got&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token template-string&quot;&gt;&lt;span class=&quot;token template-punctuation string&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;http://localhost:3000/&lt;/span&gt;&lt;span class=&quot;token interpolation&quot;&gt;&lt;span class=&quot;token interpolation-punctuation punctuation&quot;&gt;${&lt;/span&gt;req&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;params&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;id&lt;span class=&quot;token interpolation-punctuation punctuation&quot;&gt;}&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token template-punctuation string&quot;&gt;`&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;then&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+      res&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;sendStatus&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;200&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;catch&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+      res&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;sendStatus&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;503&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+app&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;listen&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;4000&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; console&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;Consumer service is listening on port 4000&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;As a final step add a &lt;code class=&quot;language-text&quot;&gt;start&lt;/code&gt; under &lt;code class=&quot;language-text&quot;&gt;scripts&lt;/code&gt; into your &lt;code class=&quot;language-text&quot;&gt;package.json&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;json&quot;&gt;&lt;pre class=&quot;language-json&quot;&gt;&lt;code class=&quot;language-json&quot;&gt;...
+&lt;span class=&quot;token property&quot;&gt;&quot;scripts&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;token property&quot;&gt;&quot;start&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;concurrently \&quot;node flaky\&quot; \&quot;node consumer\&quot; &quot;&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+...&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Going back to your terminal window, you can type:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token variable&quot;&gt;$disyuntor&lt;/span&gt;-example&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;npm&lt;/span&gt; start
+&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; concurrently &lt;span class=&quot;token string&quot;&gt;&quot;node flaky&quot;&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;node consumer&quot;&lt;/span&gt;
+
+&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt; Flaky app is listening on port &lt;span class=&quot;token number&quot;&gt;3000&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt; Consumer &lt;span class=&quot;token function&quot;&gt;service&lt;/span&gt; is listening on port &lt;span class=&quot;token number&quot;&gt;4000&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Both services are running, now in a different terminal window you can make a Curl request:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token variable&quot;&gt;$disyuntor&lt;/span&gt;-example&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;curl&lt;/span&gt; -I http://localhost:4000/1
+HTTP/1.1 &lt;span class=&quot;token number&quot;&gt;200&lt;/span&gt; OK
+X-Powered-By: Express
+Content-Type: text/plain&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;token assign-left variable&quot;&gt;charset&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;utf-8
+Content-Length: &lt;span class=&quot;token number&quot;&gt;2&lt;/span&gt;
+ETag: W/&lt;span class=&quot;token string&quot;&gt;&quot;2-nOO9QiTIwXgNtWtBJezz8kv3SLc&quot;&lt;/span&gt;
+Connection: keep-alive&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now try to do a request that you know it will return 503:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token variable&quot;&gt;$disyuntor&lt;/span&gt;-example&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;curl&lt;/span&gt; -I http://localhost:4000/0
+HTTP/1.1 &lt;span class=&quot;token number&quot;&gt;503&lt;/span&gt; Service Unavailable
+X-Powered-By: Express
+Content-Type: text/plain&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;token assign-left variable&quot;&gt;charset&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;utf-8
+Content-Length: &lt;span class=&quot;token number&quot;&gt;19&lt;/span&gt;
+ETag: W/&lt;span class=&quot;token string&quot;&gt;&quot;13-/70LdyMNgL+PAJa+Q/RtnRF82z8&quot;&lt;/span&gt;
+Date: Sun, &lt;span class=&quot;token number&quot;&gt;28&lt;/span&gt; May &lt;span class=&quot;token number&quot;&gt;2017&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;14&lt;/span&gt;:26:29 GMT
+Connection: keep-alive&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now imagine this is a production setup. Your flaky service is an internal service that has gone down. Your public service start swamping with requests your internal service. After a while your public service becomes unresponsive. &lt;/p&gt;
+&lt;p&gt;You can even reproduce that scenario with this command:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token variable&quot;&gt;$disyuntor&lt;/span&gt;-example&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;curl&lt;/span&gt; -I http://localhost:4000/0 &lt;span class=&quot;token operator&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;curl&lt;/span&gt; -I http://localhost:4000/0 &lt;span class=&quot;token operator&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;curl&lt;/span&gt; -I http://localhost:4000/0&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;You will notice that takes more than 10 seconds to finish all the requests.&lt;/p&gt;
+&lt;p&gt;You can stop both services by pressing Ctrl+C.&lt;/p&gt;
+&lt;p&gt;Let’s add Disyuntor to circuit break this requests:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token variable&quot;&gt;$disyuntor&lt;/span&gt;-example&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;yarn&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;add&lt;/span&gt; --exact disyuntor&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Modify your consumer service:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;js&quot;&gt;&lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; app       &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;express&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; got       &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;got&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; disyuntor &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;disyuntor&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; safeGot &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; disyuntor&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;promise&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;got&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+  name&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;got.request&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+  timeout&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;10s&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+  cooldown&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;5s&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+  maxFailures&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;token function-variable function&quot;&gt;onTrip&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token parameter&quot;&gt;err&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; failures&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; cooldown&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; console&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token template-string&quot;&gt;&lt;span class=&quot;token template-punctuation string&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;got.request triped because it failed &lt;/span&gt;&lt;span class=&quot;token interpolation&quot;&gt;&lt;span class=&quot;token interpolation-punctuation punctuation&quot;&gt;${&lt;/span&gt;failures&lt;span class=&quot;token interpolation-punctuation punctuation&quot;&gt;}&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt; times. Last error was &lt;/span&gt;&lt;span class=&quot;token interpolation&quot;&gt;&lt;span class=&quot;token interpolation-punctuation punctuation&quot;&gt;${&lt;/span&gt;err&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;message&lt;span class=&quot;token interpolation-punctuation punctuation&quot;&gt;}&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;! There will be no more attempts for &lt;/span&gt;&lt;span class=&quot;token interpolation&quot;&gt;&lt;span class=&quot;token interpolation-punctuation punctuation&quot;&gt;${&lt;/span&gt;cooldown&lt;span class=&quot;token interpolation-punctuation punctuation&quot;&gt;}&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;ms&lt;/span&gt;&lt;span class=&quot;token template-punctuation string&quot;&gt;`&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+app&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;/:id&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token parameter&quot;&gt;req&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; res&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; next&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;safeGot&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token template-string&quot;&gt;&lt;span class=&quot;token template-punctuation string&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;http://localhost:3000/&lt;/span&gt;&lt;span class=&quot;token interpolation&quot;&gt;&lt;span class=&quot;token interpolation-punctuation punctuation&quot;&gt;${&lt;/span&gt;req&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;params&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;id&lt;span class=&quot;token interpolation-punctuation punctuation&quot;&gt;}&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token template-punctuation string&quot;&gt;`&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;then&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+      res&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;sendStatus&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;200&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;catch&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+      res&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;sendStatus&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;500&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+app&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;listen&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;4000&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; console&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;Consumer service is listening on port 4000&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Start both services again with &lt;code class=&quot;language-text&quot;&gt;npm start&lt;/code&gt;. Start sending requests with curl:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token variable&quot;&gt;$disyuntor&lt;/span&gt;-example&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;curl&lt;/span&gt; -I http://localhost:4000/0&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;You will see this message where you started your services:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt; got.request triped because it failed &lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt; times. Last error was Response code &lt;span class=&quot;token number&quot;&gt;503&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;Ser
+vice Unavailable&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;!&lt;/span&gt; There will be no &lt;span class=&quot;token function&quot;&gt;more&lt;/span&gt; attempts &lt;span class=&quot;token keyword&quot;&gt;for&lt;/span&gt; 5000ms&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Let’s try this:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token variable&quot;&gt;$disyuntor&lt;/span&gt;-example&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;curl&lt;/span&gt; -I http://localhost:4000/0 &lt;span class=&quot;token operator&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;curl&lt;/span&gt; -I http://localhost:4000/0 &lt;span class=&quot;token operator&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;curl&lt;/span&gt; -I http://localhost:4000/0&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;You will notice that the first request takes the expected 5 seconds but subsequent request fail immediatedly. This is the Circuit Breaker pattern in action. &lt;/p&gt;
+&lt;p&gt;After the first failure, the circuit becomes open. Then after the &lt;em&gt;cooldown&lt;/em&gt; period the circuit becomes half-open. If we issue another request after 5 seconds, you will see that it tries again to contact the flaky service.&lt;/p&gt;
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;When working with multiple external services — either a Db or http service — a good resilience practice is to add a circuit breaker.&lt;/p&gt;
+&lt;p&gt;Disyuntor is a good circuit breaker library, it lacks of some features, but it gets the work done. &lt;/p&gt;</content:encoded></item><item><title><![CDATA[Redis, STunnel, and C#]]></title><description><![CDATA[In this blog post, I will try to demonstrate how to setup a working environment with StackExchange.Redis package is communicating to a Redis…]]></description><link>https://hyeomans.com/redis-stunnel-and-c/</link><guid isPermaLink="false">https://hyeomans.com/redis-stunnel-and-c/</guid><pubDate>Wed, 25 Jan 2017 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;In this blog post, I will try to demonstrate how to setup a working environment with StackExchange.Redis package is communicating to a Redis box using SSL through STunel. &lt;/p&gt;
+&lt;p&gt;By the end of this post, you will have a working environment on Vagrant like this:&lt;/p&gt;
+&lt;!--more--&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;nohighlight&quot;&gt;&lt;pre class=&quot;language-nohighlight&quot;&gt;&lt;code class=&quot;language-nohighlight&quot;&gt;                                           +------------------------------+
+                                           |                              |
+                                           |                 Vagrant Box  |
++--------------+                           +---------+       Ubuntu 14.04 |
+|              |      +------------+       |         |                    |
+|  C# Program  +------+    SSL     +-------+ STunnel +----+               |
+|              |      +------------+       |         |    |               |
+|              |                           +---------+    |               |
++--------------+                           |              |               |
+                                           |              |               |
+                                           |       +------v-------+       |
+                                           |       |              |       |
+                                           |       |              |       |
+                                           |       |    Redis     |       |
+                                           |       |              |       |
+                                           |       |              |       |
+                                           +-------+--------------+-------+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Redis and SSL&lt;/h2&gt;
+&lt;p&gt;Our first step is to install Redis and then generate a self-signed certificate to be able to connect through an STunnel.&lt;/p&gt;
+&lt;p&gt;For this post, we will use Ubuntu 14 on Vagrant, let me know if you want to know how to do it in AWS/Ubuntu 16.&lt;/p&gt;
+&lt;h2&gt;Setting up Vagrant&lt;/h2&gt;
+&lt;p&gt;Open up the command line, create a new directory:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;&amp;gt;cd C:\
+&amp;gt;C:\mkdir redis-ssl-test
+&amp;gt;C:\cd redis-ssl-test
+&amp;gt;C:\redis-ssl-test&amp;gt; mkdir redis-vagrant
+&amp;gt;C:\redis-ssl-test&amp;gt;cd redis-vagrant
+&amp;gt;C:\redis-ssl-test\redis-vagrant&amp;gt; vagrant init&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Open up your &lt;code class=&quot;language-text&quot;&gt;Vagrant&lt;/code&gt; file, and it should look like this:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;ruby&quot;&gt;&lt;pre class=&quot;language-ruby&quot;&gt;&lt;code class=&quot;language-ruby&quot;&gt;&lt;span class=&quot;token constant&quot;&gt;Vagrant&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;configure&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;config&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;
+  config&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;vm&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;box &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;ubuntu/trusty64&quot;&lt;/span&gt;
+  config&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;vm&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;hostname &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;redis-stunnel&quot;&lt;/span&gt;
+  config&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;vm&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;network &lt;span class=&quot;token symbol&quot;&gt;:private_network&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; ip&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;10.0.15.10&quot;&lt;/span&gt;
+  config&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;vm&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;network &lt;span class=&quot;token string&quot;&gt;&quot;forwarded_port&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; guest&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;6380&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; host&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;6380&lt;/span&gt;
+  config&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;vm&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;provider &lt;span class=&quot;token string&quot;&gt;&quot;virtualbox&quot;&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;vb&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;
+    vb&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;memory &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;4024&quot;&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;end&lt;/span&gt;
+  config&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;vm&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;provision &lt;span class=&quot;token string&quot;&gt;&quot;shell&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; inline&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;token constant&quot;&gt;SCRIPT&lt;/span&gt;
+    &lt;span class=&quot;token comment&quot;&gt;#!/bin/bash&lt;/span&gt;
+    echo &lt;span class=&quot;token string&quot;&gt;&quot;Adding apt-repository&quot;&lt;/span&gt;
+    add&lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;apt&lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;repository &lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;y ppa&lt;span class=&quot;token symbol&quot;&gt;:chris&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;lea&lt;span class=&quot;token operator&quot;&gt;/&lt;/span&gt;redis&lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;server
+    echo &lt;span class=&quot;token string&quot;&gt;&quot;Updating and upgrading&quot;&lt;/span&gt;
+    apt&lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;get update &lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;y &lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;qq &lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;/&lt;/span&gt;dev&lt;span class=&quot;token operator&quot;&gt;/&lt;/span&gt;null
+    apt&lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;get upgrade &lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;y &lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;qq &lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;/&lt;/span&gt;dev&lt;span class=&quot;token operator&quot;&gt;/&lt;/span&gt;null
+    echo &lt;span class=&quot;token string&quot;&gt;&quot;Installing redis and stunnel&quot;&lt;/span&gt;
+    apt&lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;get &lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;y &lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;q install redis&lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;server stunnel4
+  &lt;span class=&quot;token constant&quot;&gt;SCRIPT&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Please note that the shell script is inline for convenience. There is nothing especial about this setup; we only forward port 6380 for our SSL communication.&lt;/p&gt;
+&lt;p&gt;Go back to the command line and type:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;&amp;gt;C:\redis-ssl-test\redis-vagrant&amp;gt;vagrant up &amp;amp;&amp;amp; vagrant ssh&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;You should be inside your test Ubuntu environment. Inside here let’s see if we correctly installed Redis.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;vagrant@redis-stunnel:~$ redis-cli ping
+PONG&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We don’t have to do anything with redis; STunnel will be the one you configure. &lt;/p&gt;
+&lt;p&gt;The next step is to enable STunnel, open up stunnel configuration file:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;vagrant@redis-stunnel:~$ sudo vim /etc/default/stunnel4&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And change &lt;code class=&quot;language-text&quot;&gt;ENABLED=0&lt;/code&gt; to &lt;code class=&quot;language-text&quot;&gt;ENABLED=1&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;. . .
+ENABLED=1
+. . .&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;After that, you need to create a public/private certificate. &lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;vagrant@redis-stunnel:~$ sudo openssl req -x509 -nodes -days 3650 -newkey rsa:4096 -keyout /etc/stunnel/redis-server.key -out /etc/stunnel/redis-server.crt&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;You will get some questions regarding the certificate; the most important ones are &lt;strong&gt;Common Name&lt;/strong&gt; and &lt;strong&gt;Organization Name&lt;/strong&gt;. Make sure these match the IP address of your Vagrant box.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;Country Name (2 letter code) [AU]:US
+State or Province Name (full name) [Some-State]:
+Locality Name (eg, city) []:
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:10.0.15.10
+Organizational Unit Name (eg, section) []:
+Common Name (e.g. server FQDN or YOUR name) []:10.0.15.10
+Email Address []:&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;After generating the certificates, we will create a new configuration file for STunnel. This configuration will tell STunnel to &lt;strong&gt;listen to an external port&lt;/strong&gt; and redirect traffic to an internal port. In this case, we want STunnel listening to port 6380 and redirecting traffic to port 6379. 6379 is the default Redis port.&lt;/p&gt;
+&lt;p&gt;Go back to the command line and type:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;vagrant@redis-stunnel:~$ sudo vim /etc/stunnel/redis.conf&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And type the following configuration:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;pid = /var/run/stunnel.pid
+
+[redis-server]
+cert = /etc/stunnel/redis-server.crt
+key = /etc/stunnel/redis-server.key
+accept = 6380
+connect = 127.0.0.1:6379&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The name inside the brackets &lt;code class=&quot;language-text&quot;&gt;[redis-server]&lt;/code&gt; is something we can name per our convenience.&lt;/p&gt;
+&lt;p&gt;Now you can restart STunnel service:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;vagrant@redis-stunnel:~$ sudo service stunnel4 restart&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Everything should be running correctly. You can confirm this by running:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;vagrant@redis-stunnel:~$ sudo lsof -i :6379
+
+COMMAND    PID  USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+redis-ser 7131 redis    4u  IPv4  16619      0t0  TCP redis-stunnel:6379 (LISTEN)&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;Installing certificate&lt;/h3&gt;
+&lt;p&gt;The last step before going to VisualStudio is to install the new &lt;code class=&quot;language-text&quot;&gt;crt&lt;/code&gt; file into your certificate store.&lt;/p&gt;
+&lt;p&gt;In a real production environment, this should be defined beforehand (probably), but for now, you will install it as part of the Current User Root store.&lt;/p&gt;
+&lt;p&gt;To extract the public certificate from Vagrant, you have to make sure you’re back into Windows command line.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;C:\redis-ssl-test\redis-vagrant&amp;gt; vagrant ssh -c &amp;quot;sudo cat /etc/stunnel/redis-server.crt&amp;quot; &amp;gt; redis-server.crt&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;After that, the certificate file should be sitting next to the Vagrantfile.&lt;/p&gt;
+&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/74607d60838e0229041f5cbaf9e8f147/3ddad/cert-file.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 545px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 53.16455696202532%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAALCAYAAAB/Ca1DAAAACXBIWXMAAB2HAAAdhwGP5fFlAAABKElEQVQoz5VSi26DMAzM//8bFUKaqvKGQqGjKxQKJJBww5mYOrZu7CRLcc6+OLZZXdeoqgpN06DvewzDACGE9jnn6LoObdtqbhxH7S8c3RFH8dM0QSkFdjgcsNvt4LouwjBEWZa4XC4wDANxHMPzPOz3eziOowUozrIsJEmiY0zTRJ7nIEgpwfAAeuUZiKOEZ/F0JmPX8gYnSHA8veqSF2KLPQotYEpN4EJilOrb6+vkn+7XxsBPQOfhWjYffQxC3ehn4n+1hklRQfYFiuINtm0jyzJ0c/MpiaaqNoh8EWxuV6TRC6IoQhAEOJ/PeqK+72sTw/g/Qdo72qskOc7V5UjTFI7t4n6/r76LjYLztzgXc+98vW9hGM0VuqCF/xTEdrDfyPV0t+AdqhNZEXc1z2YAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;cert file&quot;
+        title=&quot;&quot;
+        src=&quot;/static/74607d60838e0229041f5cbaf9e8f147/3ddad/cert-file.png&quot;
+        srcset=&quot;/static/74607d60838e0229041f5cbaf9e8f147/c26ae/cert-file.png 158w,
+/static/74607d60838e0229041f5cbaf9e8f147/6bdcf/cert-file.png 315w,
+/static/74607d60838e0229041f5cbaf9e8f147/3ddad/cert-file.png 545w&quot;
+        sizes=&quot;(max-width: 545px) 100vw, 545px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;
+&lt;p&gt;To install the certificate, you can follow this steps:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Windows + R -&gt; mmc&lt;/li&gt;
+&lt;li&gt;Click on File -&gt; Add/Remove Snap-In&lt;/li&gt;
+&lt;li&gt;Click on Certificates and then “Add &gt;”&lt;/li&gt;
+&lt;li&gt;A new dialog will popup, select “My user account” -&gt; Finish&lt;/li&gt;
+&lt;li&gt;Click OK&lt;/li&gt;
+&lt;li&gt;Under Console Root, make sure to expand “Certificates - Current User.”&lt;/li&gt;
+&lt;li&gt;Click on “Trusted Root Certification Authorities” then on “Certificates” folder.&lt;/li&gt;
+&lt;li&gt;You should see a lot of rows with CA&lt;/li&gt;
+&lt;li&gt;Here click on “More Actions” at the right menu, then “All Tasks” and then “Import.”&lt;/li&gt;
+&lt;li&gt;A new dialog will show, click on Next and then Browse for your certificate file.&lt;/li&gt;
+&lt;li&gt;Click Next, and then Next again and Finish.&lt;/li&gt;
+&lt;li&gt;You will get a Security Warning question, answer Yes&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/fadf52fea2dd239a19f0ef019d910345/45662/import-cert.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 630px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 96.83544303797468%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAATCAYAAACQjC21AAAACXBIWXMAAB2HAAAdhwGP5fFlAAACbUlEQVQ4y51UXY/aMBDk//+fvlZ96Rt3UnWi4asQ54sAgSQ4gSQkTHcM5i4nOFVdaWXFzs7O7o49mKgQ0Uph6nmINjHe5mtESYbj8YiiKFFVFU7iVVWjNHuF2c+zVHyPUuc9H8T+GGoxh7tUKMsShzxH27ZYx5HsLZGlGfb7PbIsw+VyQRiEWC4W+P7zBd9+DPE6CfEiPhwHxgf5QUMnc4xHb1DKE6BYAFJ47lwC/wioC3exhHKVYcbzsTPGaKbwa+JjOFpiFqZw1xrL+IABSyhThcnoFUEQSaklzuczykILYylPF6ZMzcRamyrItq5OADp05wZd28DaQOsD8o2D0PfRdmcJ1iaAnkv5XdfhmUkHjJHAWdrElgyYVW8n8JVresch1HVtfuL3e/DloVtA+68BLHYzA0jbJQl8Yct+cdI8b5rmDmqZfQTkeQ9QJzMEnjI/kh2BTqeTWdmzRhjQWH7bSt+69g7GPQJy7wPgFL4A0jiAQKRhB0A3gxPGthV0nqeiBvt9Z1jcGPreteTqVGG1WiEWedCjKDLrZr25JyFz/uOKlJiEYO+Akl1mLyUeTRl13WAtwQygU8hX8LX0NpC92DCmArgSqM9QSrGTshIhG8/zDVgUCWh4BU3TVG5OalaytNYbimF427STy7IcSbKTiYvvdtKr69VjEJPa5A+n/BHwKxE/FvY/Aj4T8TNhf1ny/9inoRS9LGT5yK00Pu9xtdLpAVJfZgAyQb5/+/3OrOltqpSJfTQ8eYwdx5ELEMD57RgV2OrugKRtHobb4+CrBebTKTx5I5VS5j3cbrcI5J4ThDJiDOXDOAv4F60dudLAel1+AAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;import cert&quot;
+        title=&quot;&quot;
+        src=&quot;/static/fadf52fea2dd239a19f0ef019d910345/f058b/import-cert.png&quot;
+        srcset=&quot;/static/fadf52fea2dd239a19f0ef019d910345/c26ae/import-cert.png 158w,
+/static/fadf52fea2dd239a19f0ef019d910345/6bdcf/import-cert.png 315w,
+/static/fadf52fea2dd239a19f0ef019d910345/f058b/import-cert.png 630w,
+/static/fadf52fea2dd239a19f0ef019d910345/40601/import-cert.png 945w,
+/static/fadf52fea2dd239a19f0ef019d910345/78612/import-cert.png 1260w,
+/static/fadf52fea2dd239a19f0ef019d910345/45662/import-cert.png 1410w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;
+&lt;p&gt;I know, all those steps, there is a Powershell way to do it, but I will let that to you.&lt;/p&gt;
+&lt;p&gt;Once you finished, you will see your new certificate as the first entry on the CA list.&lt;/p&gt;
+&lt;p&gt;You can close the snap-in manager; you don’t need to save console settings.&lt;/p&gt;
+&lt;p&gt;You’re ready to go to Visual Studio and use the newly created certificate.&lt;/p&gt;
+&lt;h2&gt;C# simple project&lt;/h2&gt;
+&lt;p&gt;You will create a simple C# Console application.
+Go to Visual Studio and click on &lt;em&gt;File -&gt; New -&gt; Project -&gt; Console Application&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;For your convenience you can set:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Location: C:\redis-ssl-test&lt;/li&gt;
+&lt;li&gt;Name: RedisSslTest&lt;/li&gt;
+&lt;li&gt;Create directory for solution: unchecked.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/a7f3caa69a68c8a7188333a4311bb9a4/966a0/redis-ssl-start.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 630px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 69.62025316455697%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAOCAYAAAAvxDzwAAAACXBIWXMAAB2HAAAdhwGP5fFlAAACPUlEQVQ4y4VTWXLaQBDVSbywCJCEQLuQDEIIAgFSZMEkVRzAKY7gnIfNBHLEl+6WcUzFlXy8mp6R5vXr7jfKZr3FZrPFer0RcHw8nnA6/cLhcMR+/yR7jrfbney3+yM2HO+eZL/fH+j7T7q7g5IkfTB03YJpOmg0XPhBCNf10WzasG3a+yHK5Qqurm5kNUwLaqWGKGoLXDeAppkwjAYUPvj86R5x3JGDbpohzXpEEtBZG5bloFbTUa1qqBBJvd5AqxVRMgvD4RjvRxNMJh+I+C4n1LQ6Op0eZrMvqNNBlg0wX3yjn6eYTj+KetdtUYJY1jhOMR7PZK/rJiVoUmWWgGOFWVnyiDIlSQ/dbk8Uuq4Hz/PpJxO6ptNlg8rKVz7nmO++hhByljTtUxl3YLVJkqKXZUJo29zT5gU4QU5ovJAwLgi73UzAhO1OF/13A4RhCwENx3Fc6l0VhUIRt7cFURhF8b8JWSGX7HshKY3lUqlUpomqQqaqFYnP4G/5gP4QXRDyIEY0Mc9jRb5c+B840ZnooodcJg8iDGP6SaM+2c+Kzjgru1TJNjpP9jXEh6ys2XTICpHEDbaBHUJvDaCHZPowX7VoCMNPKamFGglR1Sp5lHtpioV4VdjAdaMuTR6NplT+kCacl+44wd9wObmHPrXp4eG7DOj6+uZFucIWCIjUIFJ+FQwm59fxFth/XC67YLH4Sg9ghHa7A49sxq1SisWSNJnlc3zevw31GbkD2Erz+T0eH39gtVphuVziNzrv12Yqihs1AAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;redis ssl start&quot;
+        title=&quot;&quot;
+        src=&quot;/static/a7f3caa69a68c8a7188333a4311bb9a4/f058b/redis-ssl-start.png&quot;
+        srcset=&quot;/static/a7f3caa69a68c8a7188333a4311bb9a4/c26ae/redis-ssl-start.png 158w,
+/static/a7f3caa69a68c8a7188333a4311bb9a4/6bdcf/redis-ssl-start.png 315w,
+/static/a7f3caa69a68c8a7188333a4311bb9a4/f058b/redis-ssl-start.png 630w,
+/static/a7f3caa69a68c8a7188333a4311bb9a4/966a0/redis-ssl-start.png 944w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;
+&lt;p&gt;You will need to add “StackExchange.Redis” NuGet package for this demo. &lt;/p&gt;
+&lt;p&gt;Go to &lt;em&gt;Project -&gt; Manage NuGet packages… -&gt; Browse -&gt; Search -&gt; StackExchange.Redis&lt;/em&gt; -&gt; Click Install.&lt;/p&gt;
+&lt;p&gt;The source code for connecting to Redis goes like this:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;csharp&quot;&gt;&lt;pre class=&quot;language-csharp&quot;&gt;&lt;code class=&quot;language-csharp&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;token namespace&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;token namespace&quot;&gt;System&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;Security&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;Cryptography&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;X509Certificates&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;token namespace&quot;&gt;StackExchange&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;Redis&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;token keyword&quot;&gt;namespace&lt;/span&gt; &lt;span class=&quot;token namespace&quot;&gt;RedisSslTest&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Program&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;token return-type class-name&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;void&lt;/span&gt;&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;Main&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;/span&gt; args&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;token class-name&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt;&lt;/span&gt; configurationOptions &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token constructor-invocation class-name&quot;&gt;ConfigurationOptions&lt;/span&gt;
+            &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+                EndPoints &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;10.0.15.10:6380&quot;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+                Ssl &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;
+            &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+            configurationOptions&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;CertificateSelection &lt;span class=&quot;token operator&quot;&gt;+=&lt;/span&gt; OptionsOnCertificateSelection&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+            &lt;span class=&quot;token class-name&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt;&lt;/span&gt; redis &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; ConnectionMultiplexer&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;Connect&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;configurationOptions&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;token class-name&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt;&lt;/span&gt; db &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; redis&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;GetDatabase&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+            db&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;ListLeftPush&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;test&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;from c#&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+            Console&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;ReadKey&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+        &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;token return-type class-name&quot;&gt;X509Certificate&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;OptionsOnCertificateSelection&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;object&lt;/span&gt;&lt;/span&gt; s&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;string&lt;/span&gt;&lt;/span&gt; t&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;X509CertificateCollection&lt;/span&gt; local&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;X509Certificate&lt;/span&gt; remote&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;/span&gt; a&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;StoreName&lt;/span&gt; storeName &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; StoreName&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;Root&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;StoreLocation&lt;/span&gt; certificateStoreLocation &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; StoreLocation&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;CurrentUser&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;X509FindType&lt;/span&gt; findType &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; X509FindType&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;FindBySubjectName&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;token class-name&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt;&lt;/span&gt; certificateAuthorityStore &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token constructor-invocation class-name&quot;&gt;X509Store&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;storeName&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; certificateStoreLocation&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+            certificateAuthorityStore&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;Open&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;OpenFlags&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;ReadOnly&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+            &lt;span class=&quot;token class-name&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt;&lt;/span&gt; certificatesInStore &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; certificateAuthorityStore
+                &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;Certificates
+                &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;Find&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;findType&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;10.0.15.10&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+            &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; certificatesInStore&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The magic of this code happens at the handling of &lt;code class=&quot;language-text&quot;&gt;CertificateSelection&lt;/code&gt;.
+Here we read the certificates installed on our computer, in this case, Current User,
+and let the Redis package now it will need it to communicate through SSL to our local Vagrant machine.&lt;/p&gt;
+&lt;p&gt;I wanted to show you the hard way of installing the certificate because when I was doing testing,
+always got an exception if &lt;strong&gt;I didn’t install the certificate first as part of the machine.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;The easier way to do it, and the way you will find it on examples is like this:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;csharp&quot;&gt;&lt;pre class=&quot;language-csharp&quot;&gt;&lt;code class=&quot;language-csharp&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;token namespace&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;token namespace&quot;&gt;System&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;Security&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;Cryptography&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;X509Certificates&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;token namespace&quot;&gt;StackExchange&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;Redis&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;token keyword&quot;&gt;namespace&lt;/span&gt; &lt;span class=&quot;token namespace&quot;&gt;RedisSslTest&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Program&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;token return-type class-name&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;void&lt;/span&gt;&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;Main&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;/span&gt; args&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;token class-name&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt;&lt;/span&gt; configurationOptions &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token constructor-invocation class-name&quot;&gt;ConfigurationOptions&lt;/span&gt;
+            &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+                EndPoints &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;10.0.15.10:6380&quot;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+                Ssl &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;
+            &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+            configurationOptions&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;CertificateSelection &lt;span class=&quot;token operator&quot;&gt;+=&lt;/span&gt; OptionsOnCertificateSelection&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+            &lt;span class=&quot;token class-name&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt;&lt;/span&gt; redis &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; ConnectionMultiplexer&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;Connect&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;configurationOptions&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;token class-name&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt;&lt;/span&gt; db &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; redis&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;GetDatabase&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+            db&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;ListLeftPush&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;test&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;from c#&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+            Console&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;ReadKey&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+        &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;token return-type class-name&quot;&gt;X509Certificate&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;OptionsOnCertificateSelection&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;object&lt;/span&gt;&lt;/span&gt; s&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;string&lt;/span&gt;&lt;/span&gt; t&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;X509CertificateCollection&lt;/span&gt; local&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;X509Certificate&lt;/span&gt; remote&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;/span&gt; a&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token constructor-invocation class-name&quot;&gt;X509Certificate2&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;@&quot;C:\redis-ssl-test\redis-vagrant\redis-server.crt&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Either way if you back to your Vagrant box, you can type:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;vagrant@redis-stunnel:~$ redis-cli
+127.0.0.1:6379&amp;gt; lrange test 0 -1
+1) &amp;quot;from c#&amp;quot;
+2) &amp;quot;from c#&amp;quot;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/13eb17c1aadf060b8a818db464cdde86/4651d/redis-cli-result.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 307px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 36.075949367088604%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAHCAYAAAAIy204AAAACXBIWXMAAB2HAAAdhwGP5fFlAAABNElEQVQoz3WQ63KEIAyFfZLeVlHXCyoIiuKqu7Wz7/9ApwnjdPqj/XEGEpKP5ESyKXF8bRhGjWWdsO0e3lvovkVVZ5RXGF2P3naQMg91TVfCTQa9adCpCnZQEOk7RPaByFLB8/mAv7kTNuD+WEgr5tlQY4/754bj2DHTR6x1m+GXEc5pGPqIoQFIiphubIuJQFzEv66bx0D5qkpxLRLIpgiNihpLyilVoyhEEMcMSmk6VtSbFi2twGCekE9/G1HTenHyGtZIxBsu8UuI+R7y50QcM0iciiyPTMBh0Nh3nqwLYPYrJgg3ZVSY5xc6L+Ge5ef5hyI2fCFfnDPYyZuJYgZPbLquYWmDshQ/0Dz7R+GNgLItoLQkY+vgjWyuIWYrNAHZ05x8THglahK/1hOnb2Hl04JviqvZzwPk6m0AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;redis cli result&quot;
+        title=&quot;&quot;
+        src=&quot;/static/13eb17c1aadf060b8a818db464cdde86/4651d/redis-cli-result.png&quot;
+        srcset=&quot;/static/13eb17c1aadf060b8a818db464cdde86/c26ae/redis-cli-result.png 158w,
+/static/13eb17c1aadf060b8a818db464cdde86/4651d/redis-cli-result.png 307w&quot;
+        sizes=&quot;(max-width: 307px) 100vw, 307px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;Most of the problems I had while trying this setup was the &lt;code class=&quot;language-text&quot;&gt;CertificateSelection&lt;/code&gt; handler.  Most examples online never combine having a self-signed certificate that won’t communicate to SSL directly and debugging &lt;code class=&quot;language-text&quot;&gt;StackExchange.Redis&lt;/code&gt; made it it easy.&lt;/p&gt;
+&lt;p&gt;My only complaint is that &lt;code class=&quot;language-text&quot;&gt;StackExchange.Redis&lt;/code&gt; swallows the exception that tells you &lt;a href=&quot;https://github.com/StackExchange/StackExchange.Redis/blob/master/StackExchange.Redis/StackExchange/Redis/PhysicalConnection.cs#L792&quot;&gt;exactly what’s going on &lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[ES6 Arrow functions]]></title><description><![CDATA[Last night I was reading this post: ES6 arrow functions, syntax and lexical scoping and going through the comments I saw this question: The…]]></description><link>https://hyeomans.com/es6-arrow-functions/</link><guid isPermaLink="false">https://hyeomans.com/es6-arrow-functions/</guid><pubDate>Mon, 21 Sep 2015 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;Last night I was reading this post: &lt;a href=&quot;http://toddmotto.com/es6-arrow-functions-syntaxes-and-lexical-scoping/&quot;&gt;ES6 arrow functions, syntax and lexical scoping&lt;/a&gt; and going through the comments I saw this question:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;so arrow functions always inherit scope?&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The answer was by Barney: &lt;code class=&quot;language-text&quot;&gt;always&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;I went to the console and typed:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;nvm use 4
+node
+var doSome = () =&amp;gt; { console.log(this.x) }
+doSome.call({x: &amp;#39;hello&amp;#39;});
+global.x = &amp;#39;hello&amp;#39;;
+doSome.call({x: &amp;#39;good bye&amp;#39;});&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Could you guess what is going to be printed?&lt;/p&gt;
+&lt;p&gt;I could replicate this on ES5 without fat arrow function.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;nvm use 0.10
+node
+var doSome = function() { console.log(this.x) }.bind(void(0));
+
+doSome.call({x: &amp;#39;hello&amp;#39;});
+
+global.x = &amp;#39;hello&amp;#39;;
+doSome.call({x: &amp;#39;good bye&amp;#39;});&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;What do you think? What does Babel does?&lt;/p&gt;</content:encoded></item></channel></rss>
