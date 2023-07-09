@@ -1,7 +1,7 @@
 baseURL: "https://hyeomans.com/"
 title: Hector Yeomans
 paginate: 5
-theme: PaperMod
+theme: ["hugo-chart", "PaperMod"]
 
 enableInlineShortcodes: true
 enableRobotsTXT: true
@@ -62,11 +62,11 @@ languages:
 params:
   env: production # to enable google analytics, opengraph, twitter-cards and schema.
   title: OpenTech
-  description: "ExampleSite description"
-  keywords: [Blog, Portfolio, PaperMod]
+  description: "OpenTech, un blog escrito por Héctor Yeomans, es un recorrido analítico por la convergencia entre tecnología, datos abiertos, solicitudes de transparencia y gobierno abierto."
+  keywords: [Blog]
   author: "Hector Yeomans"
   # author: ["Me", "You"] # multiple authors
-  images: ["<link or path of image for opengraph, twitter-cards>"]
+  images: [""]
   DateFormat: "January 2, 2006"
   defaultTheme: auto # dark, light
   disableThemeToggle: false

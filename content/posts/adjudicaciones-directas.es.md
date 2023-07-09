@@ -76,6 +76,45 @@ De acuerdo con los datos del Portal de la Contraloría de Sonora, las cinco adju
 
 Estas adjudicaciones suman un total de **$539,623,275.56.**
 
+{{< chart 90 200 >}}
+{
+type: 'bar',
+data: {
+labels: ['SEC (2023)', 'SSP (2022)', 'SSP (2022)', 'SSP (2023)', 'SSP (2023)'],
+datasets: [{
+label: 'Millones de pesos',
+data: [51.9, 104.2, 112.4, 127, 143.9],
+backgroundColor: [
+'rgba(255, 99, 132, 0.2)',
+'rgba(54, 162, 235, 0.2)',
+'rgba(255, 206, 86, 0.2)',
+'rgba(75, 192, 192, 0.2)',
+'rgba(255, 159, 64, 0.2)'
+],
+borderColor: [
+'rgba(255, 99, 132, 1)',
+'rgba(54, 162, 235, 1)',
+'rgba(255, 206, 86, 1)',
+'rgba(75, 192, 192, 1)',
+'rgba(153, 102, 255, 1)',
+'rgba(255, 159, 64, 1)'
+],
+borderWidth: 1
+}]
+},
+options: {
+maintainAspectRatio: false,
+scales: {
+yAxes: [{
+ticks: {
+beginAtZero: true
+}
+}]
+}
+}
+}
+{{< /chart >}}
+
 ## Justificaciones de los últimos 6 años.
 
 Las justificaciones para llevar a cabo un proceso de adjudicación directa varían dependiendo de la entidad, el contrato, y las circunstancias específicas. En los siguientes apartados, se presentan las justificaciones para las adjudicaciones directas de mayor monto por año durante los últimos seis años.
