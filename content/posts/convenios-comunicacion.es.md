@@ -1,6 +1,6 @@
 ---
 title: "Convenios Comunicacion"
-date: 2023-07-12T17:44:03-07:00
+date: 2023-07-12T18:00:00-07:00
 draft: false
 
 showToc: false
@@ -14,9 +14,9 @@ searchHidden: false
 ShowReadingTime: true
 ShowBreadCrumbs: true
 cover:
-  image: "<image path/url>"
-  alt: "<alt text>"
-  caption: "<text>"
+  image: "img/dall_e_medios_comunicacion.png"
+  alt: "oficinas medios de comunicación generada con dall-e"
+  caption: "Imagen generada con IA (dall-e)"
   relative: false # when using page bundles set this to true
   hidden: false # only hide on current single page
 ---
@@ -121,3 +121,5 @@ Adjunto se encuentra la respuesta proporcionada por el municipio en formato Exce
 | ALEJANDRO SALAZAR GOMEZ                                  | El Ayuntamiento pagará a el prestador de servicios por concepto de difusiones y publicaciones realizadas, conforme a lo solicitado por la dependencia, sujentadose a la suficiencia presupuestal autorizada |
 | ARMIDA BERNAL REYES                                      | El Ayuntamiento pagará a el prestador de servicios por concepto de difusiones y publicaciones realizadas, conforme a lo solicitado por la dependencia, sujentadose a la suficiencia presupuestal autorizada |
 | RADIO INTEGRAL S. DE R.L. DE C.V.                        | El Ayuntamiento pagará a el prestador de servicios por concepto de difusiones y publicaciones realizadas, conforme a lo solicitado por la dependencia, sujentadose a la suficiencia presupuestal autorizada |
+
+Un total de **88 convenios en 7 meses**
