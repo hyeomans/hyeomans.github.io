@@ -135,11 +135,9 @@ Un total de **88 convenios en 7 meses**
 
 ## Ayuntamiento de Cajeme
 
-El Ayuntamiento de Cajeme si respondió con los montos en los diferentes periodos en los que fue erogado el gasto.
-
-Aquí el listado:
-
 El Ayuntamiento de Cajeme sí proporcionó los montos correspondientes a los diferentes periodos durante los cuales se realizaron los gastos.
+
+{{<figure src="/img/respuesta_ayuntamiento_cajeme.png" caption="Respuesta Ayuntamiento Cajeme" target="_blank">}}
 
 A continuación, se muestra el listado:
 
