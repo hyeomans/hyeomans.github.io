@@ -22,7 +22,7 @@ cover:
   hidden: false # only hide on current single page
 ---
 
-El 21 de Junio del 2023, compartí un video en el que mostraba cómo realizar una solicitud de transparencia en la Plataforma Nacional de Transparencia [PNT][https://www.plataformadetransparencia.org.mx/]:
+El 21 de Junio del 2023, compartí un video en el que mostraba cómo realizar una solicitud de transparencia en la Plataforma Nacional de Transparencia:
 
 {{<figure src="/img/tweet_video.png" caption="Realizando solicitud transparencia" link="https://twitter.com/h_yeomans/status/1671556917657739264?s=20" target="_blank">}}
 
