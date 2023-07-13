@@ -1,9 +1,10 @@
 ---
 title: "Convenios Comunicacion"
 date: 2023-07-12T18:00:00-07:00
+lastmod: 2023-07-13T07:00:00-07:00
 draft: false
 
-showToc: false
+showToc: true
 TocOpen: false
 hidemeta: false
 
@@ -21,7 +22,11 @@ cover:
   hidden: false # only hide on current single page
 ---
 
-Hoy recibí la respuesta a la siguiente solicitud de transparencia que realicé al Ayuntamiento de Hermosillo en junio de 2023:
+El 21 de Junio del 2023, compartí un video en el que mostraba cómo realizar una solicitud de transparencia en la Plataforma Nacional de Transparencia [PNT][https://www.plataformadetransparencia.org.mx/]:
+
+{{<figure src="/img/tweet_video.png" caption="Realizando solicitud transparencia" link="https://twitter.com/h_yeomans/status/1671556917657739264?s=20" target="_blank">}}
+
+Hoy, 12 de Julio del 2023, he recibido respuesta a dicha solicitud. Vale la pena señalar que hoy era el último día para responder. El contenido de mi pregunta era:
 
 > Buen día,
 > Solicito el listado de convenios que se han celebrado con diferentes medios de comunicación desde
@@ -29,7 +34,11 @@ Hoy recibí la respuesta a la siguiente solicitud de transparencia que realicé 
 > Por favor hacer el desglose por Razón social y monto.
 > Gracias.
 
-Adjunto se encuentra la respuesta proporcionada por el municipio en formato Excel:
+## Ayuntamiento de Hermosillo
+
+La respuesta recibida del Ayuntamiento de Hermosillo no incluye los montos. A continuación, se presenta de manera íntegra la respuesta que proporcionaron a través de un archivo Excel:
+
+Adjunto, encontrarán la respuesta que el municipio proporcionó en formato Excel:
 
 | RAZON SOCIAL                                             | MONTO                                                                                                                                                                                                       |
 | -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -123,3 +132,24 @@ Adjunto se encuentra la respuesta proporcionada por el municipio en formato Exce
 | RADIO INTEGRAL S. DE R.L. DE C.V.                        | El Ayuntamiento pagará a el prestador de servicios por concepto de difusiones y publicaciones realizadas, conforme a lo solicitado por la dependencia, sujentadose a la suficiencia presupuestal autorizada |
 
 Un total de **88 convenios en 7 meses**
+
+## Ayuntamiento de Cajeme
+
+El Ayuntamiento de Cajeme si respondió con los montos en los diferentes periodos en los que fue erogado el gasto.
+
+Aquí el listado:
+
+El Ayuntamiento de Cajeme sí proporcionó los montos correspondientes a los diferentes periodos durante los cuales se realizaron los gastos.
+
+A continuación, se muestra el listado:
+
+{{<figure src="/img/cajeme_comunicacion_1.png" caption="relación 2022" target="_blank">}}
+
+{{<figure src="/img/cajeme_comunicacion_2.png" caption="relación 2023" target="_blank">}}
+
+# Conclusión
+
+Resulta interesante observar cómo cada ente obligado interpreta de manera conveniente las solicitudes que se le hacen:
+
+- El Ayuntamiento de Hermosillo decidió omitir los montos correspondientes, justificándose con fundamentos jurídicos.
+- Por otro lado, el Ayuntamiento de Cajeme decidió ampliar el rango de fechas para mostrar los montos. En lugar de limitarse a partir de noviembre de 2022, extendió la presentación de datos hasta julio.
