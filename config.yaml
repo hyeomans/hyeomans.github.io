@@ -21,43 +21,43 @@ googleAnalytics: "G-CQCQ4X7JHE"
 
 minify:
   disableXML: true
-  minifyOutput: true
+  # minifyOutput: true
 
 languages:
-    en:
-      languageName: "English"
-      weight: 1
+  en:
+    languageName: "English"
+    weight: 1
+    taxonomies:
+      tag: tags
+      series: series
+    menu:
+      main:
+        - name: Tags
+          url: tags/
+          weight: 5
+        - name: Search
+          url: search/
+          weight: 10
+  es:
+    params:
+      languageName: ":es:"
+      languageAltTitle: Espanol
+      weight: 2
+      title: OpenTech
+      homeInfoParams:
+        title: "OpenTech"
+        Content: "OpenTech, un blog escrito por Héctor Yeomans, es un recorrido analítico por la convergencia entre tecnología, datos abiertos, solicitudes de transparencia y gobierno abierto."
       taxonomies:
-        tag: tags
-        series: series
-      menu:
-          main:
-              - name: Tags
-                url: tags/
-                weight: 5
-              - name: Search
-                url: search/
-                weight: 10
-    es:
-      params:
-        languageName: ":es:"
-        languageAltTitle: Espanol
-        weight: 2
-        title: OpenTech
-        homeInfoParams:
-          title: "OpenTech"
-          Content: "OpenTech, un blog escrito por Héctor Yeomans, es un recorrido analítico por la convergencia entre tecnología, datos abiertos, solicitudes de transparencia y gobierno abierto."
-        taxonomies:
-          tag: Tags
-          series: Series
-      menu:
-          main:
-              - name: Tags
-                url: tags/
-                weight: 5
-              - name: Busqueda
-                url: busqueda/
-                weight: 10
+        tag: Tags
+        series: Series
+    menu:
+      main:
+        - name: Tags
+          url: tags/
+          weight: 5
+        - name: Busqueda
+          url: busqueda/
+          weight: 10
 
 params:
   env: production # to enable google analytics, opengraph, twitter-cards and schema.
