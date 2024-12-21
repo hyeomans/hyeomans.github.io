@@ -13,6 +13,93 @@ No estará limitado únicamente a las elecciones de 2027, aunque ese será un ej
 
 La idea detrás de esta bitácora es sencilla: tener un registro personal que no solo sirva como recordatorio, sino también como una herramienta para observar con mayor claridad los patrones y los cambios en nuestra sociedad. Aquí habrá reflexiones, análisis y recopilaciones de hechos que, al menos para mí, merecen ser recordados.
 
+## Bitácora: Crisis en el Hospital General del Estado de Sonora
+
+### Fecha: 2024-12-20
+
+El día 20 de diciembre, la Asociación de Médicos del Hospital General del Estado de Sonora publicó una carta dirigida al gobernador Alfonso Durazo Montaño, exponiendo una serie de graves carencias en el sistema de salud estatal. Esta carta, respaldada por las firmas del personal médico de todas las áreas, detalla la situación crítica del hospital y solicita la intervención inmediata del gobernador para resolver los problemas que ponen en riesgo la salud de los sonorenses.
+
+#### **Puntos clave de la carta**
+
+1. **Falta de insumos médicos y material de curación**:
+
+   - Carencia de materiales básicos como suturas, drenajes cerrados y prótesis vasculares.
+   - Insuficiencia de guantes, gasas, botas, y gorros esenciales para procedimientos médicos.
+
+2. **Déficit de equipos médicos**:
+
+   - Proveedores deficientes han entregado equipos incompletos o en mal estado.
+   - Se carece de equipos clave como un microscopio para neurocirugía y la sala de hemodinamia opera de manera limitada.
+
+3. **Escasez de personal**:
+
+   - Falta de enfermeros, lo que obliga a operar quirófanos al 50% de su capacidad, y en las noches, solo uno de los 12 quirófanos está activo.
+   - Personal eventual sin estabilidad laboral ni perspectivas de basificación.
+
+4. **Carencia de medicamentos**:
+
+   - Pacientes obligados a comprar hasta el 50% de los medicamentos por su cuenta, agravando la inequidad en el acceso a la atención médica.
+
+5. **Condiciones de limpieza inadecuadas**:
+   - Escasez de personal de intendencia, resultando en pasillos y áreas sucias que afectan la higiene hospitalaria.
+
+#### **Entrevista con la Dra. Joanna Chávez Ochoa**
+
+En entrevista, la Dra. Joanna Chávez Ochoa, médica internista y presidenta de la Asociación de Médicos del Hospital General, destacó los siguientes puntos:
+
+- **Prolongación de estancias hospitalarias**:
+  Los pacientes esperan días, semanas o incluso meses por cirugías debido a la falta de insumos, lo que genera complicaciones como infecciones.
+
+- **Impacto del cambio hacia IMSS-Bienestar**:
+  Chávez mencionó que el cambio administrativo agravó las carencias existentes, y que el presupuesto y los recursos no han fluido como se esperaba tras la transición.
+
+- **Responsabilidad compartida**:
+  Aunque el director del hospital intenta gestionar las carencias, el problema escaló hasta el gobernador debido a la falta de soluciones. Los médicos también señalan la necesidad de que el IMSS-Bienestar nacional y la Secretaría de Salud intervengan.
+
+#### **Reflexión**
+
+El Hospital General del Estado de Sonora, que históricamente ha sido un pilar de la atención médica para los más necesitados, enfrenta una crisis que compromete su capacidad de brindar servicios adecuados. La carta y la entrevista subrayan un llamado urgente al gobierno estatal para priorizar la salud como un derecho fundamental y garantizar los recursos necesarios para su atención.
+
+Como ciudadanos, es vital exigir rendición de cuentas y soluciones concretas, ya que la salud no puede esperar.
+
+---
+
+### Discusión sobre la Reforma del Poder Judicial del Estado de Sonora
+
+### Fecha: 2024-12-20
+
+El mismo 20 de diciembre, en el Congreso del Estado de Sonora, la Comisión de Gobernación y Puntos Constitucionales analizó y discutió la reforma al Poder Judicial presentada por el gobernador Alfonso Durazo Montaño. Este tema, de gran relevancia, busca cambios profundos en la estructura y operación del sistema judicial estatal.
+
+#### **Puntos destacados de la discusión**
+
+1. **Elección popular de jueces y magistrados**:
+
+   - La reforma propone que los jueces y magistrados sean electos por voto popular, lo que generaría una mayor representatividad ciudadana.
+   - Se establecen filtros para garantizar la idoneidad de los candidatos y evitar influencias políticas.
+
+2. **Creación de nuevos órganos judiciales**:
+
+   - Tribunal de Disciplina Judicial: Diseñado para supervisar la conducta de los jueces y magistrados.
+   - Órgano de Administración Judicial: Encargado de la gestión administrativa del Poder Judicial.
+
+3. **Foros de parlamento abierto**:
+
+   - Tres foros realizados en Hermosillo, Nogales y Cajeme permitieron recopilar opiniones de abogados, jueces y la sociedad civil.
+   - Propuestas destacadas incluyen mecanismos de evaluación para aspirantes y la modernización del sistema judicial a través de tecnología.
+
+4. **Impacto presupuestario**:
+
+   - La Secretaría de Hacienda estatal confirmó que la implementación escalonada de la reforma no generará un impacto presupuestario negativo.
+
+5. **Debates sobre transparencia y participación ciudadana**:
+   - Aunque se celebró la inclusión de la sociedad civil, algunos legisladores señalaron la falta de claridad en ciertos cambios realizados al dictamen original.
+
+#### **Reflexión**
+
+La reforma al Poder Judicial representa un cambio histórico en la justicia de Sonora, pero también plantea retos importantes, como garantizar la independencia judicial y la efectividad de los nuevos órganos. Es fundamental que los ciudadanos se mantengan informados y participativos, pues esta reforma puede definir el acceso y la calidad de la justicia en el estado durante las próximas décadas.
+
+---
+
 ## Discusión entre Abogados: La Ley de Ingresos de Hermosillo
 
 ### Fecha: 2024-12-17
@@ -55,6 +142,8 @@ La discusión dejó claro que el conflicto no solo refleja errores técnicos y a
 Este incidente es un ejemplo de cómo decisiones legales y políticas afectan directamente a la ciudadanía, y marca un precedente importante de cara a las futuras gestiones municipales y legislativas.
 
 Video: [https://www.youtube.com/watch?v=wvKq66zc4bk](https://www.youtube.com/watch?v=wvKq66zc4bk)
+
+---
 
 ## Debate sobre la Ley de Ingresos en Hermosillo: ¿Quién realmente afecta a los ciudadanos?
 
