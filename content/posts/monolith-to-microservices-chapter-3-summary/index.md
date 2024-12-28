@@ -1,7 +1,7 @@
 ---
 title: "Monolith to Microservices - Chapter 3 Summary"
 date: 2024-12-28T11:31:14-07:00
-draft: true
+draft: false
 
 showToc: true
 TocOpen: false
@@ -13,17 +13,16 @@ hideSummary: false
 searchHidden: false
 ShowReadingTime: true
 ShowBreadCrumbs: true
-cover:
-  image: "<image path/url>"
-  alt: "<alt text>"
-  caption: "<text>"
-  relative: false # when using page bundles set this to true
-  hidden: false # only hide on current single page
 ---
+
+![](hero.jpg)
 
 ## Overview
 
 Chapter 3, Splitting the Monolith, focuses on practical approaches to decomposing monolithic systems incrementally rather than through disruptive big bang rewrites. It introduces migration patterns like the Strangler Fig and Branch by Abstraction while emphasizing the importance of balancing technical feasibility with organizational realities.
+
+[Read Chapter 2 Summary: "Planning a Migration"](/posts/monolith-to-microservices-chapter-2-summary/)  
+[Read Chapter 1 Summary: "Just Enough Microservices"](/posts/monolith-to-microservices-introduction/)
 
 ## Incremental migrations
 
@@ -92,3 +91,6 @@ Migration patterns must align with team structures and development workflows. Ne
 3. How do organizational structures influence the choice of migration patterns?
 
 Chapter 3 provides actionable techniques for decomposing monoliths while addressing both technical and organizational complexities. Its focus on incrementalism and thoughtful planning makes it an essential guide for teams embarking on the microservices journey.
+
+[Read Chapter 2 Summary: "Planning a Migration"](/posts/monolith-to-microservices-chapter-2-summary/)  
+[Read Chapter 1 Summary: "Just Enough Microservices"](/posts/monolith-to-microservices-introduction/)
