@@ -1,0 +1,14 @@
+{{/* Force https in social tags if anything emitted http */}}
+{{- $pageURL := .Permalink | replaceRE "^http://" "https://" -}}
+<meta property="og:url" content="{{ $pageURL }}">
+
+{{- with .Params.images }}
+  {{- $img := index . 0 | absURL | replaceRE "^http://" "https://" -}}
+  <meta property="og:image" content="{{ $img }}">
+  <meta name="twitter:image" content="{{ $img }}">
+{{- else }}
+  {{- with .Resources.GetMatch "hero*" }}
+    <meta property="og:image" content="{{ .RelPermalink | absURL }}">
+    <meta name="twitter:image" content="{{ .RelPermalink | absURL }}">
+  {{- end }}
+{{- end }}
