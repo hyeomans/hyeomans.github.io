@@ -1,8 +1,13 @@
 ---
-title: Redis, STunnel, and C#
-date: "2017-01-25T00:00:00Z"
-updated: "2017-01-25T00:00:00Z"
+title: "Redis, STunnel, and C#"
+date: 2017-01-25T00:00:00-07:00
+updated: 2017-01-25T00:00:00-07:00
 aliases: ["/redis-stunnel-and-c"]
+author: "Hector Yeomans"
+description: "Setting up SSL-encrypted communication between a C# application and Redis using STunnel as the SSL proxy."
+tags: ["redis", "csharp", "ssl", "stunnel", "database", "security"]
+ShowReadingTime: true
+ShowBreadCrumbs: true
 ---
 
 In this blog post, I will try to demonstrate how to setup a working environment with StackExchange.Redis package is communicating to a Redis box using SSL through STunel.

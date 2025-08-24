@@ -1,7 +1,12 @@
 ---
-title: "Dietas en el Congreso Sonora ¿quién ha recibido la mayor dieta?"
+title: "Dietas en el Congreso Sonora: ¿quién ha recibido la mayor dieta?"
 date: 2023-07-14T11:00:00-07:00
 draft: false
+author: "Hector Yeomans"
+description: "Análisis detallado de las dietas pagadas a diputados del Congreso de Sonora entre 2018-2022, con datos obtenidos mediante transparencia."
+tags: ["transparencia", "gobierno-abierto", "datos-publicos", "sonora", "congreso", "dietas"]
+series: ["Transparencia Gubernamental en Sonora"]
+series_order: 3
 
 showToc: true
 TocOpen: false

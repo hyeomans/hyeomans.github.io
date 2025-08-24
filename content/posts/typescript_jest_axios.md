@@ -1,8 +1,15 @@
 ---
-title: Typescript, Jest and Axios
-date: "2019-11-03T00:00:00Z"
-updated: "2019-11-03T00:00:00Z"
-aliases: ["/migrate-node-package-typescript-rollup"]
+title: "Typescript, Jest and Axios"
+date: 2019-11-03T00:00:00-07:00
+updated: 2019-11-03T00:00:00-07:00
+aliases: ["/typescript-jest-axios"]
+author: "Hector Yeomans"
+description: "How to mock Axios requests in Jest tests when using TypeScript and calling Axios as a function rather than using specific methods."
+tags: ["typescript", "jest", "axios", "testing", "mocking", "javascript"]
+series: ["JavaScript & TypeScript Tips"]
+series_order: 2
+ShowReadingTime: true
+ShowBreadCrumbs: true
 ---
 
 I found different posts that tell you how to mock Axios using Jest & Typescript. The only difference in this post is that, when I use Axios, I like to use it as a function rather than calling `axios.get` or `axios.post`.

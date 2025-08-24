@@ -2,6 +2,11 @@
 title: "108 Millones, 108 Medios: Desenmascarando el Gasto Público en Comunicación en Sonora"
 date: 2023-09-09T07:00:00-07:00
 draft: false
+author: "Hector Yeomans"
+description: "Investigación sobre el gasto público en medios de comunicación del Gobierno de Sonora, revelando la distribución de 108 millones de pesos entre diferentes medios."
+tags: ["transparencia", "gobierno-abierto", "datos-publicos", "sonora", "medios-comunicacion", "gasto-publico"]
+series: ["Transparencia Gubernamental en Sonora"]
+series_order: 4
 
 showToc: true
 TocOpen: false
@@ -17,7 +22,6 @@ ShowBreadCrumbs: true
 cover:
   image: "img/108-millones.png"
   alt: "108 millones, 108 medios"
-  #   caption: "imagen generada con inteligencia artificial"
   relative: false # when using page bundles set this to true
   hidden: false # only hide on current single page
 ---

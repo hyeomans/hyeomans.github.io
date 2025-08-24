@@ -1,8 +1,15 @@
 ---
-title: Resilience with Disyuntor - Circuit Breaker
-date: "2017-05-27"
-updated: "2017-05-27"
+title: "Resilience with Disyuntor - Circuit Breaker"
+date: 2017-05-27T00:00:00-07:00
+updated: 2017-05-27T00:00:00-07:00
 aliases: ["/resilience-disyuntor-nodejs-circuit-breaker"]
+author: "Hector Yeomans"
+description: "Implementing the Circuit Breaker pattern in Node.js using Disyuntor to build resilient distributed systems and handle service failures gracefully."
+tags: ["nodejs", "circuit-breaker", "resilience", "microservices", "disyuntor", "distributed-systems"]
+series: ["Building Resilient Systems"]
+series_order: 1
+ShowReadingTime: true
+ShowBreadCrumbs: true
 ---
 
 Resilience means the capacity to recover quickly from difficulties. Circuit breaker pattern is a good practice for resilience.

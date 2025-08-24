@@ -3,6 +3,8 @@ title: "Adjudicaciones directas en Sonora: Un breve análisis de seis años"
 date: 2023-07-08T07:55:51-07:00
 tags: ["transparencia", "sonora"]
 author: "Hector Yeomans"
+series: ["Transparencia Gubernamental en Sonora"]
+series_order: 1
 
 showToc: true
 TocOpen: false

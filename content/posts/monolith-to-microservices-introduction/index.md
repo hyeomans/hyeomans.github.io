@@ -2,6 +2,11 @@
 title: "Transforming Software Systems: A Blog Series on Monolith to Microservices"
 date: 2024-12-08T11:06:10-07:00
 draft: false
+author: "Hector Yeomans"
+description: "Introduction to a blog series exploring Sam Newman's Monolith to Microservices book, covering the fundamentals of microservice architecture and evolutionary patterns."
+tags: ["monolith", "microservices", "software-architecture"]
+series: ["Monolith to Microservices"]
+series_order: 1
 
 showToc: true
 TocOpen: false
@@ -13,7 +18,6 @@ hideSummary: false
 searchHidden: false
 ShowReadingTime: true
 ShowBreadCrumbs: true
-tags: ["monolith", "microservices", "software architecture"]
 ---
 
 ![](./hero.jpg)

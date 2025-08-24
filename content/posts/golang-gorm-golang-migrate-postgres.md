@@ -1,7 +1,12 @@
 ---
-title: "How to Use GORM and Golang Migrate."
+title: "How to Use GORM and Golang Migrate"
 date: 2024-06-07T13:00:00-07:00
 draft: false
+author: "Hector Yeomans"
+description: "Complete guide on setting up GORM with Golang Migrate to manage PostgreSQL database migrations in Go applications."
+tags: ["golang", "gorm", "postgres", "database", "migrations", "programming"]
+series: ["Go Programming Patterns"]
+series_order: 2
 
 showToc: true
 TocOpen: false
@@ -11,14 +16,8 @@ disableShare: false
 disableHLJS: false
 hideSummary: false
 searchHidden: false
-ShowReadingTime: false
-ShowBreadCrumbs: false
-cover:
-  image: "<image path/url>"
-  alt: "<alt text>"
-  caption: "<text>"
-  relative: false # when using page bundles set this to true
-  hidden: false # only hide on current single page
+ShowReadingTime: true
+ShowBreadCrumbs: true
 ---
 
 Introduction

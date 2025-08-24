@@ -1,8 +1,15 @@
 ---
-title: Convert node package with Typescript and Rollup
-date: "2020-05-30"
-updated: "2020-05-30"
+title: "Convert node package with Typescript and Rollup"
+date: 2020-05-30T00:00:00-07:00
+updated: 2020-05-30T00:00:00-07:00
 aliases: ["/migrate-node-package-typescript-rollup"]
+author: "Hector Yeomans"
+description: "Step-by-step guide to converting a Node.js package from JavaScript to TypeScript using Rollup.js as the build tool."
+tags: ["typescript", "rollup", "nodejs", "javascript", "build-tools"]
+series: ["JavaScript & TypeScript Tips"]
+series_order: 3
+ShowReadingTime: true
+ShowBreadCrumbs: true
 ---
 
 I already had [a library](https://github.com/hyeomans/zuora-js) that I wanted to convert to Typescript. I picked Rollup.js to do my build process.

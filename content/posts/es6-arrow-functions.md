@@ -1,8 +1,15 @@
 ---
-title: ES6 Arrow functions
-date: "2015-09-21"
-updated: "2015-09-21"
+title: "ES6 Arrow functions"
+date: 2015-09-21T00:00:00-07:00
+updated: 2015-09-21T00:00:00-07:00
 aliases: ["/es6-arrow-functions"]
+author: "Hector Yeomans"
+description: "Exploring ES6 arrow functions and their lexical scoping behavior compared to traditional function binding in JavaScript."
+tags: ["javascript", "es6", "programming", "arrow-functions"]
+series: ["JavaScript & TypeScript Tips"]
+series_order: 1
+ShowReadingTime: true
+ShowBreadCrumbs: true
 ---
 
 Last night I was reading this post: [ES6 arrow functions, syntax and lexical scoping](http://toddmotto.com/es6-arrow-functions-syntaxes-and-lexical-scoping/) and going through the comments I saw this question:

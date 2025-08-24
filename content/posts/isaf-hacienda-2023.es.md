@@ -1,7 +1,12 @@
 ---
-title: "Cúenta Pública 2023: Hacienda"
+title: "Cuenta Pública 2023: Hacienda"
 date: 2023-08-22T11:00:00-07:00
 draft: false
+author: "Hector Yeomans"
+description: "Análisis de las observaciones del ISAF a la Secretaría de Hacienda de Sonora, revelando irregularidades financieras y problemas de control interno."
+tags: ["transparencia", "gobierno-abierto", "datos-publicos", "sonora", "hacienda", "auditoria", "ISAF"]
+series: ["Transparencia Gubernamental en Sonora"]
+series_order: 5
 
 showToc: true
 TocOpen: false

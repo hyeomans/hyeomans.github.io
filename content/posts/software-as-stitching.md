@@ -1,8 +1,13 @@
 ---
-title: Software as stitching
-date: "2018-12-27"
-updated: "2018-12-27"
+title: "Software as stitching"
+date: 2018-12-27T00:00:00-07:00
+updated: 2018-12-27T00:00:00-07:00
 aliases: ["/software-as-stitching"]
+author: "Hector Yeomans"
+description: "Exploring how most software development involves stitching together APIs and third-party services, drawing parallels to the art of sewing."
+tags: ["software-development", "api-integration", "programming", "software-architecture"]
+ShowReadingTime: true
+ShowBreadCrumbs: true
 ---
 
 ![](/img/stitching.jpg)

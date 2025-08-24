@@ -2,6 +2,11 @@
 title: "Charting the Path: Planning Your Migration to Microservices"
 date: 2024-12-19T07:40:00-07:00
 draft: false
+author: "Hector Yeomans"
+description: "Summary of Chapter 2 from Monolith to Microservices: A comprehensive guide to planning your microservices migration strategy with clear objectives and organizational alignment."
+tags: ["monolith", "microservices", "software-architecture", "migration-planning"]
+series: ["Monolith to Microservices"]
+series_order: 2
 
 showToc: true
 TocOpen: false
@@ -13,7 +18,6 @@ hideSummary: false
 searchHidden: false
 ShowReadingTime: true
 ShowBreadCrumbs: true
-tags: ["monolith", "microservices", "software architecture"]
 ---
 
 ![](./hero.jpg)

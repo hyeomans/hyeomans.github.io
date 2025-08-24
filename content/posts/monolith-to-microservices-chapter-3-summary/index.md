@@ -1,7 +1,12 @@
 ---
-title: "Monolith to Microservices - Chapter 3 Summary"
+title: "Splitting the Monolith: Incremental Migration Strategies"
 date: 2024-12-28T11:31:14-07:00
 draft: false
+author: "Hector Yeomans"
+description: "Summary of Chapter 3 from Monolith to Microservices: Practical approaches to decomposing monolithic systems using patterns like Strangler Fig and Branch by Abstraction."
+tags: ["monolith", "microservices", "software-architecture", "strangler-fig", "migration-patterns"]
+series: ["Monolith to Microservices"]
+series_order: 3
 
 showToc: true
 TocOpen: false

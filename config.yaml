@@ -2,7 +2,7 @@ baseURL: "https://hyeomans.com/"
 title: Hector Yeomans
 pagination:
   pagerSize: 5
-theme: ["hugo-chart", "PaperMod"]
+theme: [ "hugo-chart", "PaperMod" ]
 
 enableInlineShortcodes: true
 enableRobotsTXT: true
@@ -14,9 +14,9 @@ pygmentsUseClasses: true
 
 outputs:
   home:
-    - HTML
-    - RSS
-    - JSON # is necessary
+  - HTML
+  - RSS
+  - JSON # is necessary
 
 googleAnalytics: "G-CQCQ4X7JHE"
 
@@ -24,9 +24,9 @@ minify:
   disableXML: true
   # minifyOutput: true
 
-# Suppress warnings
+  # Suppress warnings
 ignoreLogs:
-  - 'warning-goldmark-raw-html'
+- 'warning-goldmark-raw-html'
 
 languages:
   en:
@@ -35,14 +35,21 @@ languages:
     taxonomies:
       tag: tags
       series: series
+      category: categories
     menu:
       main:
-        - name: Tags
-          url: tags/
-          weight: 5
-        - name: Search
-          url: search/
-          weight: 10
+      - name: Posts
+        url: posts/
+        weight: 1
+      - name: Tags
+        url: tags/
+        weight: 5
+      - name: Series
+        url: series/
+        weight: 7
+      - name: Search
+        url: search/
+        weight: 10
   es:
     params:
       languageName: ":es:"
@@ -55,35 +62,46 @@ languages:
       taxonomies:
         tag: Tags
         series: Series
+        category: Categories
     menu:
       main:
-        - name: Tags
-          url: tags/
-          weight: 5
-        - name: Busqueda
-          url: busqueda/
-          weight: 10
+      - name: Posts
+        url: posts/
+        weight: 1
+      - name: Tags
+        url: tags/
+        weight: 5
+      - name: Series
+        url: series/
+        weight: 7
+      - name: Busqueda
+        url: busqueda/
+        weight: 10
 
 params:
   env: production # to enable google analytics, opengraph, twitter-cards and schema.
   title: OpenTech
   description: "OpenTech, un blog escrito por Héctor Yeomans, es un recorrido analítico por la convergencia entre tecnología, datos abiertos, solicitudes de transparencia y gobierno abierto."
-  keywords: [Blog]
+  keywords: [ Blog, Technology, Open Data, Government Transparency, Software Development, Go, JavaScript, Microservices ]
   author: "Hector Yeomans"
   # author: ["Me", "You"] # multiple authors
-  images: [""]
+  images: [ "/img/lupa.jpg" ]
   DateFormat: "January 2, 2006"
+
+  # SEO improvements
+  enableRobotsTXT: true
+  canonifyURLs: true
   defaultTheme: auto # dark, light
   disableThemeToggle: false
 
   ShowReadingTime: true
   ShowShareButtons: true
-  ShowPostNavLinks: false
+  ShowPostNavLinks: true # Enable next/prev navigation
   ShowBreadCrumbs: true
   ShowCodeCopyButtons: true
-  ShowWordCount: false
+  ShowWordCount: true # Show word count for better UX
   ShowRssButtonInSectionTermList: true
-  UseHugoToc: false
+  UseHugoToc: true # Use Hugo's built-in TOC
   disableSpecial1stPost: false
   disableScrollToTop: false
   comments: false
@@ -116,23 +134,23 @@ params:
     imageHeight: 120
     imageTitle: my image
     buttons:
-      - name: Posts
-        url: posts
-      - name: Tags
-        url: tags
+    - name: Posts
+      url: posts
+    - name: Tags
+      url: tags
 
   # home-info mode
   homeInfoParams:
-    Title: "Hi there \U0001F44B"
-    Content: "Written by Hector Yeomans who lives in Mexico and works remotely for LeagueApps"
+    Title: "Hi there 👋"
+    Content: "I'm Hector Yeomans, a software engineer passionate about technology, open data, and government transparency. I write about software architecture, programming languages (especially Go and JavaScript), and analyze public data to promote government accountability in Mexico."
 
   socialIcons:
-    - name: twitter
-      url: "https://twitter.com/h_yeomans"
-    - name: github
-      url: "https://github.com/hyeomans"
-    - name: linkedin
-      url: "https://www.linkedin.com/in/hector-yeomans"
+  - name: twitter
+    url: "https://twitter.com/h_yeomans"
+  - name: github
+    url: "https://github.com/hyeomans"
+  - name: linkedin
+    url: "https://www.linkedin.com/in/hector-yeomans"
 
   analytics:
     google:
@@ -161,17 +179,17 @@ params:
     distance: 1000
     threshold: 0.4
     minMatchCharLength: 0
-    keys: ["title", "permalink", "summary", "content"]
+    keys: [ "title", "permalink", "summary", "content" ]
 menu:
   main:
-    - identifier: categories
-      name: categories
-      url: /categories/
-      weight: 10
-    - identifier: tags
-      name: tags
-      url: /tags/
-      weight: 20
+  - identifier: categories
+    name: categories
+    url: /categories/
+    weight: 10
+  - identifier: tags
+    name: tags
+    url: /tags/
+    weight: 20
 
 # Read: https://github.com/adityatelange/hugo-PaperMod/wiki/FAQs#using-hugos-syntax-highlighter-chroma
 markup:

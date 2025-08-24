@@ -2,7 +2,11 @@
 title: "Bitácora 2027"
 date: 2024-12-15T10:00:00+00:00
 draft: false
-lang: "es"
+author: "Hector Yeomans"
+description: "Un espacio de reflexión personal sobre política, elecciones y gobierno en Sonora y Hermosillo, documentando eventos y decisiones hacia 2027."
+tags: ["bitacora", "sonora", "hermosillo", "política", "elecciones-2027"]
+ShowReadingTime: true
+ShowBreadCrumbs: true
 ---
 
 ## Introducción

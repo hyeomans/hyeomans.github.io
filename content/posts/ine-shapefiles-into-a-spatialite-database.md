@@ -2,8 +2,11 @@
 title: "Importing INE Shapefiles into a Spatialite Database"
 date: 2024-07-14T13:00:00-07:00
 draft: false
+author: "Hector Yeomans"
+description: "Step-by-step guide to importing Mexico's National Electoral Institute shapefiles into a Spatialite database using macOS and QGIS."
+tags: ["gis", "spatialite", "qgis", "mexico", "INE", "shapefiles", "mapping"]
 
-showToc: false
+showToc: true
 TocOpen: false
 hidemeta: false
 
@@ -11,11 +14,11 @@ disableShare: false
 disableHLJS: false
 hideSummary: false
 searchHidden: false
-ShowReadingTime: false
-ShowBreadCrumbs: false
+ShowReadingTime: true
+ShowBreadCrumbs: true
 cover:
   image: "/img/shapefile_qgis.gif"
-  alt: import_shape_file_spatialite"
+  alt: "import_shape_file_spatialite"
   caption: "Importing layer into QGIS"
   relative: false # when using page bundles set this to true
   hidden: false # only hide on current single page

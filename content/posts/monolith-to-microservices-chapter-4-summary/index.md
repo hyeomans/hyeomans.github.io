@@ -1,7 +1,12 @@
 ---
-title: "Monolith to Microservices - Chapter 4 Summary"
+title: "Decomposing the Database: Achieving Data Independence in Microservices"
 date: 2025-01-06T07:00:00-07:00
 draft: false
+author: "Hector Yeomans"
+description: "Summary of Chapter 4 from Monolith to Microservices: Practical strategies for splitting monolithic databases and managing data consistency in distributed systems."
+tags: ["monolith", "microservices", "software-architecture", "database", "data-consistency"]
+series: ["Monolith to Microservices"]
+series_order: 4
 
 showToc: true
 TocOpen: false

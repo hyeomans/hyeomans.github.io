@@ -1,8 +1,15 @@
 ---
-title: Golang and interfaces misuse
-date: "2020-01-18T00:00:00Z"
-updated: "2020-01-18T00:00:00Z"
+title: "Golang and interfaces misuse"
+date: 2020-01-18T00:00:00-07:00
+updated: 2020-01-18T00:00:00-07:00
 aliases: ["/golang-and-interfaces-misuse"]
+author: "Hector Yeomans"
+description: "Understanding the proper way to use Go interfaces by following the principle of defining interfaces where they're used, not where they're implemented."
+tags: ["golang", "interfaces", "programming", "best-practices", "software-architecture"]
+series: ["Go Programming Patterns"]
+series_order: 1
+ShowReadingTime: true
+ShowBreadCrumbs: true
 ---
 
 One of my favorite things about Golang is the concept of interface. It's also one of my grievances every time I see them used as C#/Java interfaces.

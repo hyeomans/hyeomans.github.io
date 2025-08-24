@@ -1,8 +1,13 @@
 ---
-title: "Convenios Comunicacion"
+title: "Convenios de Comunicación"
 date: 2023-07-12T18:00:00-07:00
 lastmod: 2023-07-13T07:00:00-07:00
 draft: false
+author: "Hector Yeomans"
+description: "Análisis de los convenios celebrados entre diferentes medios de comunicación y el gobierno en Sonora, basado en solicitudes de transparencia."
+tags: ["transparencia", "gobierno-abierto", "datos-publicos", "sonora", "convenios", "medios-comunicacion"]
+series: ["Transparencia Gubernamental en Sonora"]
+series_order: 2
 
 showToc: true
 TocOpen: false
