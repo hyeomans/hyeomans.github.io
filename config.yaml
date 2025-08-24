@@ -38,9 +38,12 @@ languages:
       category: categories
     menu:
       main:
+      - name: Services
+        url: services/
+        weight: 1
       - name: Posts
         url: posts/
-        weight: 1
+        weight: 3
       - name: Tags
         url: tags/
         weight: 5
@@ -65,9 +68,12 @@ languages:
         category: Categories
     menu:
       main:
+      - name: Servicios
+        url: services/
+        weight: 1
       - name: Posts
         url: posts/
-        weight: 1
+        weight: 3
       - name: Tags
         url: tags/
         weight: 5
@@ -142,7 +148,7 @@ params:
   # home-info mode
   homeInfoParams:
     Title: "Hi there 👋"
-    Content: "I'm Hector Yeomans, a software engineer passionate about technology, open data, and government transparency. I write about software architecture, programming languages (especially Go and JavaScript), and analyze public data to promote government accountability in Mexico."
+    Content: "I'm Hector Yeomans, a software engineer and consultant specializing in Go development, government transparency, and workflow automation. I help businesses build scalable applications, navigate Mexican transparency laws (LGT), and streamline operations with N8N automation. [Explore my services →](/services/)"
 
   socialIcons:
   - name: twitter
