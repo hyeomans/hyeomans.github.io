@@ -1,6 +1,7 @@
 baseURL: "https://hyeomans.com/"
 title: Hector Yeomans
-paginate: 5
+pagination:
+  pagerSize: 5
 theme: ["hugo-chart", "PaperMod"]
 
 enableInlineShortcodes: true
@@ -22,6 +23,10 @@ googleAnalytics: "G-CQCQ4X7JHE"
 minify:
   disableXML: true
   # minifyOutput: true
+
+# Suppress warnings
+ignoreLogs:
+  - 'warning-goldmark-raw-html'
 
 languages:
   en:
@@ -140,7 +145,7 @@ params:
   cover:
     hidden: false # hide everywhere but not in structured data
     hiddenInList: true # hide on list pages and home
-    hiddenInSingle: true # hide on single page
+    hiddenInSingle: false # show on individual post pages
 
   # editPost:
   #   URL: "https://github.com/<path_to_repo>/content"
@@ -170,6 +175,9 @@ menu:
 
 # Read: https://github.com/adityatelange/hugo-PaperMod/wiki/FAQs#using-hugos-syntax-highlighter-chroma
 markup:
+  goldmark:
+    renderer:
+      unsafe: true
   highlight:
     noClasses: false
     # anchorLineNos: true
