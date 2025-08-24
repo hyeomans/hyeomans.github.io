@@ -11,6 +11,8 @@ buildFuture: false
 buildExpired: false
 enableEmoji: true
 pygmentsUseClasses: true
+canonifyURLs: true
+relativeURLs: true
 
 outputs:
   home:
@@ -96,7 +98,6 @@ params:
 
   # SEO improvements
   enableRobotsTXT: true
-  canonifyURLs: true
   defaultTheme: auto # dark, light
   disableThemeToggle: false
 
@@ -119,11 +120,11 @@ params:
   assets:
     # disableHLJS: true # to disable highlight.js
     # disableFingerprinting: true
-    favicon: "<link / abs url>"
-    favicon16x16: "<link / abs url>"
-    favicon32x32: "<link / abs url>"
-    apple_touch_icon: "<link / abs url>"
-    safari_pinned_tab: "<link / abs url>"
+    # favicon: "<link / abs url>"
+    # favicon16x16: "<link / abs url>"
+    # favicon32x32: "<link / abs url>"
+    # apple_touch_icon: "<link / abs url>"
+    # safari_pinned_tab: "<link / abs url>"
 
   label:
     text: "Home"
