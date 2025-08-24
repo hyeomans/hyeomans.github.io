@@ -21,7 +21,7 @@ serve-drafts:
 
 # Build for production
 build:
-	hugo --gc --minify --baseURL "https://hyeomans.com/"
+	hugo --gc --minify
 
 # Clean build artifacts
 clean:
