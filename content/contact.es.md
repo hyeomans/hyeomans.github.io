@@ -1,7 +1,7 @@
 ---
 title: "Ponte en Contacto"
 description: "Contacta a Hector Yeomans para servicios profesionales en desarrollo Go, consultoría en transparencia y automatización N8N"
-date: 2025-08-24T16:30:00-07:00
+date: 2025-08-24T08:30:00-07:00
 author: "Hector Yeomans"
 hidemeta: true
 showtoc: false
@@ -28,21 +28,27 @@ showtoc: false
 ## ⚡ Inicio Rápido
 
 ### Para Proyectos de Desarrollo
+
 Envíame:
+
 - Descripción breve del proyecto
 - Requerimientos tecnológicos
 - Expectativas de cronograma
 - Rango de presupuesto
 
 ### Para Trabajo de Transparencia/Acceso a la Información
+
 Incluye:
+
 - Información que buscas
 - Entidad gubernamental objetivo (federal, estatal, municipal)
 - Nivel de urgencia y plazos legales
 - Uso previsto de los datos
 
 ### Para Proyectos de Automatización
+
 Describe:
+
 - Procesos manuales actuales
 - Sistemas que estás usando
 - Resultados deseados
@@ -61,12 +67,12 @@ Describe:
 ✅ **Experiencia Técnica** - Conocimiento profundo en múltiples dominios  
 ✅ **Comunicación Transparente** - Actualizaciones regulares y cronogramas claros  
 ✅ **Engagement Flexible** - Desde consultoría por horas hasta proyectos completos  
-✅ **Servicio Bilingüe** - Soporte en inglés y español  
+✅ **Servicio Bilingüe** - Soporte en inglés y español
 
 ## 📍 Conéctate en Redes Sociales
 
 - **GitHub:** [github.com/hyeomans](https://github.com/hyeomans)
-- **LinkedIn:** [linkedin.com/in/hector-yeomans](https://linkedin.com/in/hector-yeomans)  
+- **LinkedIn:** [linkedin.com/in/hector-yeomans](https://linkedin.com/in/hector-yeomans)
 - **Twitter:** [@h_yeomans](https://twitter.com/h_yeomans)
 
 ---

@@ -1,7 +1,7 @@
 ---
 title: "Professional Services"
 description: "Expert services in software development, transparency consulting, and automation solutions"
-date: 2025-08-24T16:30:00-07:00
+date: 2025-08-24T08:30:00-07:00
 author: "Hector Yeomans"
 layout: "services"
 showtoc: false
@@ -13,7 +13,9 @@ Leveraging years of experience in software development, government transparency,
 ## 🚀 What I Offer
 
 ### Full-Stack Development
+
 **Modern web applications with React, TypeScript, Node.js, and Go**
+
 - Frontend development with React, TypeScript, and Tailwind CSS
 - Backend services with Go and Node.js
 - Microservices architecture and APIs
@@ -24,7 +26,9 @@ Leveraging years of experience in software development, government transparency,
 ---
 
 ### Transparency Law Consulting
+
 **Navigate Mexican transparency laws with expert guidance**
+
 - Access to information request strategy and drafting
 - Public data analysis and visualization under LGT framework
 - Government accountability research
@@ -35,7 +39,9 @@ Leveraging years of experience in software development, government transparency,
 ---
 
 ### N8N Automation
+
 **Streamline your workflows with no-code automation**
+
 - Workflow design and implementation
 - API integrations and data synchronization
 - Process automation consulting
@@ -58,4 +64,4 @@ Ready to discuss your project? [Get in touch](mailto:mail@hyeomans.com) to sched
 
 ---
 
-*All services are delivered remotely with flexible scheduling to accommodate different time zones.*
+_All services are delivered remotely with flexible scheduling to accommodate different time zones._

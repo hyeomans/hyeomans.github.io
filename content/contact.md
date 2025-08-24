@@ -1,7 +1,7 @@
 ---
 title: "Get In Touch"
 description: "Contact Hector Yeomans for professional services in Go development, FOIA consulting, and N8N automation"
-date: 2025-08-24T16:30:00-07:00
+date: 2025-08-24T08:30:00-07:00
 author: "Hector Yeomans"
 hidemeta: true
 showtoc: false
@@ -22,27 +22,33 @@ Ready to start your next project? I'd love to hear about your challenges and dis
 ## 🚀 Services Available
 
 - **[Full-Stack Development](/services/fullstack-development/)** - Modern web applications with React, TypeScript, Node.js, and Go
-- **[Transparency Law Consulting](/services/transparency-consulting/)** - Mexican transparency law expertise under LGT and government data analysis  
+- **[Transparency Law Consulting](/services/transparency-consulting/)** - Mexican transparency law expertise under LGT and government data analysis
 - **[N8N Automation](/services/n8n-automation/)** - Workflow automation and business process optimization
 
 ## ⚡ Quick Start
 
 ### For Development Projects
+
 Send me:
+
 - Brief project description
 - Technology requirements
 - Timeline expectations
 - Budget range
 
 ### For Transparency/Access to Information Work
+
 Include:
+
 - Information you're seeking
 - Target government entity (federal, state, municipal)
 - Urgency level and legal deadlines
 - Intended use of data
 
 ### For Automation Projects
+
 Describe:
+
 - Current manual processes
 - Systems you're using
 - Desired outcomes
@@ -61,12 +67,12 @@ Describe:
 ✅ **Technical Expertise** - Deep knowledge across multiple domains  
 ✅ **Transparent Communication** - Regular updates and clear timelines  
 ✅ **Flexible Engagement** - From hourly consulting to full projects  
-✅ **Bilingual Service** - English and Spanish support  
+✅ **Bilingual Service** - English and Spanish support
 
 ## 📍 Connect on Social
 
 - **GitHub:** [github.com/hyeomans](https://github.com/hyeomans)
-- **LinkedIn:** [linkedin.com/in/hector-yeomans](https://linkedin.com/in/hector-yeomans)  
+- **LinkedIn:** [linkedin.com/in/hector-yeomans](https://linkedin.com/in/hector-yeomans)
 - **Twitter:** [@h_yeomans](https://twitter.com/h_yeomans)
 
 ---

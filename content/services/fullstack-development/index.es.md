@@ -1,7 +1,7 @@
 ---
 title: "Experiencia en Desarrollo Full-Stack"
 description: "Experiencia especializada en desarrollo full-stack con Go, React, TypeScript, Node.js construyendo aplicaciones escalables para empresas de primer nivel"
-date: 2025-08-24T16:30:00-07:00
+date: 2025-08-24T08:30:00-07:00
 author: "Hector Yeomans"
 tags:
   [

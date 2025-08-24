@@ -1,7 +1,7 @@
 ---
 title: "Full-Stack Development Services"
 description: "Expert full-stack development services with Go, React, TypeScript, Node.js for scalable, modern applications"
-date: 2025-08-24T16:30:00-07:00
+date: 2025-08-24T08:30:00-07:00
 author: "Hector Yeomans"
 tags:
   [

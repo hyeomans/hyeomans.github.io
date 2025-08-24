@@ -1,7 +1,7 @@
 ---
 title: "Servicios Profesionales"
 description: "Servicios especializados en desarrollo de software, consultoría en transparencia y soluciones de automatización"
-date: 2025-08-24T16:30:00-07:00
+date: 2025-08-24T08:30:00-07:00
 author: "Hector Yeomans"
 layout: "services"
 showtoc: false
@@ -13,7 +13,9 @@ Aprovechando años de experiencia en desarrollo de software, transparencia guber
 ## 🚀 Lo Que Ofrezco
 
 ### Desarrollo Full-Stack
+
 **Aplicaciones web modernas con React, TypeScript, Node.js y Go**
+
 - Desarrollo frontend con React, TypeScript y Tailwind CSS
 - Servicios backend con Go y Node.js
 - Arquitectura de microservicios y APIs
@@ -24,7 +26,9 @@ Aprovechando años de experiencia en desarrollo de software, transparencia guber
 ---
 
 ### Consultoría en Transparencia
+
 **Navega las leyes mexicanas de transparencia con orientación experta**
+
 - Estrategia y redacción de solicitudes de acceso a la información
 - Análisis y visualización de datos públicos bajo el marco de la LGT
 - Investigación de rendición de cuentas gubernamental
@@ -35,7 +39,9 @@ Aprovechando años de experiencia en desarrollo de software, transparencia guber
 ---
 
 ### Automatización N8N
+
 **Optimiza tus flujos de trabajo con automatización sin código**
+
 - Diseño e implementación de flujos de trabajo
 - Integraciones de APIs y sincronización de datos
 - Consultoría en automatización de procesos
@@ -58,4 +64,4 @@ Aprovechando años de experiencia en desarrollo de software, transparencia guber
 
 ---
 
-*Todos los servicios se entregan de forma remota con horarios flexibles para adaptarse a diferentes zonas horarias.*
+_Todos los servicios se entregan de forma remota con horarios flexibles para adaptarse a diferentes zonas horarias._
