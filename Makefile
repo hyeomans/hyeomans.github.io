@@ -13,11 +13,11 @@ help:
 
 # Start development server
 serve:
-	hugo server --navigateToChanged --disableFastRender
+	hugo server --gc --noHTTPCache --navigateToChanged --disableFastRender
 
 # Start server with drafts and future posts
 serve-drafts:
-	hugo server -D -F --navigateToChanged --disableFastRender
+	hugo server -D -F --gc --noHTTPCache --navigateToChanged --disableFastRender
 
 # Build for production
 build:

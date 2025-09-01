@@ -1,0 +1,52 @@
+{{ define "title" }}
+{{ if eq site.Language.Lang "es" }}404 - Página No Encontrada{{ else }}404 - Page Not Found{{ end }}
+{{ end }}
+
+{{ define "main" }}
+<div style="display: flex; align-items: center; justify-content: center; min-height: 60vh; padding: 2rem 1rem;">
+    <div style="text-align: center; max-width: 600px; width: 100%;">
+        <div style="font-size: 8rem; font-weight: bold; color: var(--primary); line-height: 1; margin-bottom: 1rem;">404</div>
+        <div>
+            <h1 style="font-size: 2.5rem; margin-bottom: 1rem; color: var(--primary);">
+                {{ if eq site.Language.Lang "es" }}Página No Encontrada{{ else }}Page Not Found{{ end }}
+            </h1>
+            <p style="font-size: 1.2rem; color: var(--secondary); margin-bottom: 2rem;">
+                {{ if eq site.Language.Lang "es" }}
+                    La página que buscas no existe o ha sido movida.
+                {{ else }}
+                    The page you're looking for doesn't exist or has been moved.
+                {{ end }}
+            </p>
+        </div>
+        
+        <div style="display: flex; gap: 1rem; justify-content: center; margin-bottom: 3rem; flex-wrap: wrap;">
+            <a href="{{ "" | relLangURL }}" style="padding: 0.75rem 1.5rem; border-radius: 0.5rem; text-decoration: none; font-weight: 600; background-color: var(--primary); color: var(--theme); border: 2px solid var(--primary); display: inline-block;">
+                {{ if eq site.Language.Lang "es" }}Ir al Inicio{{ else }}Go Home{{ end }}
+            </a>
+            <a href="{{ "search" | relLangURL }}" style="padding: 0.75rem 1.5rem; border-radius: 0.5rem; text-decoration: none; font-weight: 600; background-color: transparent; color: var(--secondary); border: 2px solid var(--border); display: inline-block;">
+                {{ if eq site.Language.Lang "es" }}Buscar{{ else }}Search{{ end }}
+            </a>
+        </div>
+
+        <div style="margin-bottom: 2rem; padding: 2rem; background-color: var(--entry); border-radius: 0.75rem; border: 1px solid var(--border);">
+            <h3 style="margin-bottom: 1rem; color: var(--primary); font-size: 1.25rem;">
+                {{ if eq site.Language.Lang "es" }}Páginas Populares{{ else }}Popular Pages{{ end }}
+            </h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.5rem;">
+                <a href="{{ "posts" | relLangURL }}" style="display: block; padding: 0.75rem; text-decoration: none; color: var(--secondary); border-radius: 0.375rem;">
+                    {{ if eq site.Language.Lang "es" }}Artículos{{ else }}Posts{{ end }}
+                </a>
+                <a href="{{ "services" | relLangURL }}" style="display: block; padding: 0.75rem; text-decoration: none; color: var(--secondary); border-radius: 0.375rem;">
+                    {{ if eq site.Language.Lang "es" }}Servicios{{ else }}Services{{ end }}
+                </a>
+                <a href="{{ "series" | relLangURL }}" style="display: block; padding: 0.75rem; text-decoration: none; color: var(--secondary); border-radius: 0.375rem;">
+                    Series
+                </a>
+                <a href="{{ "tags" | relLangURL }}" style="display: block; padding: 0.75rem; text-decoration: none; color: var(--secondary); border-radius: 0.375rem;">
+                    {{ if eq site.Language.Lang "es" }}Etiquetas{{ else }}Tags{{ end }}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{{ end }}
