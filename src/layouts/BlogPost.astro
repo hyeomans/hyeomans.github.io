@@ -5,6 +5,7 @@ import BaseLayout from './BaseLayout.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import ReadingTime from '../components/ReadingTime.astro';
 import type { LanguageLink } from '../types/site';
+import { slugifyTag } from '../utils/slug';
 
 interface Props {
 	title: string;
@@ -185,7 +186,8 @@ const canonicalPath = lang === 'en' ? `/posts/${routeSlug}/` : `/es/posts/${rout
 						<h2 class="sr-only">{breadcrumbText.tags}</h2>
 						<div class="flex flex-wrap gap-2">
 							{tags.map((tag) => {
-								const tagPath = lang === 'en' ? `/tags/${tag}/` : `/es/tags/${tag}/`;
+								const tagSlug = slugifyTag(tag);
+								const tagPath = lang === 'en' ? `/tags/${tagSlug}/` : `/es/tags/${tagSlug}/`;
 								return (
 									<a
 										href={tagPath}

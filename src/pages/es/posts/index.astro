@@ -38,8 +38,8 @@ const languageLinks = [
 				<div class="mx-auto max-w-4xl">
 					<div class="space-y-12">
 						{posts.map((post) => {
-							// Remove the 'es/' prefix from the slug if it exists
-							const slug = post.slug.startsWith('es/') ? post.slug.slice(3) : post.slug;
+							// Extract just the post name from the slug (e.g., 'es/medios-comunicacion' -> 'medios-comunicacion')
+							const slug = post.slug.split('/').pop() ?? post.slug;
 							const postUrl = `/es/posts/${slug}/`;
 							return (
 								<article class="group relative">

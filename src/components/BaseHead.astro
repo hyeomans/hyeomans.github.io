@@ -56,13 +56,20 @@ const langLocales: Record<'en' | 'es', string> = {
 	es: 'es_MX',
 };
 
+// Find the English version for x-default (or fall back to current page if it's English)
+const englishVersion = lang === 'en'
+	? canonicalURL.toString()
+	: alternates.find(alt => alt.lang === 'en')?.href
+		? new URL(alternates.find(alt => alt.lang === 'en')!.href, siteOrigin).toString()
+		: canonicalURL.toString();
+
 const hrefLangEntries = [
 	{ lang, href: canonicalURL.toString() },
 	...alternates.map((alt) => ({
 		lang: alt.lang,
 		href: new URL(alt.href, siteOrigin).toString(),
 	})),
-	{ lang: 'x-default', href: SITE_URL },
+	{ lang: 'x-default', href: englishVersion },
 ];
 
 const uniqueHrefLang = Array.from(
