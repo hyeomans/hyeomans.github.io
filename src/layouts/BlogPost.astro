@@ -1,0 +1,209 @@
+---
+import type { ImageMetadata } from 'astro';
+import { getCollection } from 'astro:content';
+import BaseLayout from './BaseLayout.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import ReadingTime from '../components/ReadingTime.astro';
+import type { LanguageLink } from '../types/site';
+
+interface Props {
+	title: string;
+	description: string;
+	pubDate: Date;
+	updatedDate?: Date;
+	heroImage?: ImageMetadata;
+	heroAlt?: string;
+	tags?: string[];
+	author?: string;
+	lang?: 'en' | 'es';
+	content: string;
+	slug: string;
+	entrySlug: string;
+	translationKey?: string;
+}
+
+const {
+	title,
+	description,
+	pubDate,
+	updatedDate,
+	heroImage,
+	heroAlt,
+	tags = [],
+	author,
+	lang = 'en',
+	content,
+	slug: routeSlug,
+	entrySlug,
+	translationKey,
+} = Astro.props;
+
+const allPosts = await getCollection('posts');
+const translationMatch = allPosts.find(
+	(post) =>
+		post.data.lang !== lang &&
+		!post.data.draft &&
+		(post.data.translationKey && translationKey
+			? post.data.translationKey === translationKey
+			: (post.slug.split('/').pop() ?? post.slug) === routeSlug),
+);
+
+const englishSlug =
+	lang === 'en'
+		? routeSlug
+		: translationMatch && translationMatch.data.lang === 'en'
+			? translationMatch.slug.split('/').pop() ?? translationMatch.slug
+			: undefined;
+
+const spanishSlug =
+	lang === 'es'
+		? routeSlug
+		: translationMatch && translationMatch.data.lang === 'es'
+			? translationMatch.slug.split('/').pop() ?? translationMatch.slug
+			: undefined;
+
+const languageLinks: LanguageLink[] = [
+	{
+		lang: 'en',
+		href: englishSlug ? `/posts/${englishSlug}/` : '/posts/',
+		label: 'EN',
+		available: Boolean(englishSlug),
+		isTranslation: Boolean(englishSlug),
+		description: englishSlug ? 'View this article in English' : 'Browse all English posts',
+	},
+	{
+		lang: 'es',
+		href: spanishSlug ? `/es/posts/${spanishSlug}/` : '/es/posts/',
+		label: 'ES',
+		available: Boolean(spanishSlug),
+		isTranslation: Boolean(spanishSlug),
+		description: spanishSlug ? 'Ver este artículo en español' : 'Explora los posts en español',
+	},
+];
+
+// Breadcrumb text based on language
+const breadcrumbText = {
+	home: lang === 'en' ? 'Home' : 'Inicio',
+	posts: lang === 'en' ? 'Posts' : 'Posts',
+	updatedOn: lang === 'en' ? 'Updated on' : 'Actualizado el',
+	postedBy: lang === 'en' ? 'Posted by' : 'Publicado por',
+	tags: lang === 'en' ? 'Tags' : 'Etiquetas',
+};
+
+const postsPath = lang === 'en' ? '/posts/' : '/es/posts/';
+const canonicalPath = lang === 'en' ? `/posts/${routeSlug}/` : `/es/posts/${routeSlug}/`;
+---
+
+<BaseLayout
+	title={title}
+	description={description}
+	image={heroImage}
+	imageAlt={heroAlt}
+	type="article"
+	publishedTime={pubDate}
+	modifiedTime={updatedDate}
+	tags={tags}
+	author={author}
+	lang={lang}
+	languageLinks={languageLinks}
+	canonicalUrl={canonicalPath}
+>
+	<article class="py-12 sm:py-16">
+		<div class="mx-auto max-w-3xl px-6 lg:px-8">
+			<!-- Breadcrumb Navigation -->
+			<nav class="flex mb-8 text-sm" aria-label="Breadcrumb">
+				<ol class="inline-flex items-center space-x-1 md:space-x-3">
+					<li class="inline-flex items-center">
+						<a
+							href="/"
+							class="text-gray-600 hover:text-gamboge-600 dark:text-gray-400 dark:hover:text-gamboge-400 transition-colors"
+						>
+							{breadcrumbText.home}
+						</a>
+					</li>
+					<li>
+						<div class="flex items-center">
+							<span class="mx-2 text-gray-400">/</span>
+							<a
+								href={postsPath}
+								class="text-gray-600 hover:text-gamboge-600 dark:text-gray-400 dark:hover:text-gamboge-400 transition-colors"
+							>
+								{breadcrumbText.posts}
+							</a>
+						</div>
+					</li>
+					<li aria-current="page">
+						<div class="flex items-center">
+							<span class="mx-2 text-gray-400">/</span>
+							<span class="text-gray-900 dark:text-white font-medium">
+								{title}
+							</span>
+						</div>
+					</li>
+				</ol>
+			</nav>
+
+			<!-- Hero Image -->
+			{heroImage && (
+				<div class="mb-8 -mx-6 lg:-mx-8">
+					<img
+						src={heroImage.src}
+						alt={heroAlt || title}
+						class="w-full h-auto rounded-lg"
+						loading="eager"
+					/>
+				</div>
+			)}
+
+			<!-- Post Header -->
+			<header class="mb-8">
+				<h1 class="text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl mb-4">
+					{title}
+				</h1>
+
+				<div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 dark:text-gray-400 mb-4">
+					<FormattedDate date={pubDate} lang={lang} />
+					<span class="text-gray-400">•</span>
+					<ReadingTime content={content} lang={lang} />
+					{author && (
+						<>
+							<span class="text-gray-400">•</span>
+							<span>{breadcrumbText.postedBy} {author}</span>
+						</>
+					)}
+				</div>
+
+				{updatedDate && (
+					<div class="text-sm text-gray-600 dark:text-gray-400 italic">
+						{breadcrumbText.updatedOn} <FormattedDate date={updatedDate} lang={lang} />
+					</div>
+				)}
+
+				<!-- Tags -->
+				{tags.length > 0 && (
+					<div class="mt-6">
+						<h2 class="sr-only">{breadcrumbText.tags}</h2>
+						<div class="flex flex-wrap gap-2">
+							{tags.map((tag) => {
+								const tagPath = lang === 'en' ? `/tags/${tag}/` : `/es/tags/${tag}/`;
+								return (
+									<a
+										href={tagPath}
+										class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gamboge-100 text-gamboge-800 hover:bg-gamboge-200 dark:bg-gamboge-900 dark:text-gamboge-200 dark:hover:bg-gamboge-800 transition-colors"
+									>
+										#{tag}
+									</a>
+								);
+							})}
+						</div>
+					</div>
+				)}
+			</header>
+
+			<!-- Post Content -->
+			<div class="prose prose-lg dark:prose-invert max-w-none">
+				<slot />
+			</div>
+		</div>
+	</article>
+</BaseLayout>

@@ -1,0 +1,94 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { AUTHOR_NAME, SOCIAL_LINKS } from '../../../consts';
+
+const title = 'Acerca de';
+const description = 'Conoce más sobre Hector Yeomans y este blog.';
+const languageLinks = [
+	{ lang: 'en', href: '/about/', label: 'EN', available: true, isTranslation: true },
+	{ lang: 'es', href: '/es/about/', label: 'ES', available: true, isTranslation: true },
+];
+---
+
+<BaseLayout title={title} description={description} lang="es" languageLinks={languageLinks} canonicalUrl="/es/about/">
+	<div class="bg-white dark:bg-gray-900 py-24 sm:py-32">
+		<div class="mx-auto max-w-4xl px-6 lg:px-8">
+			<article class="prose prose-lg dark:prose-invert mx-auto">
+				<h1>Acerca de Mí</h1>
+
+				<p class="lead">
+					Hola, soy {AUTHOR_NAME}, un ingeniero de software apasionado por construir sistemas
+					escalables y explorar tecnologías web modernas.
+				</p>
+
+				<h2>Qué Hago</h2>
+
+				<p>
+					Me especializo en desarrollo backend con Go y TypeScript, construyendo microservicios
+					y sistemas distribuidos. Mi trabajo se enfoca en crear soluciones robustas y mantenibles
+					que resuelven problemas del mundo real.
+				</p>
+
+				<p>
+					Más allá de la ingeniería de software, me interesa profundamente la transparencia
+					gubernamental y las iniciativas de datos abiertos, particularmente en México. Creo
+					que la tecnología puede jugar un papel crucial en hacer que el gobierno sea más
+					accesible y responsable ante los ciudadanos.
+				</p>
+
+				<h2>Este Blog</h2>
+
+				<p>
+					Este blog es donde comparto mis pensamientos sobre ingeniería de software, lenguajes
+					de programación y tendencias tecnológicas. Encontrarás posts sobre:
+				</p>
+
+				<ul>
+					<li>Programación en Go y mejores prácticas</li>
+					<li>TypeScript y JavaScript moderno</li>
+					<li>Arquitectura de microservicios</li>
+					<li>Desarrollo web</li>
+					<li>Datos abiertos y transparencia gubernamental</li>
+				</ul>
+
+				<p>
+					Escribo tanto en inglés como en español, con el objetivo de hacer el contenido técnico
+					accesible para una audiencia más amplia.
+				</p>
+
+				<h2>Contacto</h2>
+
+				<p>
+					Siempre es un placer conectar con otros desarrolladores y entusiastas de la tecnología.
+					Puedes encontrarme en:
+				</p>
+
+				<ul>
+					<li>
+						<a href={SOCIAL_LINKS.github} target="_blank" rel="noopener noreferrer">
+							GitHub
+						</a> - Revisa mis proyectos de código abierto
+					</li>
+					<li>
+						<a href={SOCIAL_LINKS.twitter} target="_blank" rel="noopener noreferrer">
+							Twitter / X
+						</a> - Sígueme para actualizaciones y pensamientos sobre tecnología
+					</li>
+					<li>
+						<a href={SOCIAL_LINKS.linkedin} target="_blank" rel="noopener noreferrer">
+							LinkedIn
+						</a> - Conecta profesionalmente
+					</li>
+				</ul>
+
+				<p class="text-sm text-gray-600 dark:text-gray-400 mt-8">
+					<em>
+						Este sitio está construido con <a href="https://astro.build" target="_blank" rel="noopener noreferrer">Astro</a>,
+						estilizado con <a href="https://tailwindcss.com" target="_blank" rel="noopener noreferrer">Tailwind CSS</a>,
+						y alojado en <a href="https://pages.github.com" target="_blank" rel="noopener noreferrer">GitHub Pages</a>.
+					</em>
+				</p>
+			</article>
+		</div>
+	</div>
+</BaseLayout>

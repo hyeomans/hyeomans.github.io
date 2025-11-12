@@ -1,0 +1,19 @@
+---
+interface Props {
+	content: string;
+	lang?: 'en' | 'es';
+}
+
+const { content, lang = 'en' } = Astro.props;
+
+// Calculate reading time (average 225 words per minute)
+const wordsPerMinute = 225;
+const wordCount = content.trim().split(/\s+/).length;
+const readingTime = Math.ceil(wordCount / wordsPerMinute);
+
+const text = lang === 'en' ? 'min read' : 'min de lectura';
+---
+
+<span class="text-sm text-gray-600 dark:text-gray-400">
+	{readingTime} {text}
+</span>

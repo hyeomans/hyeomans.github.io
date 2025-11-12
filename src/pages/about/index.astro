@@ -1,0 +1,93 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { AUTHOR_NAME, SOCIAL_LINKS } from '../../consts';
+
+const title = 'About';
+const description = 'Learn more about Hector Yeomans and this blog.';
+const languageLinks = [
+	{ lang: 'en', href: '/about/', label: 'EN', available: true, isTranslation: true },
+	{ lang: 'es', href: '/es/about/', label: 'ES', available: true, isTranslation: true },
+];
+---
+
+<BaseLayout title={title} description={description} lang="en" languageLinks={languageLinks} canonicalUrl="/about/">
+	<div class="bg-white dark:bg-gray-900 py-24 sm:py-32">
+		<div class="mx-auto max-w-4xl px-6 lg:px-8">
+			<article class="prose prose-lg dark:prose-invert mx-auto">
+				<h1>About Me</h1>
+
+				<p class="lead">
+					Hi, I'm {AUTHOR_NAME}, a software engineer passionate about building scalable systems
+					and exploring modern web technologies.
+				</p>
+
+				<h2>What I Do</h2>
+
+				<p>
+					I specialize in backend development with Go and TypeScript, building microservices
+					and distributed systems. My work focuses on creating robust, maintainable solutions
+					that solve real-world problems.
+				</p>
+
+				<p>
+					Beyond software engineering, I'm deeply interested in government transparency and
+					open data initiatives, particularly in Mexico. I believe technology can play a crucial
+					role in making government more accessible and accountable to citizens.
+				</p>
+
+				<h2>This Blog</h2>
+
+				<p>
+					This blog is where I share my thoughts on software engineering, programming languages,
+					and technology trends. You'll find posts about:
+				</p>
+
+				<ul>
+					<li>Go programming and best practices</li>
+					<li>TypeScript and modern JavaScript</li>
+					<li>Microservices architecture</li>
+					<li>Web development</li>
+					<li>Open data and government transparency</li>
+				</ul>
+
+				<p>
+					I write in both English and Spanish, aiming to make technical content accessible
+					to a broader audience.
+				</p>
+
+				<h2>Get in Touch</h2>
+
+				<p>
+					I'm always happy to connect with fellow developers and tech enthusiasts. You can
+					find me on:
+				</p>
+
+				<ul>
+					<li>
+						<a href={SOCIAL_LINKS.github} target="_blank" rel="noopener noreferrer">
+							GitHub
+						</a> - Check out my open source projects
+					</li>
+					<li>
+						<a href={SOCIAL_LINKS.twitter} target="_blank" rel="noopener noreferrer">
+							Twitter / X
+						</a> - Follow me for tech updates and thoughts
+					</li>
+					<li>
+						<a href={SOCIAL_LINKS.linkedin} target="_blank" rel="noopener noreferrer">
+							LinkedIn
+						</a> - Connect professionally
+					</li>
+				</ul>
+
+				<p class="text-sm text-gray-600 dark:text-gray-400 mt-8">
+					<em>
+						This site is built with <a href="https://astro.build" target="_blank" rel="noopener noreferrer">Astro</a>,
+						styled with <a href="https://tailwindcss.com" target="_blank" rel="noopener noreferrer">Tailwind CSS</a>,
+						and hosted on <a href="https://pages.github.com" target="_blank" rel="noopener noreferrer">GitHub Pages</a>.
+					</em>
+				</p>
+			</article>
+		</div>
+	</div>
+</BaseLayout>

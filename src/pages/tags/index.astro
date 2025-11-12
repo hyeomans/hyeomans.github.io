@@ -1,0 +1,71 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { slugifyTag } from '../../utils/slug';
+
+// Get all English posts and extract unique tags with counts
+const posts = (await getCollection('posts'))
+	.filter((post) => post.data.lang === 'en' && !post.data.draft);
+
+const tagCounts = new Map<string, number>();
+posts.forEach((post) => {
+	post.data.tags?.forEach((tag) => {
+		tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
+	});
+});
+
+// Sort tags alphabetically
+const sortedTags = Array.from(tagCounts.entries())
+	.sort((a, b) => a[0].localeCompare(b[0]))
+	.map(([label, count]) => ({
+		label,
+		count,
+		slug: slugifyTag(label),
+	}));
+
+const title = 'All Tags';
+const description = 'Browse posts by topic.';
+const languageLinks = [
+	{ lang: 'en', href: '/tags/', label: 'EN', available: true, isTranslation: true },
+	{ lang: 'es', href: '/es/tags/', label: 'ES', available: true, isTranslation: true },
+];
+---
+
+<BaseLayout title={title} description={description} lang="en" languageLinks={languageLinks} canonicalUrl="/tags/">
+	<div class="bg-white dark:bg-gray-900 py-24 sm:py-32">
+		<div class="mx-auto max-w-7xl px-6 lg:px-8">
+			<div class="mx-auto max-w-2xl text-center mb-16">
+				<h1 class="text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl">
+					{title}
+				</h1>
+				<p class="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
+					{description}
+				</p>
+			</div>
+
+			{sortedTags.length === 0 ? (
+				<div class="text-center text-gray-600 dark:text-gray-400">
+					<p>No tags found.</p>
+				</div>
+			) : (
+				<div class="mx-auto max-w-4xl">
+					<div class="flex flex-wrap gap-4 justify-center">
+						{sortedTags.map((tag) => (
+							<a
+								href={`/tags/${tag.slug}/`}
+								class="group inline-flex flex-col items-center px-6 py-4 rounded-lg bg-gray-50 dark:bg-gray-800 hover:bg-gamboge-50 dark:hover:bg-gamboge-900 transition-colors border border-gray-200 dark:border-gray-700"
+							>
+								<span class="text-xl font-semibold text-gray-900 dark:text-white group-hover:text-gamboge-600 dark:group-hover:text-gamboge-400 transition-colors">
+									#{tag.label}
+								</span>
+								<span class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+									{tag.count} {tag.count === 1 ? 'post' : 'posts'}
+								</span>
+							</a>
+						))}
+					</div>
+				</div>
+			)}
+		</div>
+	</div>
+</BaseLayout>

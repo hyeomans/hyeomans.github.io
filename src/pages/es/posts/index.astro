@@ -1,0 +1,105 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import FormattedDate from '../../../components/FormattedDate.astro';
+import ReadingTime from '../../../components/ReadingTime.astro';
+import { slugifyTag } from '../../../utils/slug';
+
+// Get all Spanish posts and sort by date (newest first)
+const posts = (await getCollection('posts'))
+	.filter((post) => post.data.lang === 'es' && !post.data.draft)
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const title = 'Todos los Posts';
+const description = 'Explora todos los artículos sobre ingeniería de software, Go, TypeScript y más.';
+const languageLinks = [
+	{ lang: 'en', href: '/posts/', label: 'EN', available: true, isTranslation: true },
+	{ lang: 'es', href: '/es/posts/', label: 'ES', available: true, isTranslation: true },
+];
+---
+
+<BaseLayout title={title} description={description} lang="es" languageLinks={languageLinks} canonicalUrl="/es/posts/">
+	<div class="bg-white dark:bg-gray-900 py-24 sm:py-32">
+		<div class="mx-auto max-w-7xl px-6 lg:px-8">
+			<div class="mx-auto max-w-2xl text-center mb-16">
+				<h1 class="text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl">
+					{title}
+				</h1>
+				<p class="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
+					{description}
+				</p>
+			</div>
+
+			{posts.length === 0 ? (
+				<div class="text-center text-gray-600 dark:text-gray-400">
+					<p>No se encontraron posts.</p>
+				</div>
+			) : (
+				<div class="mx-auto max-w-4xl">
+					<div class="space-y-12">
+						{posts.map((post) => {
+							// Remove the 'es/' prefix from the slug if it exists
+							const slug = post.slug.startsWith('es/') ? post.slug.slice(3) : post.slug;
+							const postUrl = `/es/posts/${slug}/`;
+							return (
+								<article class="group relative">
+									<div class="relative flex flex-col gap-8 lg:flex-row">
+										{/* Hero Image */}
+										{post.data.heroImage && (
+											<div class="lg:w-64 lg:flex-shrink-0">
+												<a href={postUrl} class="block">
+													<img
+														src={post.data.heroImage.src}
+														alt={post.data.heroAlt || post.data.title}
+														class="aspect-[16/9] w-full rounded-2xl bg-gray-100 object-cover lg:aspect-[4/3] transition-transform group-hover:scale-105"
+														loading="lazy"
+													/>
+												</a>
+											</div>
+										)}
+
+										{/* Post Content */}
+										<div class="flex-1">
+											<div class="flex items-center gap-x-4 text-xs mb-2">
+												<FormattedDate date={post.data.pubDate} lang="es" />
+												<span class="text-gray-400">•</span>
+												<ReadingTime content={post.body} lang="es" />
+											</div>
+
+											<h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-gamboge-600 dark:group-hover:text-gamboge-400 transition-colors">
+												<a href={postUrl} class="hover:underline">
+													{post.data.title}
+												</a>
+											</h2>
+
+											<p class="text-base leading-7 text-gray-600 dark:text-gray-300 mb-4">
+												{post.data.description}
+											</p>
+
+											{/* Tags */}
+											{post.data.tags && post.data.tags.length > 0 && (
+												<div class="flex flex-wrap gap-2">
+													{post.data.tags.map((tag) => {
+														const tagSlug = slugifyTag(tag);
+														return (
+															<a
+																href={`/es/tags/${tagSlug}/`}
+																class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gamboge-100 text-gamboge-800 hover:bg-gamboge-200 dark:bg-gamboge-900 dark:text-gamboge-200 dark:hover:bg-gamboge-800 transition-colors"
+															>
+																#{tag}
+															</a>
+														);
+													})}
+												</div>
+											)}
+										</div>
+									</div>
+								</article>
+							);
+						})}
+					</div>
+				</div>
+			)}
+		</div>
+	</div>
+</BaseLayout>

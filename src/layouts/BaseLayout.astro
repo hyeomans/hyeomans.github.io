@@ -1,0 +1,95 @@
+---
+import type { ImageMetadata } from 'astro';
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import type { LanguageLink } from '../types/site';
+
+interface Props {
+	title?: string;
+	description?: string;
+	image?: string | ImageMetadata;
+	imageAlt?: string;
+	type?: 'website' | 'article';
+	publishedTime?: Date;
+	modifiedTime?: Date;
+	tags?: string[];
+	author?: string;
+	lang?: 'en' | 'es';
+	languageLinks?: LanguageLink[];
+	canonicalUrl?: string;
+}
+
+const {
+	title = SITE_TITLE,
+	description = SITE_DESCRIPTION,
+	image,
+	imageAlt,
+	type = 'website',
+	publishedTime,
+	modifiedTime,
+	tags,
+	author,
+	lang = 'en',
+	languageLinks,
+	canonicalUrl,
+} = Astro.props;
+
+const currentPath = Astro.url.pathname;
+
+const defaultLanguageLinks: LanguageLink[] =
+	lang === 'en'
+		? [
+			{ lang: 'en', href: currentPath, label: 'EN', available: true },
+			{ lang: 'es', href: '/es/posts/', label: 'ES', available: false, description: 'Explorar contenido en español' },
+		]
+		: [
+			{ lang: 'en', href: '/posts/', label: 'EN', available: false, description: 'Read the English site' },
+			{ lang: 'es', href: currentPath, label: 'ES', available: true },
+		];
+
+const computedLanguageLinks = languageLinks ?? defaultLanguageLinks;
+const translationAlternates = computedLanguageLinks
+	.filter((link) => link.isTranslation)
+	.map((link) => ({ lang: link.lang, href: link.href }));
+
+const canonicalFromProps = canonicalUrl ? new URL(canonicalUrl, Astro.site ?? undefined) : undefined;
+---
+
+<!doctype html>
+<html lang={lang} class="scroll-smooth">
+	<head>
+		<BaseHead
+			title={title}
+			description={description}
+			image={image}
+			type={type}
+			publishedTime={publishedTime}
+			modifiedTime={modifiedTime}
+			tags={tags}
+			author={author}
+			lang={lang}
+			imageAlt={imageAlt}
+			alternates={translationAlternates}
+			canonicalUrl={canonicalFromProps?.toString()}
+		/>
+	</head>
+	<body class="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex flex-col font-sans antialiased">
+		<!-- Skip to content link for accessibility -->
+		<a
+			href="#main-content"
+			class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-gamboge-500 focus:text-white focus:rounded-md"
+		>
+			Skip to content
+		</a>
+
+		<Header currentPath={currentPath} lang={lang} languageLinks={computedLanguageLinks} />
+
+		<main id="main-content" class="flex-1">
+			<slot />
+		</main>
+
+		<Footer lang={lang} />
+	</body>
+</html>

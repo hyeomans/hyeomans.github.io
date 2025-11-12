@@ -1,0 +1,182 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@variant dark (&:is(.dark *));
+
+@font-face {
+  font-family: "Atkinson Hyperlegible";
+  src: url("/fonts/atkinson-regular.woff") format("woff");
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Atkinson Hyperlegible";
+  src: url("/fonts/atkinson-bold.woff") format("woff");
+  font-weight: 700;
+  font-display: swap;
+  font-style: normal;
+}
+
+@theme {
+  /* Gamboge color palette - primary accent */
+  --color-gamboge-50: #fdfaed;
+  --color-gamboge-100: #f9f1cc;
+  --color-gamboge-200: #f3e294;
+  --color-gamboge-300: #eccf5d;
+  --color-gamboge-400: #e8bb37;
+  --color-gamboge-500: #e09d1f;
+  --color-gamboge-600: #c67a19;
+  --color-gamboge-700: #a55818;
+  --color-gamboge-800: #86461a;
+  --color-gamboge-900: #6f3a18;
+  --color-gamboge-950: #3f1d09;
+}
+
+@layer base {
+  :root {
+    color-scheme: light dark;
+    background-color: #ffffff;
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    font-family: "Atkinson Hyperlegible", "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    @apply bg-white text-gray-900 transition-colors duration-200;
+  }
+
+  .dark body {
+    @apply bg-gray-950 text-gray-100;
+  }
+
+  /* Custom selection colors */
+  ::selection {
+    @apply bg-gamboge-200 text-gamboge-900;
+  }
+
+  .dark ::selection {
+    @apply bg-gamboge-800 text-gamboge-100;
+  }
+
+  a {
+    @apply text-gamboge-700 underline-offset-4 transition-colors duration-200;
+  }
+
+  a:hover {
+    @apply text-gamboge-500;
+  }
+
+  a:focus-visible,
+  button:focus-visible {
+    @apply outline-none ring-2 ring-gamboge-500 ring-offset-2;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  }
+
+  pre {
+    @apply rounded-xl border border-gray-200/70 bg-gray-900/90 p-4 text-sm text-gray-50 shadow-inner shadow-gray-900/30;
+  }
+
+  pre code {
+    background: transparent;
+    padding: 0;
+  }
+
+  hr {
+    @apply my-10 border-t border-dashed border-gray-200 dark:border-gray-700;
+  }
+
+  table {
+    @apply w-full border-collapse text-sm;
+  }
+
+  table thead {
+    @apply bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-100;
+  }
+
+  table th,
+  table td {
+    @apply border border-gray-200 px-4 py-2 text-left dark:border-gray-700;
+  }
+
+  .prose figure {
+    @apply my-8;
+  }
+
+  .prose figcaption {
+    @apply mt-2 text-center text-sm text-gray-500 dark:text-gray-400;
+  }
+
+  blockquote {
+    @apply border-l-4 border-gamboge-500/70 bg-gamboge-50/70 px-6 py-3 text-lg italic text-gray-800 dark:border-gamboge-400 dark:bg-gray-800 dark:text-gray-100;
+  }
+
+  .dark blockquote {
+    @apply border-gamboge-400 bg-gray-800/60;
+  }
+
+  /* Prose customization for blog posts */
+  .prose {
+    --tw-prose-body: theme(colors.gray.700);
+    --tw-prose-headings: theme(colors.gray.900);
+    --tw-prose-links: theme(colors.gamboge.600);
+    --tw-prose-bold: theme(colors.gray.900);
+    --tw-prose-code: theme(colors.gray.900);
+    --tw-prose-quotes: theme(colors.gray.900);
+    --tw-prose-quote-borders: theme(colors.gamboge.600);
+    @apply text-base leading-relaxed;
+  }
+
+  .prose p {
+    @apply leading-8;
+  }
+
+  .prose h1,
+  .prose h2,
+  .prose h3,
+  .prose h4 {
+    @apply scroll-mt-20;
+  }
+
+  .prose pre {
+    @apply bg-gray-900 text-gray-50;
+  }
+
+  .prose code {
+    @apply rounded-md bg-gray-100 px-1 py-0.5 text-sm font-semibold text-gray-800 dark:bg-gray-800 dark:text-gray-100;
+  }
+
+  .dark .prose {
+    --tw-prose-body: theme(colors.gray.300);
+    --tw-prose-headings: theme(colors.white);
+    --tw-prose-links: theme(colors.gamboge.400);
+    --tw-prose-bold: theme(colors.white);
+    --tw-prose-code: theme(colors.white);
+    --tw-prose-quotes: theme(colors.gray.100);
+    --tw-prose-quote-borders: theme(colors.gamboge.400);
+  }
+
+  .dark .prose pre {
+    @apply bg-gray-900 text-gray-50;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}

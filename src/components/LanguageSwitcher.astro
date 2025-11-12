@@ -1,0 +1,49 @@
+---
+import type { LanguageLink } from '../types/site';
+
+interface Props {
+	currentLang?: 'en' | 'es';
+	links?: LanguageLink[];
+}
+
+const languageNames: Record<'en' | 'es', string> = {
+	en: 'English',
+	es: 'Español',
+};
+
+const fallbackLinks: LanguageLink[] = [
+	{ lang: 'en', href: '/', label: 'EN', available: true },
+	{ lang: 'es', href: '/es/posts/', label: 'ES', available: true, description: 'Explorar contenido en español' },
+];
+
+const { currentLang = 'en', links = fallbackLinks } = Astro.props;
+---
+
+<div class="inline-flex items-center gap-1 rounded-full border border-gray-200 bg-white/70 px-1 py-1 text-xs font-semibold uppercase text-gray-600 shadow-sm backdrop-blur dark:border-gray-700 dark:bg-gray-900/70 dark:text-gray-300">
+	<span class="sr-only">Language selector</span>
+	{links.map((link) => {
+		const isActive = link.lang === currentLang;
+		const label = link.label ?? link.lang.toUpperCase();
+		const description = link.description ?? (link.available === false
+			? `Translation not available yet. Browse the ${languageNames[link.lang]} site.`
+			: `View this page in ${languageNames[link.lang]}`);
+
+		return (
+			<a
+				href={link.href}
+				class={`rounded-full px-2.5 py-1 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gamboge-500 ${
+					isActive
+						? 'bg-gamboge-600 text-white dark:bg-gamboge-500'
+						: link.available === false
+							? 'text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300'
+							: 'text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white'
+				}`}
+				aria-current={isActive ? 'page' : undefined}
+				aria-label={description}
+				title={description}
+			>
+				{label}
+			</a>
+		);
+	})}
+</div>
