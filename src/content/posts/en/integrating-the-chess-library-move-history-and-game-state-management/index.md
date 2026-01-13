@@ -320,6 +320,9 @@ By delegating to the chess library instead of implementing rules from scratch, w
 
 The most complex part of the integration was understanding the coordinate system mapping, but once that was sorted out with the `coordinatesToSquare` function, everything else fell into place naturally.
 
+
+![Chess game demo](/images/chess-post-2.gif)
+
 Here is the full source code for now, everything lives in a single file for simplicity:
 
 
