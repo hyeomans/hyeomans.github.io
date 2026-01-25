@@ -93,6 +93,11 @@ const breadcrumbText = {
 
 const postsPath = lang === 'en' ? '/posts/' : '/es/posts/';
 const canonicalPath = lang === 'en' ? `/posts/${routeSlug}/` : `/es/posts/${routeSlug}/`;
+const breadcrumbs = [
+	{ name: breadcrumbText.home, item: '/' },
+	{ name: breadcrumbText.posts, item: postsPath },
+	{ name: title, item: canonicalPath },
+];
 ---
 
 <BaseLayout
@@ -108,6 +113,7 @@ const canonicalPath = lang === 'en' ? `/posts/${routeSlug}/` : `/es/posts/${rout
 	lang={lang}
 	languageLinks={languageLinks}
 	canonicalUrl={canonicalPath}
+	breadcrumbs={breadcrumbs}
 >
 	<article class="py-12 sm:py-16">
 		<div class="mx-auto max-w-3xl px-6 lg:px-8">

@@ -1,9 +1,10 @@
 // Site-wide constants and configuration
 
 export const SITE_TITLE = 'Hector Yeomans';
-export const SITE_DESCRIPTION = 'Software engineer writing about Go, TypeScript, microservices, and government transparency in Mexico.';
+export const SITE_DESCRIPTION = 'Staff software engineer focused on Go, TypeScript, and microservices. Writing about scalable systems, open data, and engineering leadership.';
 export const SITE_URL = 'https://hyeomans.com';
 export const AUTHOR_NAME = 'Hector Yeomans';
+export const SITE_OG_IMAGE = '/images/og-default.svg';
 
 export const SOCIAL_LINKS = {
   github: 'https://github.com/hyeomans',

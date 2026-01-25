@@ -89,9 +89,10 @@ const languageLinks = [
 			<div class="mx-auto max-w-4xl">
 				<div class="space-y-12">
 						{posts.map((post) => {
-							const postUrl = `/es/posts/${post.slug}/`;
-						return (
-							<article class="group relative">
+							const slug = post.slug.split('/').pop() ?? post.slug;
+							const postUrl = `/es/posts/${slug}/`;
+							return (
+								<article class="group relative">
 								<div class="relative flex flex-col gap-8 lg:flex-row">
 									{post.data.heroImage && (
 										<div class="lg:w-64 lg:flex-shrink-0">

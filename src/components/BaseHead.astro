@@ -2,7 +2,7 @@
 // Import the global.css file here so that it is included on
 // all pages through the use of the <BaseHead /> component.
 import '../styles/global.css';
-import { SITE_TITLE, SITE_URL, AUTHOR_NAME, GOOGLE_ANALYTICS_ID } from '../consts';
+import { SITE_TITLE, SITE_URL, AUTHOR_NAME, GOOGLE_ANALYTICS_ID, SOCIAL_LINKS, SITE_OG_IMAGE } from '../consts';
 
 interface Props {
 	title: string;
@@ -17,6 +17,8 @@ interface Props {
 	lang?: 'en' | 'es';
 	alternates?: { lang: 'en' | 'es'; href: string }[];
 	canonicalUrl?: string;
+	robots?: string;
+	breadcrumbs?: { name: string; item: string }[];
 }
 
 const siteOrigin = Astro.site?.origin ?? SITE_URL;
@@ -34,6 +36,8 @@ const {
 	lang = 'en',
 	alternates = [],
 	canonicalUrl,
+	robots = 'index,follow',
+	breadcrumbs = [],
 } = Astro.props;
 
 const canonicalURL = canonicalUrl
@@ -49,7 +53,8 @@ const resolveImage = () => {
 	return undefined;
 };
 
-const ogImage = resolveImage();
+const ogImage = resolveImage() ?? new URL(SITE_OG_IMAGE, siteOrigin).toString();
+const ogImageAlt = imageAlt ?? `${SITE_TITLE} — Software Engineer`;
 
 const langLocales: Record<'en' | 'es', string> = {
 	en: 'en_US',
@@ -77,19 +82,57 @@ const uniqueHrefLang = Array.from(
 ).filter(Boolean);
 
 const structuredData: Record<string, unknown>[] = [];
+const websiteId = `${SITE_URL}/#website`;
+const personId = `${SITE_URL}/#person`;
+const pageId = `${canonicalURL.toString()}#webpage`;
+const articleId = `${canonicalURL.toString()}#article`;
+const socialUrls = Object.values(SOCIAL_LINKS);
+
+structuredData.push(
+	{
+		'@context': 'https://schema.org',
+		'@type': 'WebSite',
+		'@id': websiteId,
+		name: SITE_TITLE,
+		url: SITE_URL,
+		description,
+		inLanguage: langLocales[lang],
+		publisher: { '@id': personId },
+	},
+	{
+		'@context': 'https://schema.org',
+		'@type': 'Person',
+		'@id': personId,
+		name: AUTHOR_NAME,
+		url: SITE_URL,
+		sameAs: socialUrls,
+	},
+);
 
 if (type === 'article' && publishedTime) {
 	structuredData.push({
 		'@context': 'https://schema.org',
+		'@type': 'WebPage',
+		'@id': pageId,
+		url: canonicalURL.toString(),
+		name: title,
+		description,
+		inLanguage: langLocales[lang],
+		isPartOf: { '@id': websiteId },
+	});
+	structuredData.push({
+		'@context': 'https://schema.org',
 		'@type': 'BlogPosting',
+		'@id': articleId,
 		headline: title,
 		description,
-		image: ogImage,
+		...(ogImage ? { image: ogImage } : {}),
 		datePublished: publishedTime.toISOString(),
 		dateModified: (modifiedTime ?? publishedTime).toISOString(),
 		inLanguage: langLocales[lang],
 		author: {
 			'@type': 'Person',
+			'@id': personId,
 			name: author,
 			url: SITE_URL,
 		},
@@ -101,17 +144,32 @@ if (type === 'article' && publishedTime) {
 		keywords: tags.join(', '),
 		mainEntityOfPage: {
 			'@type': 'WebPage',
-			'@id': canonicalURL.toString(),
+			'@id': pageId,
 		},
 	});
 } else {
 	structuredData.push({
 		'@context': 'https://schema.org',
-		'@type': 'WebSite',
-		name: SITE_TITLE,
-		url: SITE_URL,
+		'@type': 'WebPage',
+		'@id': pageId,
+		name: title,
+		url: canonicalURL.toString(),
 		inLanguage: langLocales[lang],
 		description,
+		isPartOf: { '@id': websiteId },
+	});
+}
+
+if (breadcrumbs.length > 0) {
+	structuredData.push({
+		'@context': 'https://schema.org',
+		'@type': 'BreadcrumbList',
+		itemListElement: breadcrumbs.map((crumb, index) => ({
+			'@type': 'ListItem',
+			position: index + 1,
+			name: crumb.name,
+			item: new URL(crumb.item, siteOrigin).toString(),
+		})),
 	});
 }
 ---
@@ -122,9 +180,10 @@ if (type === 'article' && publishedTime) {
 <meta name="color-scheme" content="light dark" />
 <meta name="referrer" content="strict-origin-when-cross-origin" />
 <meta name="format-detection" content="telephone=no" />
-<meta name="robots" content="index,follow" />
+<meta name="robots" content={robots} />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="sitemap" href="/sitemap-index.xml" />
+<link rel="alternate" type="application/rss+xml" title={`${SITE_TITLE} RSS`} href="/rss.xml" />
 <meta name="generator" content={Astro.generator} />
 <meta name="author" content={author} />
 
@@ -157,7 +216,7 @@ if (type === 'article' && publishedTime) {
 	.map((alt) => <meta property="og:locale:alternate" content={langLocales[alt.lang]} />)}
 {ogImage && <meta property="og:image" content={ogImage} />}
 {ogImage && <meta property="og:image:secure_url" content={ogImage} />}
-{ogImage && imageAlt && <meta property="og:image:alt" content={imageAlt} />}
+{ogImage && ogImageAlt && <meta property="og:image:alt" content={ogImageAlt} />}
 {type === 'article' && publishedTime && (
 	<meta property="article:published_time" content={publishedTime.toISOString()} />
 )}
@@ -173,7 +232,7 @@ if (type === 'article' && publishedTime) {
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
 {ogImage && <meta property="twitter:image" content={ogImage} />}
-{ogImage && imageAlt && <meta name="twitter:image:alt" content={imageAlt} />}
+{ogImage && ogImageAlt && <meta name="twitter:image:alt" content={ogImageAlt} />}
 <meta name="twitter:creator" content="@h_yeomans" />
 <meta name="twitter:site" content="@h_yeomans" />
 

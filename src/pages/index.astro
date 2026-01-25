@@ -17,13 +17,14 @@ const latestPosts = (await getCollection('posts'))
 			<div class="mx-auto flex max-w-6xl flex-col gap-12 px-6 lg:flex-row lg:items-center lg:gap-24 lg:px-8">
 				<div class="flex-1">
 					<p class="text-sm font-semibold uppercase tracking-widest text-gamboge-600 dark:text-gamboge-400">
-						Software · Open Data · Civic Tech
+						Staff Software Engineer · Go · TypeScript · Microservices
 					</p>
 					<h1 class="mt-6 text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-6xl">
 						Hector Yeomans
 					</h1>
 					<p class="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
-						{SITE_DESCRIPTION}
+						I build scalable backend systems and lead engineering teams. Focus areas include Go, TypeScript,
+						microservices, and modernizing legacy platforms.
 					</p>
 					<div class="mt-10 flex flex-wrap items-center gap-4">
 						<a
@@ -91,7 +92,8 @@ const latestPosts = (await getCollection('posts'))
 
 				<div class="mt-10 grid gap-8 sm:grid-cols-2">
 					{latestPosts.map((post) => {
-						const postUrl = `/posts/${post.slug}/`;
+						const slug = post.slug.split('/').pop() ?? post.slug;
+						const postUrl = `/posts/${slug}/`;
 						return (
 							<article class="group relative rounded-2xl border border-gray-100 bg-white/80 p-6 shadow-sm ring-1 ring-gray-100 transition hover:-translate-y-1 hover:shadow-lg dark:border-gray-800 dark:bg-gray-900/50 dark:ring-gray-800">
 								<div class="flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400">

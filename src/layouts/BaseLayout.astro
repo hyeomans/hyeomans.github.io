@@ -19,6 +19,8 @@ interface Props {
 	lang?: 'en' | 'es';
 	languageLinks?: LanguageLink[];
 	canonicalUrl?: string;
+	robots?: string;
+	breadcrumbs?: { name: string; item: string }[];
 }
 
 const {
@@ -34,6 +36,8 @@ const {
 	lang = 'en',
 	languageLinks,
 	canonicalUrl,
+	robots,
+	breadcrumbs,
 } = Astro.props;
 
 const currentPath = Astro.url.pathname;
@@ -73,6 +77,8 @@ const canonicalFromProps = canonicalUrl ? new URL(canonicalUrl, Astro.site ?? un
 			imageAlt={imageAlt}
 			alternates={translationAlternates}
 			canonicalUrl={canonicalFromProps?.toString()}
+			robots={robots}
+			breadcrumbs={breadcrumbs}
 		/>
 	</head>
 	<body class="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex flex-col font-sans antialiased">
