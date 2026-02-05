@@ -10,8 +10,6 @@ heroImage: "./hero.gif"
 heroAlt: "Crafting a vibe-coded app."
 ---
 
-# Vibe coding feels like a cheat code. It's also a funding problem.
-
 Recently I started building a Go API and did what I usually do first: signup/signin. That quickly turned into the full email/password gauntlet: forgot password, email verification, resets, edge cases, the whole thing.
 
 I set the foundation the way I've done it for years: an OpenAPI-first contract, Docker + testcontainers, and a layered architecture that keeps the seams clear. Once that was in place, I switched into my `ralph-wiggum` mode: ship a feature, verify it, repeat.
