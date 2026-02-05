@@ -29,3 +29,5 @@ hugo-site/
 # Temp editor files
 *.tmp
 *.swp
+.agents
+.claude
