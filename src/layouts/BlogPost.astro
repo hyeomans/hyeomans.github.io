@@ -215,3 +215,96 @@ const breadcrumbs = [
 		</div>
 	</article>
 </BaseLayout>
+
+<script>
+	const mermaidBlocks = Array.from(document.querySelectorAll<HTMLElement>('.prose pre.mermaid'));
+
+	if (mermaidBlocks.length > 0) {
+		let mermaidLib: typeof import('mermaid').default | undefined;
+		let rendering = false;
+		const currentTheme = () => (document.documentElement.classList.contains('dark') ? 'dark' : 'default');
+
+		for (const block of mermaidBlocks) {
+			const source = block.textContent?.trim();
+			if (source) block.dataset.mermaidSource = source;
+		}
+
+		const fitRenderedDiagram = (block: HTMLElement) => {
+			const svg = block.querySelector<SVGSVGElement>('svg');
+			if (!svg) return;
+
+			const padding = svg.classList.contains('statediagram') ? 80 : 24;
+			let box: DOMRect;
+
+			try {
+				box = svg.getBBox();
+			} catch {
+				return;
+			}
+
+			if (box.width === 0 || box.height === 0) return;
+
+			svg.setAttribute(
+				'viewBox',
+				`${box.x - padding} ${box.y - padding} ${box.width + padding * 2} ${box.height + padding * 2}`,
+			);
+			svg.removeAttribute('width');
+			svg.removeAttribute('height');
+		};
+
+		const renderMermaid = async () => {
+			if (rendering) return;
+			rendering = true;
+
+			try {
+				if (!mermaidLib) {
+					mermaidLib = (await import('mermaid')).default;
+				}
+
+				mermaidLib.initialize({
+					startOnLoad: false,
+					securityLevel: 'strict',
+					theme: currentTheme(),
+					themeVariables: {
+						fontFamily: 'Atkinson Hyperlegible, Arial, sans-serif',
+						fontSize: '18px',
+					},
+					flowchart: {
+						useMaxWidth: false,
+					},
+					sequence: {
+						useMaxWidth: false,
+					},
+				});
+
+				for (const block of mermaidBlocks) {
+					const source = block.dataset.mermaidSource;
+					if (!source) continue;
+					block.removeAttribute('data-processed');
+					block.textContent = source;
+				}
+
+				await mermaidLib.run({ nodes: mermaidBlocks });
+
+				for (const block of mermaidBlocks) {
+					fitRenderedDiagram(block);
+				}
+			} catch (err) {
+				console.error('Failed to render Mermaid diagrams:', err);
+			} finally {
+				rendering = false;
+			}
+		};
+
+		const observer = new MutationObserver(() => {
+			renderMermaid().catch((err) => console.error(err));
+		});
+
+		observer.observe(document.documentElement, {
+			attributes: true,
+			attributeFilter: ['class'],
+		});
+
+		renderMermaid().catch((err) => console.error(err));
+	}
+</script>

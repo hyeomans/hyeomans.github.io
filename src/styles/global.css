@@ -153,6 +153,31 @@
     @apply bg-gray-900 text-gray-50;
   }
 
+  .prose pre.mermaid {
+    @apply my-8 overflow-x-auto rounded-xl border border-gray-200/70 bg-white p-4 text-gray-900 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100;
+    background-color: #ffffff !important;
+    color: #111827 !important;
+    max-height: none;
+  }
+
+  .dark .prose pre.mermaid {
+    background-color: #111827 !important;
+    color: #f3f4f6 !important;
+  }
+
+  .prose pre.mermaid svg {
+    display: block;
+    width: 100%;
+    min-width: 640px;
+    max-width: 100%;
+    height: auto;
+    margin-inline: auto;
+  }
+
+  .prose pre.mermaid svg foreignObject {
+    overflow: visible;
+  }
+
   .prose code {
     @apply rounded-md bg-gray-100 px-1 py-0.5 text-sm font-semibold text-gray-800 dark:bg-gray-800 dark:text-gray-100;
   }
