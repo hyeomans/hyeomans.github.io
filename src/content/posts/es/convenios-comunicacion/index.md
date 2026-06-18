@@ -14,9 +14,7 @@ heroAlt: "Ilustración generada con IA sobre convenios de comunicación"
 El 21 de Junio del 2023, compartí un video en el que mostraba cómo realizar una solicitud de transparencia en la Plataforma Nacional de Transparencia:
 
 <figure class="my-6 text-center">
-	<a href="https://twitter.com/h_yeomans/status/1671556917657739264?s=20" target="_blank" rel="noopener noreferrer">
-		<img src="./tweet_video.png" alt="Realizando solicitud transparencia" />
-	</a>
+	<img src="./tweet_video.png" alt="Realizando solicitud transparencia" />
 	<figcaption class="mt-2 text-sm text-gray-500 dark:text-gray-400">Realizando solicitud transparencia</figcaption>
 </figure>
 
@@ -148,7 +146,7 @@ A continuación, se muestra el listado:
 	<figcaption class="mt-2 text-sm text-gray-500 dark:text-gray-400">Relación 2023</figcaption>
 </figure>
 
-# Conclusión
+## Conclusión
 
 Resulta interesante observar cómo cada ente obligado interpreta de manera conveniente las solicitudes que se le hacen:
 

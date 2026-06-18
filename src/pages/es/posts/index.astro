@@ -10,8 +10,8 @@ const posts = (await getCollection('posts'))
 	.filter((post) => post.data.lang === 'es' && !post.data.draft)
 	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
-const title = 'Todos los Posts';
-const description = 'Explora todos los artículos sobre ingeniería de software, Go, TypeScript y más.';
+const title = 'Artículos de ingeniería y datos públicos';
+const description = 'Explora artículos de Hector Yeomans sobre ingeniería de software, datos públicos, transparencia, Go, TypeScript y sistemas backend.';
 const languageLinks = [
 	{ lang: 'en', href: '/posts/', label: 'EN', available: true, isTranslation: true },
 	{ lang: 'es', href: '/es/posts/', label: 'ES', available: true, isTranslation: true },

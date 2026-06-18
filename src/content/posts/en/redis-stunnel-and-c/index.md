@@ -179,7 +179,7 @@ C:\redis-ssl-test\redis-vagrant> vagrant ssh -c "sudo cat /etc/stunnel/redis-ser
 
 After that, the certificate file should be sitting next to the Vagrantfile.
 
-![](./cert-file.png)
+![Certificate file saved for the local Redis SSL setup](./cert-file.png)
 
 To install the certificate, you can follow this steps:
 
@@ -196,7 +196,7 @@ To install the certificate, you can follow this steps:
 - Click Next, and then Next again and Finish.
 - You will get a Security Warning question, answer Yes
 
-![](./import-cert.png)
+![Importing the certificate into Windows certificate storage](./import-cert.png)
 
 I know, all those steps, there is a Powershell way to do it, but I will let that to you.
 
@@ -217,7 +217,7 @@ For your convenience you can set:
 - Name: RedisSslTest
 - Create directory for solution: unchecked.
 
-![](./redis-ssl-start.png)
+![Redis and stunnel services running for SSL testing](./redis-ssl-start.png)
 
 You will need to add "StackExchange.Redis" NuGet package for this demo.
 
@@ -321,10 +321,10 @@ vagrant@redis-stunnel:~$ redis-cli
 2) "from c#"
 ```
 
-![](./redis-cli-result.png)
+![Redis CLI result after connecting through stunnel](./redis-cli-result.png)
 
 ## Conclusion
 
 Most of the problems I had while trying this setup was the `CertificateSelection` handler. Most examples online never combine having a self-signed certificate that won't communicate to SSL directly and debugging `StackExchange.Redis` made it it easy.
 
-My only complaint is that `StackExchange.Redis` swallows the exception that tells you [exactly what's going on ](https://github.com/StackExchange/StackExchange.Redis/blob/master/StackExchange.Redis/StackExchange/Redis/PhysicalConnection.cs#L792)
+My only complaint is that `StackExchange.Redis` swallows the exception that tells you [exactly what's going on](https://github.com/StackExchange/StackExchange.Redis/blob/main/src/StackExchange.Redis/PhysicalConnection.cs).

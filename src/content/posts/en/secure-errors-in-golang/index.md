@@ -54,11 +54,11 @@ That gives us enough room to demonstrate the most common error cases:
 
 This is the runtime flow:
 
-![](./1.jpg)
+![Runtime flow for safe error handling across HTTP, service, and repository layers](./1.jpg)
 
 And this is the error ownership model:
 
-![](./2.jpg)
+![Error ownership model separating persistence, service, and HTTP responsibilities](./2.jpg)
 
 That separation is the whole point.
 
@@ -144,7 +144,7 @@ This was one of the cleaner outcomes of the refactor. The repository now owns pe
 
 Visually, it looks like this:
 
-![](./3.jpg)
+![Service layer flow for translating application rules into safe errors](./3.jpg)
 
 Examples:
 
@@ -169,7 +169,7 @@ It just does this:
 
 This keeps handlers small and predictable.
 
-![](./hero.jpg)
+![Secure error handling architecture for a small layered Go application](./hero.jpg)
 
 When this pattern is in place, the HTTP layer becomes boring in the best possible way.
 

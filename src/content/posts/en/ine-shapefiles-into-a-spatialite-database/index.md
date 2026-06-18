@@ -62,18 +62,18 @@ Enter SQL statements terminated with a ";"
 
 - Visit the INE transparency portal: https://pautas.ine.mx/transparencia/mapas/
 
-![](./pautas_ine.jpg)
+![INE transparency portal map download page](./pautas_ine.jpg)
 
 - Download the shapefiles you need. For this tutorial, we'll use the ENTIDADES (States) shapefile.
 
 ## Importing Shapefiles into QGIS
 
 1. Open QGIS and drag and drop the downloaded shapefile into the QGIS window.
-   ![](./shapefile_qgis.gif)
+   ![Dragging an INE shapefile into QGIS](./shapefile_qgis.gif)
 2. Establish a connection to your Spatialite database (ine.db) in QGIS.
-   ![](./ine_db_conn.jpg)
+   ![Spatialite database connection settings in QGIS](./ine_db_conn.jpg)
 3. Import the shapefile layer into the Spatialite database using QGIS's import functionality.
-   ![](./entidad_table.jpg)
+   ![QGIS import dialog for the ENTIDAD shapefile table](./entidad_table.jpg)
 
 ## Querying the Database
 
@@ -95,7 +95,7 @@ WHERE ST_Contains(geom, MakePoint(-110.969966939491, 29.142818450243844));
 
 This query will return the state information for the given coordinates.
 
-![](./output_entidad.jpg)
+![Spatialite query result showing the matched Mexican state](./output_entidad.jpg)
 
 ## Conclusion
 

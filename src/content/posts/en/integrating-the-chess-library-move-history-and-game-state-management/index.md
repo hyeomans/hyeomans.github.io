@@ -1,6 +1,6 @@
 ---
-title: "Integrating the Chess Library: Move History and Game State Management"
-description: "Part 2 of building a chess TUI in Go. Learn how to integrate a chess library for move validation, implement move history tracking, detect checkmate, and delegate board state management instead of building chess rules from scratch."
+title: "Chess TUI in Go: Move History and Game State"
+description: "Part 2 of building a chess TUI in Go: integrate a chess library, validate moves, track history, and delegate board state."
 pubDate: 2026-01-13T19:04:53+00:00
 author: "Hector Yeomans"
 tags: ["golang", "chess", "tui", "bubbletea", "chess-library", "game-development"]
@@ -681,4 +681,3 @@ func main() {
 - Tutorial video: [Building Chess in Go with Fyne](https://www.youtube.com/watch?v=zlPDWBLhn6c)
 - Chess library: [github.com/corentings/chess/v2](https://github.com/corentings/chess)
 - Bubble Tea framework: [github.com/charmbracelet/bubbletea](https://github.com/charmbracelet/bubbletea)
-

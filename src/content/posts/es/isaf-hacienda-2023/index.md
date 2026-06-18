@@ -31,7 +31,7 @@ Este caso no solo exige una atención seria y medidas correctivas inmediatas, si
 
 Las consecuencias de no solventar esta observación podrían ser graves. La violación de las normas legales aplicables podría desencadenar la intervención de la Unidad de Investigación del ISAF, resultando en sanciones y una pérdida de confianza en la gestión financiera de la entidad.
 
-Por último, al revisar el [Estado Analítico de Partidas del Ejecutivo en el 2022](https://hacienda.sonora.gob.mx/media/203160/analitico-de-partidas-4to-trimestre-2022.pdf), encontramos que la Tesorería del Estado sufrió una modificación en su presupuesto asignado, en dos partidas en particular:
+Por último, al revisar el Estado Analítico de Partidas del Ejecutivo en el 2022 (PDF original de Hacienda Sonora: `analitico-de-partidas-4to-trimestre-2022.pdf`), encontramos que la Tesorería del Estado sufrió una modificación en su presupuesto asignado, en dos partidas en particular:
 
 - 39501 PENAS, MULTAS, ACCESORIOS Y ACTUALIZACIONES: se modificó el presupuesto de 0 pesos asignados a $28,100,712, erogando un total de $28,100,712 en 2022.
 - 34102 SERVICIOS FINANCIEROS CONVENIDOS: se modificó el presupuesto de 0 pesos asignados a $62,849,242, erogando un total de $62,849,242 en 2022.
@@ -89,9 +89,9 @@ Conclusión y Acciones Pendientes: Es inaceptable que el sujeto fiscalizado no h
 
 Estas constituyen apenas cuatro de las observaciones no solventadas en relación con la cuenta pública del 2022 por parte de la Secretaría de Hacienda. De ello se deduce que la Secretaría ha enfrentado alteraciones en su estructura, específicamente en cuanto a personal administrativo, y también ha experimentado una migración hacia un nuevo sistema. Estos movimientos están causando estragos en procesos que anteriormente funcionaban de manera óptima.
 
-Lo desconcertante es que la implementación del sistema SAP data de 2018. Ya entonces podíamos observar en el portal de licitaciones de la Contraloría la primera adjudicación directa por parte de la Secretaría de Hacienda, referente a la "ADQUISICIÓN DE LAS LICENCIAS DE SOFTWARE SAP Y SAP ENTERPRISE SUPPORT PARA LA SOLUCIÓN INTEGRAL DE INFORMACIÓN SAP (SISTEMA INFORMÁTICO DE PLANEACIÓN DE RECURSOS GUBERNAMENTALES) IMPLEMENTADA EN EL GOBIERNO DEL ESTADO DE SONORA" [Enlace](https://compranet.sonora.gob.mx/Sistema/Portal/DetallesPortal?contId=51404).
+Lo desconcertante es que la implementación del sistema SAP data de 2018. Ya entonces podíamos observar en el portal de licitaciones de la Contraloría la primera adjudicación directa por parte de la Secretaría de Hacienda, referente a la "ADQUISICIÓN DE LAS LICENCIAS DE SOFTWARE SAP Y SAP ENTERPRISE SUPPORT PARA LA SOLUCIÓN INTEGRAL DE INFORMACIÓN SAP (SISTEMA INFORMÁTICO DE PLANEACIÓN DE RECURSOS GUBERNAMENTALES) IMPLEMENTADA EN EL GOBIERNO DEL ESTADO DE SONORA" (CompraNet Sonora contId 51404).
 
-La licitación más reciente, de Abril de 2023, correspondió al "SERVICIO DE GESTIÓN DE APLICACIONES SAP," con un costo total de $52,870,080.00. Y pese a este desembolso, las observaciones no solventadas se han multiplicado. [Enlace](https://compranet.sonora.gob.mx/Sistema/Portal/DetallesPortal?contId=118029).
+La licitación más reciente, de Abril de 2023, correspondió al "SERVICIO DE GESTIÓN DE APLICACIONES SAP," con un costo total de $52,870,080.00. Y pese a este desembolso, las observaciones no solventadas se han multiplicado (CompraNet Sonora contId 118029).
 
 En definitiva, parece que en el Estado de Sonora damos dos pasos adelante solo para retroceder diez. Estoy convencido de que muchas dependencias enfrentarán más observaciones este año en comparación con el anterior. Pero esto pasará desapercibido, ya que la comunidad Sonorense no puede invertir tiempo en leer aburridos documentos de 100 páginas que simplemente confirman lo que ya saben.
 

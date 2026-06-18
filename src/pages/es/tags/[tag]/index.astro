@@ -49,8 +49,9 @@ export async function getStaticPaths() {
 }
 
 const { posts, tag, tagSlug, hasEnglishVersion } = Astro.props;
-const title = `Posts etiquetados con "${tag}"`;
-const description = `Explora todos los posts etiquetados con ${tag}.`;
+const title = `Artículos sobre ${tag} | Hector Yeomans`;
+const description = `Explora ${posts.length} ${posts.length === 1 ? 'artículo' : 'artículos'} sobre ${tag}, transparencia, datos públicos y tecnología escritos por Hector Yeomans.`;
+const robots = posts.length > 1 ? 'index,follow' : 'noindex,follow';
 const languageLinks = [
 	{
 		lang: 'en',
@@ -64,7 +65,7 @@ const languageLinks = [
 ];
 ---
 
-<BaseLayout title={title} description={description} lang="es" languageLinks={languageLinks} canonicalUrl={`/es/tags/${tagSlug}/`}>
+<BaseLayout title={title} description={description} lang="es" languageLinks={languageLinks} canonicalUrl={`/es/tags/${tagSlug}/`} robots={robots}>
 	<div class="bg-white dark:bg-gray-900 py-24 sm:py-32">
 		<div class="mx-auto max-w-7xl px-6 lg:px-8">
 			<div class="mx-auto max-w-2xl text-center mb-16">

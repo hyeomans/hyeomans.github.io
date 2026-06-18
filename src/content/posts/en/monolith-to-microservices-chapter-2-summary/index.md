@@ -1,6 +1,6 @@
 ---
 title: "Charting the Path: Planning Your Migration to Microservices"
-description: "Summary of Chapter 2 from Monolith to Microservices: A comprehensive guide to planning your microservices migration strategy with clear objectives and organizational alignment."
+description: "Summary of Chapter 2 from Monolith to Microservices, focused on planning migrations with clear goals and organizational alignment."
 pubDate: 2024-12-19T07:40:00-07:00
 author: "Hector Yeomans"
 tags: ["monolith", "microservices", "software-architecture", "migration-planning"]

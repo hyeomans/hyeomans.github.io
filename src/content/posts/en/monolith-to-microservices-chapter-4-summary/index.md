@@ -1,5 +1,5 @@
 ---
-title: "Decomposing the Database: Achieving Data Independence in Microservices"
+title: "Database Decomposition in Microservices"
 description: "Summary of Chapter 4 from Monolith to Microservices: Practical strategies for splitting monolithic databases and managing data consistency in distributed systems."
 pubDate: 2025-01-06T07:00:00-07:00
 author: "Hector Yeomans"

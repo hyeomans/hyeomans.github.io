@@ -1,12 +1,15 @@
 ---
+import { SITE_URL } from '../../../consts';
+
 const destination = '/posts/vibe-coding-kills-open-source/';
+const canonical = new URL(destination, SITE_URL).toString();
 ---
 
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
 		<meta http-equiv="refresh" content={`0; url=${destination}`} />
-		<link rel="canonical" href={destination} />
+		<link rel="canonical" href={canonical} />
 		<meta name="robots" content="noindex" />
 		<title>Redirecting…</title>
 	</head>

@@ -24,9 +24,9 @@ the new API to conform to the company business logic.
 
 This is where my idea of stitching comes to mind; you don't know from the beginning how everything has to be laid out. Just as you stitch, you don't know for sure if the combination of API call is going to work as you're picturing it in your head.
 
-![](./stitching-2.jpg)
+![Close-up of stitching work used as a metaphor for software integration](./stitching-2.jpg)
 <sub><sup>Photo by Dương Trần Quốc on Unsplash</sup></sub>
 
 I'm not saying that software stitching is easy, but it can become repetitive.
 
-![](./stitching-3.jpg)
+![Thread and fabric illustrating software as stitching](./stitching-3.jpg)

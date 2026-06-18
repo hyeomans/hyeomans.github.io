@@ -9,7 +9,7 @@ lang: "en"
 draft: false
 ---
 
-I already had [a library](https://github.com/hyeomans/zuora-js) that I wanted to convert to Typescript. I picked Rollup.js to do my build process.
+I already had a library that I wanted to convert to Typescript. I picked Rollup.js to do my build process.
 
 First I installed the following packages:
 
@@ -156,8 +156,6 @@ parser: '@typescript-eslint/parser',
   ...
 ```
 
-You can see the resulting branch here:
-
-https://github.com/hyeomans/zuora-js/tree/ts-rollup
+The resulting branch is no longer public, but the migration steps below are the process I used.
 
 Thanks for reading!

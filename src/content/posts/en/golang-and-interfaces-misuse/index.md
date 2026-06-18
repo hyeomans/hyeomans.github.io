@@ -163,6 +163,5 @@ If you need more information about this pattern, there are other great blog post
 
 https://github.com/golang/go/wiki/CodeReviewComments#interfaces
 https://dave.cheney.net/2016/08/20/solid-go-design
-https://twitter.com/davecheney/status/1030790804011245569?lang=en
 https://www.ardanlabs.com/blog/2017/07/interface-semantics.html
 https://github.com/ardanlabs/gotraining/blob/master/topics/go/design/composition/pollution/example1/example1.go

@@ -10,8 +10,8 @@ const posts = (await getCollection('posts'))
 	.filter((post) => post.data.lang === 'en' && !post.data.draft)
 	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
-const title = 'All Posts';
-const description = 'Browse all blog posts about software engineering, Go, TypeScript, and more.';
+const title = 'Software Engineering Articles';
+const description = 'Browse Hector Yeomans articles about Go, TypeScript, microservices, backend architecture, data systems, and pragmatic software engineering.';
 const languageLinks = [
 	{ lang: 'en', href: '/posts/', label: 'EN', available: true, isTranslation: true },
 	{ lang: 'es', href: '/es/posts/', label: 'ES', available: true, isTranslation: true },

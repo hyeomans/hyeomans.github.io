@@ -34,11 +34,9 @@ El artículo 48 limita el uso de adjudicaciones directas e invitaciones a tres p
 Por otro lado, los decretos de Presupuesto de Egresos, como el de 2023, establecen montos máximos y mínimos para bienes muebles y contratación de servicios, además de fomentar el desarrollo de micro, pequeñas y medianas empresas locales, con especial atención en aquellas dirigidas por mujeres.
 
 <figure class="my-6 text-center">
-	<a href="https://contraloria.sonora.gob.mx/informacion-de-interes/compendio-legislativo-basico-estatal/decretos/7413-decreto-numero-91-de-presupuesto-de-egresos-del-gobierno-del-estado-de-sonora-para-el-ejercicio-fiscal-de-2023/file.html" target="_blank" rel="noopener noreferrer">
-		<img src="./adquisicion_bienes_muebles.png" alt="Tabla de montos máximos en adjudicaciones directas" loading="lazy" />
-	</a>
+	<img src="./adquisicion_bienes_muebles.png" alt="Tabla de montos máximos en adjudicaciones directas" loading="lazy" />
 	<figcaption class="mt-2 text-sm text-gray-500 dark:text-gray-400">
-		Fuente: Contraloría Sonora. El recuadro indica el monto máximo adjudicable mediante invitación a tres proveedores.
+		Fuente: Contraloría Sonora, Decreto número 91 del Presupuesto de Egresos 2023. El recuadro indica el monto máximo adjudicable mediante invitación a tres proveedores.
 	</figcaption>
 </figure>
 
@@ -62,11 +60,11 @@ De acuerdo con los datos del Portal de la Contraloría de Sonora, las cinco adju
 
 | Monto           | Fecha Firma | Concepto                                                                                                                                                                                                                                                                                                                                            | Dependencia                       | url                                                                                 |
 | :-------------- | :---------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------- | :---------------------------------------------------------------------------------- |
-| $143,907,609.56 | 01/02/2023  | SERVICIO INTEGRAL DE MANTENIMIENTO PREVENTIVO Y CORRECTIVO DE LA INFRAESTRUCTURA TECNOLOGICA DE MONITOREO...                                                                                                                                                                                                                                        | SECRETARÍA DE SEGURIDAD PÚBLICA   | [link](https://compranet.sonora.gob.mx/Sistema/Portal/DetallesPortal?contId=118060) |
-| $127,014,525.00 | 01/01/2023  | ADQUISICIÓN DE BIENES PERECEDEROS, GRANOS Y PRODUCTOS ALIMENTICIOS BÁSICOS O SEMIPROCESADOS PARA PERSONAS EN PROCESO DE REINSERCIÓN SOCIAL...                                                                                                                                                                                                       | SECRETARÍA DE SEGURIDAD PÚBLICA   | [link](https://compranet.sonora.gob.mx/Sistema/Portal/DetallesPortal?contId=118054) |
-| $112,486,065.00 | 01/01/2022  | ADQUISICIÓN DE BIENES PERECEDEROS, GRANOS Y PRODUCTOS ALIMENTICIOS BÁSICOS O SEMIPROCESADOS PARA PERSONAS EN PROCESO DE REINSERCIÓN SOCIAL O SUJETOS A PROCESO PENAL                                                                                                                                                                                | SECRETARÍA DE SEGURIDAD PÚBLICA   | [link](https://compranet.sonora.gob.mx/Sistema/Portal/DetallesPortal?contId=118075) |
-| $104,227,008.00 | 15/02/2022  | SERVICIOS DE MANTENIMIENTO PREVENTIVO Y CORRECTIVO DEL PROYECTO DEL CENTRO DE CONTROL...                                                                                                                                                                                                                                                            | SECRETARÍA DE SEGURIDAD PÚBLICA   | [link](https://compranet.sonora.gob.mx/Sistema/Portal/DetallesPortal?contId=118087) |
-| $51,988,068.00  | 01/01/2023  | SE OBLIGA A LLEVAR A CABO EL SERVICIO DE TRANSMISIÓN MASIVA VÍA SATÉLITE DE EDUCACIÓN Y CULTURA, TRANSMITIR EN LOS TIEMPOS ACORDADOS LA PROGRAMACIÓN PRODUCIDA Y REALIZADA POR TELEVISÓN EDUCATIVA DE SONORA, LA CUAL SIRVE COMO APOYO Y COMPLEMENTO A LA EDUCACIÓN PREESCOLAR, PRIMARIA Y SECUNDARIA, ASI COMO AL NIVEL MEDIO SUPERIOR Y SUPERIOR. | SECRETARIA DE EDUCACIÓN Y CULTURA | [link](https://compranet.sonora.gob.mx/Sistema/Portal/DetallesPortal?contId=128235) |
+| $143,907,609.56 | 01/02/2023  | SERVICIO INTEGRAL DE MANTENIMIENTO PREVENTIVO Y CORRECTIVO DE LA INFRAESTRUCTURA TECNOLOGICA DE MONITOREO...                                                                                                                                                                                                                                        | SECRETARÍA DE SEGURIDAD PÚBLICA   | CompraNet Sonora contId 118060 |
+| $127,014,525.00 | 01/01/2023  | ADQUISICIÓN DE BIENES PERECEDEROS, GRANOS Y PRODUCTOS ALIMENTICIOS BÁSICOS O SEMIPROCESADOS PARA PERSONAS EN PROCESO DE REINSERCIÓN SOCIAL...                                                                                                                                                                                                       | SECRETARÍA DE SEGURIDAD PÚBLICA   | CompraNet Sonora contId 118054 |
+| $112,486,065.00 | 01/01/2022  | ADQUISICIÓN DE BIENES PERECEDEROS, GRANOS Y PRODUCTOS ALIMENTICIOS BÁSICOS O SEMIPROCESADOS PARA PERSONAS EN PROCESO DE REINSERCIÓN SOCIAL O SUJETOS A PROCESO PENAL                                                                                                                                                                                | SECRETARÍA DE SEGURIDAD PÚBLICA   | CompraNet Sonora contId 118075 |
+| $104,227,008.00 | 15/02/2022  | SERVICIOS DE MANTENIMIENTO PREVENTIVO Y CORRECTIVO DEL PROYECTO DEL CENTRO DE CONTROL...                                                                                                                                                                                                                                                            | SECRETARÍA DE SEGURIDAD PÚBLICA   | CompraNet Sonora contId 118087 |
+| $51,988,068.00  | 01/01/2023  | SE OBLIGA A LLEVAR A CABO EL SERVICIO DE TRANSMISIÓN MASIVA VÍA SATÉLITE DE EDUCACIÓN Y CULTURA, TRANSMITIR EN LOS TIEMPOS ACORDADOS LA PROGRAMACIÓN PRODUCIDA Y REALIZADA POR TELEVISÓN EDUCATIVA DE SONORA, LA CUAL SIRVE COMO APOYO Y COMPLEMENTO A LA EDUCACIÓN PREESCOLAR, PRIMARIA Y SECUNDARIA, ASI COMO AL NIVEL MEDIO SUPERIOR Y SUPERIOR. | SECRETARIA DE EDUCACIÓN Y CULTURA | CompraNet Sonora contId 128235 |
 
 Estas adjudicaciones suman un total de **$539,623,275.56.**
 
@@ -101,8 +99,8 @@ A fecha de hoy, la justificación para las adjudicaciones directas de la Secreta
 
 | Monto Contrato  | Fecha Firma | concepto_contrato                                                                                                                                                                                                        | dependencia                     | url                                                                                 |
 | :-------------- | :---------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------ | :---------------------------------------------------------------------------------- |
-| $143,907,609.56 | 01/02/2023  | SERVICIO INTEGRAL DE MANTENIMIENTO PREVENTIVO Y CORRECTIVO DE LA INFRAESTRUCTURA TECNOLOGICA DE MONITOREO, ATENCION CIUDADANA, VIDEO VIGILANCIA URBANA ASI COMO EL MANTENIMIENTO INTEGRAL DE LAS AREAS DENOMINADAS SALVA | SECRETARÍA DE SEGURIDAD PÚBLICA | [link](https://compranet.sonora.gob.mx/Sistema/Portal/DetallesPortal?contId=118060) |
-| $112,486,065.00 | 01/01/2022  | ADQUISICIÓN DE BIENES PERECEDEROS, GRANOS Y PRODUCTOS ALIMENTICIOS BÁSICOS O SEMIPROCESADOS PARA PERSONAS EN PROCESO DE REINSERCIÓN SOCIAL O SUJETOS A PROCESO PENAL                                                     | SECRETARÍA DE SEGURIDAD PÚBLICA | [link](https://compranet.sonora.gob.mx/Sistema/Portal/DetallesPortal?contId=118075) |
+| $143,907,609.56 | 01/02/2023  | SERVICIO INTEGRAL DE MANTENIMIENTO PREVENTIVO Y CORRECTIVO DE LA INFRAESTRUCTURA TECNOLOGICA DE MONITOREO, ATENCION CIUDADANA, VIDEO VIGILANCIA URBANA ASI COMO EL MANTENIMIENTO INTEGRAL DE LAS AREAS DENOMINADAS SALVA | SECRETARÍA DE SEGURIDAD PÚBLICA | CompraNet Sonora contId 118060 |
+| $112,486,065.00 | 01/01/2022  | ADQUISICIÓN DE BIENES PERECEDEROS, GRANOS Y PRODUCTOS ALIMENTICIOS BÁSICOS O SEMIPROCESADOS PARA PERSONAS EN PROCESO DE REINSERCIÓN SOCIAL O SUJETOS A PROCESO PENAL                                                     | SECRETARÍA DE SEGURIDAD PÚBLICA | CompraNet Sonora contId 118075 |
 
 ### Mayor adjudicación directa del 2021
 
@@ -118,7 +116,7 @@ El dictamen también señala que la cantidad de vales y el monto a dispersar est
 
 | Monto Contrato | Fecha firma | Concepto                                                           | Dependencia            | url                                                                                 |
 | :------------- | :---------- | :----------------------------------------------------------------- | :--------------------- | :---------------------------------------------------------------------------------- |
-| $49,125,000.00 | 30/12/2021  | ADQUISICIÓN DE VALES DE DESPENSA A TRAVÉS DE TARJETAS ELECTRÓNICAS | SECRETARÍA DE HACIENDA | [link](https://compranet.sonora.gob.mx/Sistema/Portal/DetallesPortal?contId=106382) |
+| $49,125,000.00 | 30/12/2021  | ADQUISICIÓN DE VALES DE DESPENSA A TRAVÉS DE TARJETAS ELECTRÓNICAS | SECRETARÍA DE HACIENDA | CompraNet Sonora contId 106382 |
 
 ### Mayor adjudicación directa del 2020
 
@@ -136,7 +134,7 @@ La reunión concluyó con la decisión de celebrar una próxima reunión el 3 de
 
 | Monto Contrato | Fecha firma | Concepto                                                                                                                                                                                                                                          | Dependencia                                                              | url                                                                                |
 | :------------- | :---------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :----------------------------------------------------------------------- | :--------------------------------------------------------------------------------- |
-| $39,781,398.29 | 01/01/2020  | CONTRATACIÓN DEL SUMINISTRO DE DESAYUNOS ESCOLARES FRÍOS Y CALIENTES EN LOS PLANTELES ESCOLARES UBICADOS EN LA ZONA TERRITORIAL DEL ESTADO DE SONORA, PERTENECIENTES AL PROGRAMA DE DESAYUNOS ESCOLARES PARA LOS MESES DE ENERO Y FEBRERO DE 2020 | SISTEMA PARA EL DESARROLLO INTEGRAL DE LA FAMILIA EN EL ESTADO DE SONORA | [link](https://compranet.sonora.gob.mx/Sistema/Portal/DetallesPortal?contId=95676) |
+| $39,781,398.29 | 01/01/2020  | CONTRATACIÓN DEL SUMINISTRO DE DESAYUNOS ESCOLARES FRÍOS Y CALIENTES EN LOS PLANTELES ESCOLARES UBICADOS EN LA ZONA TERRITORIAL DEL ESTADO DE SONORA, PERTENECIENTES AL PROGRAMA DE DESAYUNOS ESCOLARES PARA LOS MESES DE ENERO Y FEBRERO DE 2020 | SISTEMA PARA EL DESARROLLO INTEGRAL DE LA FAMILIA EN EL ESTADO DE SONORA | CompraNet Sonora contId 95676 |
 
 ### Mayor adjudicación directa del 2019
 
@@ -154,7 +152,7 @@ El dictamen fue firmado en la Ciudad de Hermosillo, Sonora, el 7 de enero de 201
 
 | Monto Contrato | Fecha firma | Concepto                                                                                                                                                                                        | Dependencia            | url                                                                                |
 | :------------- | :---------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------- | :--------------------------------------------------------------------------------- |
-| $14,741,904.00 | 07/01/2019  | DESARROLLO, MANTENIMIENTO, SOPORTE Y ASISTENCIA TECNICA EN EL SERVICIO DE HOSPEDAJE DE LA PLATAFORMA DIGITAL Y MOVIL DE LA SECRETARIA DE HACIENDA EN LA NUBE BAJO LA PLATAFORMA MICROSOFT AZURE | SECRETARÍA DE HACIENDA | [link](https://compranet.sonora.gob.mx/Sistema/Portal/DetallesPortal?contId=62447) |
+| $14,741,904.00 | 07/01/2019  | DESARROLLO, MANTENIMIENTO, SOPORTE Y ASISTENCIA TECNICA EN EL SERVICIO DE HOSPEDAJE DE LA PLATAFORMA DIGITAL Y MOVIL DE LA SECRETARIA DE HACIENDA EN LA NUBE BAJO LA PLATAFORMA MICROSOFT AZURE | SECRETARÍA DE HACIENDA | CompraNet Sonora contId 62447 |
 
 ### Mayor monto 2018
 
@@ -174,7 +172,7 @@ La autorización para esta contratación fue dada por el Ing. Rogelio Manuel Dia
 
 | Monto Contrato | Fecha firma | Concepto                                                                                                                                            | Dependencia                     | url                                                                                |
 | :------------- | :---------- | :-------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------ | :--------------------------------------------------------------------------------- |
-| $15,086,206.90 | 22/03/2018  | SERVICIOS PROFESIONALES RELATIVOS AL ASESORAMIENTO Y APOYO TÉCNICO PARA LA EJECUCIÓN DE LOS PROGRAMAS DE DESARROLLO REGIONAL EN EL ESTADO DE SONORA | SECRETARÍA DE DESARROLLO SOCIAL | [link](https://compranet.sonora.gob.mx/Sistema/Portal/DetallesPortal?contId=51638) |
+| $15,086,206.90 | 22/03/2018  | SERVICIOS PROFESIONALES RELATIVOS AL ASESORAMIENTO Y APOYO TÉCNICO PARA LA EJECUCIÓN DE LOS PROGRAMAS DE DESARROLLO REGIONAL EN EL ESTADO DE SONORA | SECRETARÍA DE DESARROLLO SOCIAL | CompraNet Sonora contId 51638 |
 
 ## Conclusión
 

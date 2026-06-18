@@ -1,9 +1,9 @@
 ---
 title: "The Best Code I Wrote Was The Code I Refactored"
-description: "My 'simple' integration with an email marketing software turned into a complex backend monster. Here’s the story of how a split-brain unsubscribe problem forced me to refactor, delete most of my code, and build a much smarter, simpler solution."
+description: "How a split-brain unsubscribe bug forced a refactor of an email marketing integration into a smaller, safer backend design."
 pubDate: 2025-11-12T16:48:30+00:00
 author: "Hector Yeomans"
-tags: ["email marketing software", " loops.so", " api integration", " refactoring"]
+tags: ["email marketing software", "loops.so", "api integration", "refactoring"]
 lang: "en"
 draft: false
 heroImage: "./hero.gif"

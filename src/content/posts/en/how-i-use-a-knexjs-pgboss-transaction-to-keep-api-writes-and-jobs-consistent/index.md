@@ -1,5 +1,5 @@
 ---
-title: "Knex.js transaction + pg-boss: keep API writes and jobs consistent"
+title: "Knex.js and pg-boss in One Transaction"
 description: "A practical knex.js transaction + pgboss pattern that keeps database writes and pg-boss jobs consistent in one PostgreSQL transaction."
 pubDate: 2026-02-20T17:00:10+00:00
 author: "Hector Yeomans"

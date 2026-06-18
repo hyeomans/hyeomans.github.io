@@ -3,7 +3,7 @@ title: "The Architectural Shift: Moving to MikroORM's Unit of Work"
 description: "Why MikroORM feels different from Prisma/TypeORM, and why the Unit of Work pattern matters for complex domain logic."
 pubDate: 2026-01-21T13:21:39+00:00
 author: "Hector Yeomans"
-tags: ["architecture", " mikroorm", " nodejs", " patterns", "typescript"]
+tags: ["architecture", "mikroorm", "nodejs", "patterns", "typescript"]
 lang: "en"
 draft: false
 heroImage: "./hero.jpg"

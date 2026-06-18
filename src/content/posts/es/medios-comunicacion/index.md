@@ -1,5 +1,5 @@
 ---
-title: "108 Millones, 108 Medios: Desenmascarando el Gasto Público en Comunicación en Sonora"
+title: "Gasto público en medios en Sonora: 108 millones"
 description: "Investigación sobre el gasto público en medios de comunicación del Gobierno de Sonora, revelando la distribución de 108 millones de pesos entre diferentes medios."
 pubDate: 2023-09-09T07:00:00-07:00
 author: "Hector Yeomans"
@@ -20,7 +20,7 @@ Hice una solicitud para que varias dependencias me detallaran los gastos en part
 
 Centré mi investigación en el Gobierno del Estado de Sonora desde enero de 2022 hasta marzo de 2023. ¿Por qué empezar en enero? Porque es cuando la nueva administración de la 4T en Sonora empezó a jugar con el presupuesto que ellos mismos habían aprobado. Y ¿hasta junio del 2023? Pues porque cada dependencia tiene que preparar un informe semestral para el "Analítico de Partidas" del Ejecutivo, que puedes encontrar en la página de Hacienda de Sonora.
 
-![](./organigrama-ejecutivo.png)
+![Organigrama del Ejecutivo del Estado de Sonora](./organigrama-ejecutivo.png)
 
 Ahora, hablemos del Sistema Estatal de Comunicación Social, que está bajo el paraguas del "Ejecutivo del Estado". Según su propio organigrama en su portal de transparencia, uno pensaría que todo el dinero para comunicación sale de ahí, ¿verdad? Pero aquí viene lo curioso: según el analítico de partidas, en 2022 este sistema gastó un total de $18,898,817. Sinceramente, eso no es suficiente para mantener a todos los periodistas\* que tenemos en Sonora.
 
@@ -30,7 +30,7 @@ Ahora, hablemos del Sistema Estatal de Comunicación Social, que está bajo el p
 
 ---
 
-![](./analitico-partidas-comunicacion-social.png)
+![Analítico de partidas de comunicación social del Gobierno de Sonora](./analitico-partidas-comunicacion-social.png)
 
 Según lo que entendí, el Sistema Estatal de Comunicación Social es quien hace los acuerdos con los periodistas*. En resumen, parece que la oficina del Sistema Estatal le dice a cada medio de comunicación: "Oye, factura esto a tal dependencia". Entonces pensé, si sumo todas esas partidas presupuestales, debería obtener el total de lo que gastamos en comunicación social. También pedí el listado de los nombres comerciales de los periodistas* que están en el listado de lo que se erogó.
 
@@ -70,7 +70,7 @@ Lo más complicado de todo esto es limpiar y estructurar los datos. Por ejemplo,
 
 Después de analizar el gasto durante 18 meses, está claro que Telemax encabeza la lista en recibir presupuesto. Le siguen tanto medios de renombre como otros poco conocidos. No es una cuestión menor.
 
-![](./medios-top-10.png)
+![Gráfica de los medios que recibieron más gasto público en Sonora](./medios-top-10.png)
 
 Para respaldar lo anterior, aquí están los datos fríos:
 
@@ -92,13 +92,13 @@ Para respaldar lo anterior, aquí están los datos fríos:
 
 Me llama la atención que hubo transferencias a Telemax, además de su presupuesto asignado. Por ejemplo, para 2022 su presupuesto original era de 108 millones, pero luego sufrió modificaciones para erogar un total de 64 millones.
 
-![](./telemax-analitico.png)
+![Analítico de presupuesto de Telemax](./telemax-analitico.png)
 
 ### ¿Cómo se distribuyó el gasto?
 
 Aunque es el Sistema Estatal de Comunicación Social quién dirije los pagos, cada ente obligado tuvo egresos en las partidas antes mencionadas. Así se distribuyó el gasto:
 
-![](./medios-por-ente.png)
+![Distribución del gasto en medios por ente obligado](./medios-por-ente.png)
 
 He aquí los datos que alimentan la gráfica anterior:
 

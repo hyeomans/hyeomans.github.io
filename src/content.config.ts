@@ -9,7 +9,7 @@ const posts = defineCollection({
 			pubDate: z.coerce.date(),
 			updatedDate: z.coerce.date().optional(),
 			author: z.string().default('Hector Yeomans'),
-			tags: z.array(z.string()).default([]),
+			tags: z.array(z.string().transform((tag) => tag.trim())).default([]),
 			lang: z.enum(['en', 'es']),
 			heroImage: image().optional(),
 			heroAlt: z.string().optional(),

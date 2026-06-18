@@ -30,7 +30,7 @@ En el caso del Poder Legislativo del Estado de Sonora, las responsabilidades en 
 
 Esto permite que el público tenga pleno acceso a la información referente a las remuneraciones de los legisladores de Sonora y la distribución de los recursos. Dicho esto, la siguiente sección se dedicará a profundizar en estos datos, brindando un análisis detallado de quién ha percibido la mayor dieta en el Congreso de Sonora.
 
-La información utilizada para este análisis ha sido obtenida a través del portal de transparencia del Congreso del Estado de Sonora: http://www.congresoson.gob.mx/Transparencia/LeyDeTransparencia
+La información utilizada para este análisis ha sido obtenida a través del portal de transparencia del Congreso del Estado de Sonora. La URL original ya no está disponible: `http://www.congresoson.gob.mx/Transparencia/LeyDeTransparencia`.
 
 ### Fracciones parlamentarias
 
@@ -44,7 +44,7 @@ En el período de 2018 al 2022, los montos asignados a cada fracción parlamenta
 1. PT: $20,184,000
 1. PES: $19,951,500
 
-![](./fraccion_dietas.png)
+![Dietas acumuladas por fracción parlamentaria en el Congreso de Sonora](./fraccion_dietas.png)
 
 ### Diputadas y diputados
 
@@ -58,13 +58,13 @@ La información accesible a través del portal del Congreso del Estado de Sonora
 
 Cabe señalar que estos montos corresponden a las dietas acumuladas durante el período de tiempo mencionado, e incluyen a aquellos legisladores que han obtenido la reelección.
 
-![](./diputadas_diputados_dietas.png)
+![Diputadas y diputados con mayores dietas acumuladas en Sonora](./diputadas_diputados_dietas.png)
 
 ### Montos totales
 
 La gráfica a continuación presenta los montos totales desembolsados anualmente, sumando un gran total de: $429,098,562.
 
-![](./dietas_totales.png)
+![Montos totales de dietas por año en el Congreso de Sonora](./dietas_totales.png)
 
 ## Solicitud de transparencia
 
@@ -79,12 +79,10 @@ El 7 de junio de 2023, formulé la siguiente petición de transparencia:
 >   DEL ESTADO DE SONORA, fracción IX que fundamenta: Documentos: Los reportes, estudios, actas, resoluciones, OFICIOS, CORRESPONDENCIA, acuerdos, directivas, directrices, CIRCULARES, contratos, convenios, instructivos, notas, memorandos, estadísticas o bien, cualquier OTRO registro que documente el ejercicio de las facultades o la actividad de los sujetos obligados, sus servidores públicos e integrantes, sin importar su FUENTE o fecha de elaboración (sic)
 >   Gracias
 
-Es importante mencionar que mi petición no solo buscaba obtener los montos asignados sino también los criterios de asignación y los detalles sobre el gasto de esos recursos. Esto es algo que el Congreso de Sonora debería transparentar. Sin embargo, el archivo que utilicé para obtener los datos sobre las dietas presenta una columna titulada "Hipervinculo al informe", que se encuentra vacía. Puede consultar el archivo del Congreso [en este enlace](https://onedrive.live.com/embed?cid=E26DCB4439974123&resid=E26DCB4439974123!656&authkey=AHYgEXjhH_mQ5LI&em=2&wdDownloadButton=True) o haciendo clic en la imagen:
+Es importante mencionar que mi petición no solo buscaba obtener los montos asignados sino también los criterios de asignación y los detalles sobre el gasto de esos recursos. Esto es algo que el Congreso de Sonora debería transparentar. Sin embargo, el archivo que utilicé para obtener los datos sobre las dietas presenta una columna titulada "Hipervinculo al informe", que se encuentra vacía. La liga original al archivo de OneDrive del Congreso ya no está disponible.
 
 <figure class="my-6 text-center">
-	<a href="https://onedrive.live.com/embed?cid=E26DCB4439974123&resid=E26DCB4439974123!656&authkey=AHYgEXjhH_mQ5LI&em=2&wdDownloadButton=True" target="_blank" rel="noopener noreferrer">
-		<img src="./excel_congreso.png" alt="Tabla del Congreso del Estado de Sonora" loading="lazy" />
-	</a>
+	<img src="./excel_congreso.png" alt="Tabla del Congreso del Estado de Sonora" loading="lazy" />
 	<figcaption class="mt-2 text-sm text-gray-500 dark:text-gray-400">Fuente: Congreso del Estado de Sonora</figcaption>
 </figure>
 

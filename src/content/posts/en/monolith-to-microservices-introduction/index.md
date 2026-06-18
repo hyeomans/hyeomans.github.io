@@ -1,5 +1,5 @@
 ---
-title: "Transforming Software Systems: A Blog Series on Monolith to Microservices"
+title: "Monolith to Microservices: Series Introduction"
 description: "Introduction to a blog series exploring Sam Newman's Monolith to Microservices book, covering the fundamentals of microservice architecture and evolutionary patterns."
 pubDate: 2024-12-08T11:06:10-07:00
 author: "Hector Yeomans"

@@ -9,11 +9,11 @@ lang: "en"
 draft: false
 ---
 
-I found different posts that tell you how to mock Axios using Jest & Typescript. The only difference in this post is that, when I use Axios, I like to use it as a function rather than calling \`axios.get\` or \`axios.post\`.
+I found different posts that tell you how to mock Axios using Jest & Typescript. The only difference in this post is that, when I use Axios, I like to use it as a function rather than calling `axios.get` or `axios.post`.
 
 Imagine you have this Axios request that you want to mock in your tests:
 
-\`\`\`typescript
+```typescript
 //src/index.ts
 import axios from "axios";
 
@@ -27,46 +27,46 @@ export interface Post {
 const DummyRequest = (id: number): Promise<Post> => {
   return axios({
     method: "GET",
-    url: \`https://jsonplaceholder.typicode.com/posts/\${id}\`,
+    url: `https://jsonplaceholder.typicode.com/posts/${id}`,
   }).then((response) => {
     return { ...response.data };
   });
 };
 
 export default DummyRequest;
-\`\`\`
+```
 
 Install jest and jest-ts and initialize jest-ts
 
-\`\`\`bash
+```bash
 >npm i -D ts-jest jest
 >npx ts-jest config:init
-\`\`\`
+```
 
-This last command will create a \`jest.config.js\` file:
+This last command will create a `jest.config.js` file:
 
-\`\`\`js
+```js
 //jest.config.js
 module.exports = {
   preset: "ts-jest",
   testEnvironment: "node",
 };
-\`\`\`
+```
 
 In your tsconfig.json file, make **sure that your tests are excluded from the compiler**:
 
-\`\`\`json
+```json
 //tsconfig.json
 ...
 "exclude": [
       "test/**/*" <--Add this to your exclude array
  ],
 ...
-\`\`\`
+```
 
-Now we can create a test for our DummyRequest.ts, create this file under \`test/index.test.ts\`:
+Now we can create a test for our DummyRequest.ts, create this file under `test/index.test.ts`:
 
-\`\`\`typescript
+```typescript
 import axios, { AxiosResponse } from "axios";
 import DummyRequest from "../src";
 import { mocked } from "ts-jest/dist/util/testing"; //<-- This allows to mock results
@@ -103,6 +103,6 @@ it("returns a post", async () => {
     body: "quia et suscipit\\nsuscipit recusandae consequuntur expedita et cum\\nreprehenderit molestiae ut ut quas totam\\nnostrum rerum est autem sunt rem eveniet architecto",
   });
 });
-\`\`\`
+```
 
 Now you can mock the whole Axios function rather than specific methods.

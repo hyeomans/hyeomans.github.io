@@ -1,6 +1,6 @@
 ---
 title: "Managing Go Tools the Right Way: From tools.go to go tool"
-description: "Go 1.24 introduces a better way to manage project tools. Let's explore the evolution from manual installs to tools.go to the new go tool directive using OpenAPI code generation as a practical example."
+description: "A practical guide to Go 1.24's go tool directive, using OpenAPI code generation to compare modern tool management with tools.go."
 pubDate: 2025-12-31T02:51:37+00:00
 author: "Hector Yeomans"
 tags: ["golang", "tooling"]
