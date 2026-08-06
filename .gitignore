@@ -31,3 +31,4 @@ hugo-site/
 *.swp
 .agents
 .claude
+.playwright*
