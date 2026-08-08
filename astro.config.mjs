@@ -67,7 +67,7 @@ const indexableTagSlugs = getIndexableTagSlugs();
 
 const shouldIncludeInSitemap = (page) => {
   const { pathname } = new URL(page);
-  if (pathname === "/posts/todo/" || pathname === "/card/") return false;
+  if (pathname === "/posts/todo/") return false;
 
   const englishTag = pathname.match(/^\/tags\/([^/]+)\/$/);
   if (englishTag) return indexableTagSlugs.en.has(englishTag[1]);

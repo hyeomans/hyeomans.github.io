@@ -1,6 +1,5 @@
 # build output
 dist/
-public/wallet/*.pkpass
 # generated types
 .astro/
 

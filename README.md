@@ -53,29 +53,6 @@ All commands are run from the root of the project, from a terminal:
 | `bun astro ...`       | Run CLI commands like `astro add`, `astro check` |
 | `bun astro -- --help` | Get help using the Astro CLI                     |
 
-## Digital wallet contact card
-
-`/card/` is a deliberately minimal contact card for NFC and QR sharing. It exposes only `me@hyeomans.com` and the LinkedIn profile. Generate its deterministic QR and Wallet artwork with:
-
-```sh
-npm run card:assets
-```
-
-Signed Apple Wallet and Google Wallet artifacts are generated during deployment. Configure these GitHub Actions secrets:
-
-- `APPLE_PASS_TYPE_IDENTIFIER` (for example, `pass.com.hyeomans.contact`)
-- `APPLE_TEAM_IDENTIFIER`
-- `APPLE_WWDR_CERTIFICATE` (PEM text or base64-encoded PEM)
-- `APPLE_SIGNER_CERTIFICATE` (PEM text or base64-encoded PEM)
-- `APPLE_SIGNER_KEY` (PEM text or base64-encoded PEM)
-- `APPLE_SIGNER_KEY_PASSPHRASE` (only when the key is encrypted)
-- `GOOGLE_WALLET_ISSUER_ID`
-- `GOOGLE_WALLET_CREDENTIALS` (service-account JSON or its base64 encoding)
-
-`npm run wallet:generate` allows unconfigured local builds and marks unavailable passes honestly. `npm run wallet:verify` is the strict release gate and requires both issuer configurations. No signing secret is committed or delivered to the browser.
-
-`npm run wallet:test` exercises both signing implementations with disposable local certificates and then removes the generated test artifacts.
-
 ## 👀 Want to learn more?
 
 Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).

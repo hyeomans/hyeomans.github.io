@@ -6,12 +6,6 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "card:assets": "node scripts/generate-card-assets.mjs",
-    "card:verify:deployment": "node scripts/verify-card-deployment.mjs",
-    "card:verify": "node scripts/verify-card-privacy.mjs",
-    "wallet:generate": "node scripts/generate-wallet-passes.mjs",
-    "wallet:test": "node scripts/test-wallet-generation.mjs",
-    "wallet:verify": "node scripts/generate-wallet-passes.mjs --require-all",
     "audit:seo": "node scripts/audit-seo.mjs",
     "audit:links": "node scripts/audit-links.mjs",
     "astro": "astro"
@@ -28,7 +22,6 @@
     "tailwindcss": "^4.1.17"
   },
   "devDependencies": {
-    "@tailwindcss/typography": "0.5.19",
-    "qrcode": "^1.5.4"
+    "@tailwindcss/typography": "0.5.19"
   }
 }
