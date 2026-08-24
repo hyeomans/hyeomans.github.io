@@ -135,7 +135,8 @@ const canonicalFromProps = canonicalUrl ? new URL(canonicalUrl, Astro.site ?? un
 							target.classList.toggle('is-past', entry.boundingClientRect.bottom < 0);
 						}
 					},
-					{ rootMargin: '0px 0px -8% 0px', threshold: 0.12 },
+					// A percentage threshold can never be reached by content taller than the viewport.
+					{ rootMargin: '0px 0px -8% 0px', threshold: 0 },
 				);
 
 				const groups = new Map<Element, number>();
