@@ -81,7 +81,7 @@ const canonicalFromProps = canonicalUrl ? new URL(canonicalUrl, Astro.site ?? un
 			breadcrumbs={breadcrumbs}
 		/>
 	</head>
-	<body class="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex flex-col font-sans antialiased">
+	<body class="min-h-screen flex flex-col font-sans antialiased">
 		<!-- Skip to content link for accessibility -->
 		<a
 			href="#main-content"
@@ -97,5 +97,65 @@ const canonicalFromProps = canonicalUrl ? new URL(canonicalUrl, Astro.site ?? un
 		</main>
 
 		<Footer lang={lang} />
+
+		<script>
+			const revealSelector = [
+				'[data-reveal]',
+				'[data-reveal-group] > *',
+				'[data-reveal-prose] > h2',
+				'[data-reveal-prose] > h3',
+				'[data-reveal-prose] > figure',
+				'[data-reveal-prose] > pre',
+				'[data-reveal-prose] > blockquote',
+				'[data-reveal-prose] > table',
+				'[data-reveal-prose] > .not-prose',
+			].join(',');
+
+			const initializeReveals = () => {
+				const targets = Array.from(document.querySelectorAll<HTMLElement>(revealSelector));
+				if (targets.length === 0) return;
+
+				const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+				if (reduceMotion || !('IntersectionObserver' in window)) {
+					targets.forEach((target) => target.classList.add('is-revealed'));
+					return;
+				}
+
+				const observer = new IntersectionObserver(
+					(entries) => {
+						for (const entry of entries) {
+							const target = entry.target as HTMLElement;
+							if (entry.isIntersecting) {
+								target.classList.add('is-revealed');
+								target.classList.remove('is-past');
+								continue;
+							}
+
+							target.classList.remove('is-revealed');
+							target.classList.toggle('is-past', entry.boundingClientRect.bottom < 0);
+						}
+					},
+					{ rootMargin: '0px 0px -8% 0px', threshold: 0.12 },
+				);
+
+				const groups = new Map<Element, number>();
+				for (const target of targets) {
+					if (target.dataset.revealReady === 'true') continue;
+					target.dataset.revealReady = 'true';
+
+					const group = target.parentElement?.closest('[data-reveal-group]');
+					if (group) {
+						const index = groups.get(group) ?? 0;
+						target.style.setProperty('--reveal-delay', `${Math.min(index, 5) * 65}ms`);
+						groups.set(group, index + 1);
+					}
+
+					observer.observe(target);
+				}
+			};
+
+			initializeReveals();
+			window.addEventListener('pageshow', initializeReveals);
+		</script>
 	</body>
 </html>

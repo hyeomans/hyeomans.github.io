@@ -1,0 +1,1083 @@
+---
+import type {
+  ArchitectureDiagramDefinition,
+  ArchitectureNode,
+} from "./architecture-diagram";
+import type { HTMLAttributes } from "astro/types";
+
+type Props = ArchitectureDiagramDefinition &
+  Omit<HTMLAttributes<"figure">, "id" | "title">;
+
+const {
+  id,
+  title,
+  summary,
+  nodes,
+  flows,
+  modes = [],
+  initialMode,
+  autoplayMs = 2400,
+  theme = "auto",
+  class: className,
+  ...rest
+} = Astro.props;
+
+const fail = (message: string): never => {
+  throw new Error(`[ArchitectureDiagram:${id || "unknown"}] ${message}`);
+};
+
+if (!id || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id)) {
+  fail("id must be a non-empty kebab-case string");
+}
+if (!title) fail("title is required");
+if (!nodes.length) fail("at least one node is required");
+if (!flows.length) fail("at least one flow is required");
+
+const duplicate = (values: string[]) =>
+  values.find((value, index) => values.indexOf(value) !== index);
+const duplicateNode = duplicate(nodes.map((node) => node.id));
+const duplicateFlow = duplicate(flows.map((flow) => flow.id));
+const duplicateMode = duplicate(modes.map((mode) => mode.id));
+if (duplicateNode) fail(`duplicate node id: ${duplicateNode}`);
+if (duplicateFlow) fail(`duplicate flow id: ${duplicateFlow}`);
+if (duplicateMode) fail(`duplicate mode id: ${duplicateMode}`);
+
+const nodeIds = new Set(nodes.map((node) => node.id));
+for (const node of nodes) {
+  if (node.x < 0 || node.x > 100 || node.y < 0 || node.y > 100) {
+    fail(`node ${node.id} must use x/y percentages from 0 to 100`);
+  }
+}
+for (const flow of flows) {
+  if (!flow.steps.length) fail(`flow ${flow.id} has no steps`);
+  for (const step of flow.steps) {
+    if (!nodeIds.has(step.from)) {
+      fail(`flow ${flow.id} references missing source node ${step.from}`);
+    }
+    if (!nodeIds.has(step.to)) {
+      fail(`flow ${flow.id} references missing destination node ${step.to}`);
+    }
+  }
+}
+
+const modeIds = new Set(modes.map((mode) => mode.id));
+const validateModes = (owner: string, referencedModes: string[] = []) => {
+  for (const mode of referencedModes) {
+    if (!modeIds.has(mode)) fail(`${owner} references missing mode ${mode}`);
+  }
+};
+for (const node of nodes) {
+  validateModes(`node ${node.id}`, node.visibleIn);
+  validateModes(`node ${node.id} variants`, Object.keys(node.variants ?? {}));
+}
+for (const flow of flows) {
+  validateModes(`flow ${flow.id}`, flow.visibleIn);
+  for (const step of flow.steps) {
+    validateModes(
+      `step ${step.from} to ${step.to} variants`,
+      Object.keys(step.variants ?? {}),
+    );
+  }
+}
+const resolvedInitialMode = initialMode ?? modes[0]?.id ?? "";
+if (resolvedInitialMode && !modeIds.has(resolvedInitialMode)) {
+  fail(`initialMode ${resolvedInitialMode} is not present in modes`);
+}
+
+const nodeInMode = (node: ArchitectureNode, mode: string) =>
+  !node.visibleIn?.length || node.visibleIn.includes(mode);
+const flowInMode = (flow: (typeof flows)[number], mode: string) =>
+  !flow.visibleIn?.length || flow.visibleIn.includes(mode);
+const initialFlow =
+  flows.find((flow) => flowInMode(flow, resolvedInitialMode)) ?? flows[0];
+const domId = `architecture-${id}`;
+const nodeValue = (
+  node: ArchitectureNode,
+  field: "label" | "tech" | "detail",
+) => node.variants?.[resolvedInitialMode]?.[field] ?? node[field] ?? "";
+const clientConfig = JSON.stringify({
+  id,
+  nodes,
+  flows,
+  modes,
+  initialMode: resolvedInitialMode,
+  initialFlow: initialFlow.id,
+  autoplayMs,
+});
+---
+
+<figure
+  {...rest}
+  class:list={["architecture-diagram", className]}
+  data-architecture-diagram
+  data-diagram-id={domId}
+  data-theme={theme}
+  aria-labelledby={`${domId}-title`}
+  aria-describedby={summary ? `${domId}-summary` : undefined}
+>
+  <figcaption class="diagram-caption">
+    <strong id={`${domId}-title`}>{title}</strong>
+    {summary && <span id={`${domId}-summary`}>{summary}</span>}
+  </figcaption>
+
+  <div class="diagram-toolbar">
+    <div
+      class="mode-switch"
+      data-mode-switch
+      role="group"
+      aria-label="Architecture mode"
+      hidden={modes.length < 2}
+    >
+      {modes.map((mode) => (
+        <button
+          type="button"
+          data-mode={mode.id}
+          aria-pressed={mode.id === resolvedInitialMode ? "true" : "false"}
+        >
+          {mode.label}
+        </button>
+      ))}
+    </div>
+
+    <nav class="flow-switch" aria-label="Architecture flows">
+      {flows.map((flow) => (
+        <button
+          type="button"
+          data-flow={flow.id}
+          data-visible-in={flow.visibleIn?.join(",")}
+          aria-pressed={flow.id === initialFlow.id ? "true" : "false"}
+          hidden={!flowInMode(flow, resolvedInitialMode)}
+        >
+          {flow.label}
+        </button>
+      ))}
+    </nav>
+  </div>
+
+  <div class="diagram-shell">
+    <section class="diagram-main" aria-label="Interactive architecture walkthrough">
+      <div class="player">
+        <p class="flow-heading">
+          <span data-flow-name>{initialFlow.label}</span>
+          <span data-step-count aria-live="polite">1 / {initialFlow.steps.length}</span>
+        </p>
+        <div class="player-actions">
+          <button type="button" data-action="previous" aria-label="Previous step">
+            <span aria-hidden="true">←</span>
+          </button>
+          <button
+            type="button"
+            data-action="play"
+            aria-label="Play flow"
+            aria-pressed="false"
+          >
+            <span data-play-label>Play</span>
+          </button>
+          <button type="button" data-action="next" aria-label="Next step">
+            <span aria-hidden="true">→</span>
+          </button>
+        </div>
+      </div>
+
+      <p class="flow-note" data-flow-note hidden={!initialFlow.note}>
+        {initialFlow.note}
+      </p>
+      <div
+        class="progress-track"
+        data-progress
+        role="progressbar"
+        aria-label="Flow progress"
+        aria-valuemin="1"
+        aria-valuemax={initialFlow.steps.length}
+        aria-valuenow="1"
+      >
+        <span data-progress-fill style="width: 0%"></span>
+      </div>
+
+      <div
+        class="stage-scroll"
+        role="group"
+        aria-label="Architecture canvas; scroll horizontally on narrow screens"
+        tabindex="0"
+      >
+        <div class="stage" data-stage>
+          <svg class="wires" data-wires aria-hidden="true"></svg>
+          {nodes.map((node) => (
+            <button
+              type="button"
+              class="node"
+              data-node={node.id}
+              data-role={node.role}
+              data-visible-in={node.visibleIn?.join(",")}
+              style={`--node-x:${node.x}%;--node-y:${node.y}%`}
+              hidden={!nodeInMode(node, resolvedInitialMode)}
+              aria-label={`${nodeValue(node, "label")}, ${node.role}`}
+            >
+              <span class="node-role" aria-hidden="true">{node.role.slice(0, 2)}</span>
+              <strong data-node-label>{nodeValue(node, "label")}</strong>
+              <span data-node-tech>{nodeValue(node, "tech")}</span>
+              <small data-node-detail>{nodeValue(node, "detail")}</small>
+              <span class="step-badge" data-node-step aria-hidden="true"></span>
+            </button>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <aside class="step-panel" aria-label="Current architecture step">
+      <p class="panel-eyebrow">
+        Step <span data-panel-index>1</span> of <span data-panel-total>{initialFlow.steps.length}</span>
+        <span data-panel-mode hidden={!resolvedInitialMode}>{resolvedInitialMode}</span>
+      </p>
+      <p class="panel-title"><strong data-panel-title>{initialFlow.steps[0]?.title}</strong></p>
+      <p class="panel-route" data-panel-route></p>
+      <p class="panel-description" data-panel-description>
+        {initialFlow.steps[0]?.description}
+      </p>
+      <pre class="panel-payload"><code data-panel-payload>{initialFlow.steps[0]?.payload ?? ""}</code></pre>
+      <div class="panel-chips" data-panel-chips>
+        {initialFlow.steps[0]?.chips?.map((chip) => <span>{chip}</span>)}
+      </div>
+    </aside>
+  </div>
+
+  <details class="text-alternative">
+    <summary>Read the diagram as text</summary>
+    <p>{summary ?? title}</p>
+    {flows.map((flow) => (
+      <div>
+        <p><strong>{flow.label}</strong>{flow.note ? ` — ${flow.note}` : ""}</p>
+        <ol>
+          {flow.steps.map((step) => (
+            <li>
+              <strong>{step.title}:</strong> {step.from} → {step.to}. {step.description}
+            </li>
+          ))}
+        </ol>
+      </div>
+    ))}
+  </details>
+
+  <template data-diagram-config>{clientConfig}</template>
+</figure>
+
+<script>
+  type NodeConfig = {
+    id: string;
+    role: string;
+    label: string;
+    tech?: string;
+    detail?: string;
+    visibleIn?: string[];
+    variants?: Record<string, Partial<NodeConfig>>;
+  };
+  type StepConfig = {
+    from: string;
+    to: string;
+    title: string;
+    route?: string;
+    description: string;
+    payload?: string;
+    chips?: string[];
+    variants?: Record<string, Partial<StepConfig>>;
+  };
+  type FlowConfig = {
+    id: string;
+    label: string;
+    note?: string;
+    visibleIn?: string[];
+    steps: StepConfig[];
+  };
+  type DiagramConfig = {
+    id: string;
+    nodes: NodeConfig[];
+    flows: FlowConfig[];
+    modes: Array<{ id: string; label: string }>;
+    initialMode: string;
+    initialFlow: string;
+    autoplayMs: number;
+  };
+
+  const svgNamespace = "http://www.w3.org/2000/svg";
+
+  const initializeArchitectureDiagram = (root: HTMLElement) => {
+    if (root.dataset.ready === "true") return;
+
+    const configTemplate = root.querySelector<HTMLTemplateElement>(
+      "template[data-diagram-config]",
+    );
+    const configText = configTemplate?.content.textContent?.trim();
+    if (!configText) return;
+
+    const config = JSON.parse(configText) as DiagramConfig;
+    root.dataset.ready = "true";
+
+    const required = <T extends Element>(selector: string): T => {
+      const element = root.querySelector<T>(selector);
+      if (!element) throw new Error(`Architecture diagram is missing ${selector}`);
+      return element;
+    };
+
+    const stage = required<HTMLElement>("[data-stage]");
+    const svg = required<SVGSVGElement>("[data-wires]");
+    const flowName = required<HTMLElement>("[data-flow-name]");
+    const stepCount = required<HTMLElement>("[data-step-count]");
+    const flowNote = required<HTMLElement>("[data-flow-note]");
+    const progress = required<HTMLElement>("[data-progress]");
+    const progressFill = required<HTMLElement>("[data-progress-fill]");
+    const previousButton = required<HTMLButtonElement>("[data-action='previous']");
+    const nextButton = required<HTMLButtonElement>("[data-action='next']");
+    const playButton = required<HTMLButtonElement>("[data-action='play']");
+    const playLabel = required<HTMLElement>("[data-play-label]");
+    const panelIndex = required<HTMLElement>("[data-panel-index]");
+    const panelTotal = required<HTMLElement>("[data-panel-total]");
+    const panelMode = required<HTMLElement>("[data-panel-mode]");
+    const panelTitle = required<HTMLElement>("[data-panel-title]");
+    const panelRoute = required<HTMLElement>("[data-panel-route]");
+    const panelDescription = required<HTMLElement>("[data-panel-description]");
+    const panelPayload = required<HTMLElement>("[data-panel-payload]");
+    const panelChips = required<HTMLElement>("[data-panel-chips]");
+    const nodeElements = Array.from(
+      root.querySelectorAll<HTMLButtonElement>("[data-node]"),
+    );
+    const nodeById = new Map(
+      nodeElements.map((element) => [element.dataset.node ?? "", element]),
+    );
+    const nodeConfigById = new Map(config.nodes.map((node) => [node.id, node]));
+
+    const state = {
+      mode: config.initialMode,
+      flow: config.initialFlow,
+      step: 0,
+      timer: 0,
+      playing: false,
+    };
+
+    const visibleInMode = (visibleIn?: string[]) =>
+      !visibleIn?.length || visibleIn.includes(state.mode);
+    const nodeIsVisible = (id: string) => {
+      const node = nodeConfigById.get(id);
+      return Boolean(node && visibleInMode(node.visibleIn));
+    };
+    const effectiveStep = (step: StepConfig): StepConfig => ({
+      ...step,
+      ...(step.variants?.[state.mode] ?? {}),
+    });
+    const visibleSteps = (flow: FlowConfig) =>
+      flow.steps
+        .filter((step) => nodeIsVisible(step.from) && nodeIsVisible(step.to))
+        .map(effectiveStep);
+    const availableFlows = () =>
+      config.flows.filter(
+        (flow) => visibleInMode(flow.visibleIn) && visibleSteps(flow).length > 0,
+      );
+    const currentFlow = () =>
+      availableFlows().find((flow) => flow.id === state.flow) ?? availableFlows()[0];
+
+    const stopPlaying = () => {
+      if (state.timer) window.clearInterval(state.timer);
+      state.timer = 0;
+      state.playing = false;
+      playButton.setAttribute("aria-pressed", "false");
+      playButton.setAttribute("aria-label", "Play flow");
+      playLabel.textContent = "Play";
+    };
+
+    const setPlaying = (playing: boolean) => {
+      stopPlaying();
+      if (!playing) return;
+      state.playing = true;
+      playButton.setAttribute("aria-pressed", "true");
+      playButton.setAttribute("aria-label", "Pause flow");
+      playLabel.textContent = "Pause";
+      state.timer = window.setInterval(() => {
+        if (!root.isConnected) {
+          stopPlaying();
+          return;
+        }
+        const flow = currentFlow();
+        if (!flow) return;
+        const steps = visibleSteps(flow);
+        if (state.step >= steps.length - 1) {
+          stopPlaying();
+          return;
+        }
+        state.step += 1;
+        render();
+      }, Math.max(900, config.autoplayMs));
+    };
+
+    const updateNodesForMode = () => {
+      for (const node of config.nodes) {
+        const element = nodeById.get(node.id);
+        if (!element) continue;
+        const visible = visibleInMode(node.visibleIn);
+        element.hidden = !visible;
+        const variant = node.variants?.[state.mode] ?? {};
+        const label = variant.label ?? node.label;
+        const tech = variant.tech ?? node.tech ?? "";
+        const detail = variant.detail ?? node.detail ?? "";
+        requiredWithin(element, "[data-node-label]").textContent = label;
+        requiredWithin(element, "[data-node-tech]").textContent = tech;
+        requiredWithin(element, "[data-node-detail]").textContent = detail;
+        element.setAttribute("aria-label", `${label}, ${node.role}`);
+      }
+    };
+
+    const requiredWithin = (element: Element, selector: string): HTMLElement => {
+      const match = element.querySelector<HTMLElement>(selector);
+      if (!match) throw new Error(`Architecture node is missing ${selector}`);
+      return match;
+    };
+
+    const wireColor = (role: string) =>
+      getComputedStyle(root)
+        .getPropertyValue(`--architecture-role-${role}`)
+        .trim() || "#6aa9ff";
+
+    const svgElement = <K extends keyof SVGElementTagNameMap>(name: K) =>
+      document.createElementNS(svgNamespace, name);
+
+    const pathFor = (from: Element, to: Element) => {
+      const stageRect = stage.getBoundingClientRect();
+      const fromRect = from.getBoundingClientRect();
+      const toRect = to.getBoundingClientRect();
+      const fromCenterX = fromRect.left - stageRect.left + fromRect.width / 2;
+      const fromCenterY = fromRect.top - stageRect.top + fromRect.height / 2;
+      const toCenterX = toRect.left - stageRect.left + toRect.width / 2;
+      const toCenterY = toRect.top - stageRect.top + toRect.height / 2;
+      const centerDx = toCenterX - fromCenterX;
+      const centerDy = toCenterY - fromCenterY;
+      const centerDistance = Math.max(1, Math.hypot(centerDx, centerDy));
+      const unitX = centerDx / centerDistance;
+      const unitY = centerDy / centerDistance;
+      const distanceToEdge = (rect: DOMRect, x: number, y: number) =>
+        Math.min(
+          Math.abs(x) > 0.001 ? rect.width / 2 / Math.abs(x) : Number.POSITIVE_INFINITY,
+          Math.abs(y) > 0.001 ? rect.height / 2 / Math.abs(y) : Number.POSITIVE_INFINITY,
+        );
+      const fromInset = distanceToEdge(fromRect, unitX, unitY) + 3;
+      const toInset = distanceToEdge(toRect, unitX, unitY) + 8;
+      const x1 = fromCenterX + unitX * fromInset;
+      const y1 = fromCenterY + unitY * fromInset;
+      const x2 = toCenterX - unitX * toInset;
+      const y2 = toCenterY - unitY * toInset;
+      const dx = x2 - x1;
+      const dy = y2 - y1;
+      const distance = Math.max(1, Math.hypot(dx, dy));
+      const bend = Math.min(64, Math.max(22, distance * 0.14));
+      const controlX = (x1 + x2) / 2 + (-dy / distance) * bend;
+      const controlY = (y1 + y2) / 2 + (dx / distance) * bend;
+      return `M ${x1} ${y1} Q ${controlX} ${controlY} ${x2} ${y2}`;
+    };
+
+    const drawWires = (steps: StepConfig[], activeStep: StepConfig) => {
+      svg.replaceChildren();
+      const defs = svgElement("defs");
+      svg.append(defs);
+
+      const roles = new Set(
+        steps.map((step) => nodeConfigById.get(step.to)?.role ?? "orchestrator"),
+      );
+      for (const role of roles) {
+        const marker = svgElement("marker");
+        const markerId = `${root.dataset.diagramId}-arrow-${role}`;
+        marker.id = markerId;
+        marker.setAttribute("viewBox", "0 0 8 8");
+        marker.setAttribute("refX", "7");
+        marker.setAttribute("refY", "4");
+        marker.setAttribute("markerWidth", "7");
+        marker.setAttribute("markerHeight", "7");
+        marker.setAttribute("orient", "auto-start-reverse");
+        const arrow = svgElement("path");
+        arrow.setAttribute("d", "M 0 0 L 8 4 L 0 8 z");
+        arrow.setAttribute("fill", wireColor(role));
+        marker.append(arrow);
+        defs.append(marker);
+      }
+
+      const uniqueEdges = new Map<string, StepConfig>();
+      for (const step of steps) {
+        uniqueEdges.set(`${step.from}>${step.to}`, step);
+      }
+
+      for (const step of uniqueEdges.values()) {
+        const from = nodeById.get(step.from);
+        const to = nodeById.get(step.to);
+        if (!from || !to || from.hidden || to.hidden) continue;
+        const role = nodeConfigById.get(step.to)?.role ?? "orchestrator";
+        const color = wireColor(role);
+        const d = pathFor(from, to);
+        const active = step.from === activeStep.from && step.to === activeStep.to;
+        const path = svgElement("path");
+        path.setAttribute("d", d);
+        path.setAttribute("fill", "none");
+        path.setAttribute("stroke", color);
+        path.setAttribute("stroke-width", active ? "3" : "1.5");
+        path.setAttribute("stroke-linecap", "round");
+        path.setAttribute("vector-effect", "non-scaling-stroke");
+        path.setAttribute("marker-end", `url(#${root.dataset.diagramId}-arrow-${role})`);
+        path.setAttribute("opacity", active ? "1" : "0.38");
+        if (!active) path.setAttribute("stroke-dasharray", "5 7");
+        svg.append(path);
+
+        if (active && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          const packet = svgElement("circle");
+          packet.setAttribute("r", "5");
+          packet.setAttribute("fill", color);
+          packet.setAttribute("aria-hidden", "true");
+          const motion = svgElement("animateMotion");
+          motion.setAttribute("dur", "1.8s");
+          motion.setAttribute("repeatCount", "indefinite");
+          motion.setAttribute("path", d);
+          packet.append(motion);
+          svg.append(packet);
+        }
+      }
+    };
+
+    const render = () => {
+      const flows = availableFlows();
+      if (!flows.length) {
+        stopPlaying();
+        flowName.textContent = "No flow is available in this mode";
+        return;
+      }
+      if (!flows.some((flow) => flow.id === state.flow)) state.flow = flows[0].id;
+      const flow = currentFlow();
+      if (!flow) return;
+      const steps = visibleSteps(flow);
+      state.step = Math.max(0, Math.min(state.step, steps.length - 1));
+      const step = steps[state.step];
+
+      updateNodesForMode();
+      flowName.textContent = flow.label;
+      stepCount.textContent = `${state.step + 1} / ${steps.length}`;
+      flowNote.textContent = flow.note ?? "";
+      flowNote.hidden = !flow.note;
+      panelIndex.textContent = String(state.step + 1);
+      panelTotal.textContent = String(steps.length);
+      panelMode.textContent = state.mode;
+      panelMode.hidden = !state.mode;
+      panelTitle.textContent = step.title;
+      panelRoute.textContent = `${step.from} → ${step.to}${step.route ? ` · ${step.route}` : ""}`;
+      panelDescription.textContent = step.description;
+      panelPayload.textContent = step.payload ?? "";
+      panelChips.replaceChildren();
+      for (const chip of step.chips ?? []) {
+        const element = document.createElement("span");
+        element.textContent = chip;
+        panelChips.append(element);
+      }
+
+      previousButton.disabled = state.step === 0;
+      nextButton.disabled = state.step === steps.length - 1;
+      const percent = steps.length === 1 ? 100 : (state.step / (steps.length - 1)) * 100;
+      progressFill.style.width = `${percent}%`;
+      progress.setAttribute("aria-valuemax", String(steps.length));
+      progress.setAttribute("aria-valuenow", String(state.step + 1));
+
+      const participants = new Set(steps.flatMap((item) => [item.from, item.to]));
+      for (const element of nodeElements) {
+        const nodeId = element.dataset.node ?? "";
+        element.classList.toggle("is-dimmed", !participants.has(nodeId));
+        element.classList.toggle("is-source", nodeId === step.from);
+        element.classList.toggle("is-active", nodeId === step.to);
+        const badge = requiredWithin(element, "[data-node-step]");
+        badge.textContent = nodeId === step.to ? String(state.step + 1) : "";
+      }
+
+      root.querySelectorAll<HTMLButtonElement>("[data-flow]").forEach((button) => {
+        const flowConfig = config.flows.find((item) => item.id === button.dataset.flow);
+        const available = Boolean(flowConfig && flows.includes(flowConfig));
+        button.hidden = !available;
+        button.setAttribute("aria-pressed", button.dataset.flow === flow.id ? "true" : "false");
+      });
+      root.querySelectorAll<HTMLButtonElement>("[data-mode]").forEach((button) => {
+        button.setAttribute("aria-pressed", button.dataset.mode === state.mode ? "true" : "false");
+      });
+
+      window.requestAnimationFrame(() => drawWires(steps, step));
+    };
+
+    previousButton.addEventListener("click", () => {
+      stopPlaying();
+      state.step -= 1;
+      render();
+    });
+    nextButton.addEventListener("click", () => {
+      stopPlaying();
+      state.step += 1;
+      render();
+    });
+    playButton.addEventListener("click", () => setPlaying(!state.playing));
+
+    root.querySelectorAll<HTMLButtonElement>("[data-mode]").forEach((button) => {
+      button.addEventListener("click", () => {
+        stopPlaying();
+        state.mode = button.dataset.mode ?? "";
+        state.step = 0;
+        updateNodesForMode();
+        render();
+      });
+    });
+    root.querySelectorAll<HTMLButtonElement>("[data-flow]").forEach((button) => {
+      button.addEventListener("click", () => {
+        stopPlaying();
+        state.flow = button.dataset.flow ?? state.flow;
+        state.step = 0;
+        render();
+      });
+    });
+    for (const element of nodeElements) {
+      element.addEventListener("click", () => {
+        stopPlaying();
+        const flow = currentFlow();
+        if (!flow) return;
+        const index = visibleSteps(flow).findIndex(
+          (step) => step.from === element.dataset.node || step.to === element.dataset.node,
+        );
+        if (index >= 0) {
+          state.step = index;
+          render();
+        }
+      });
+    }
+
+    let redrawFrame = 0;
+    const scheduleRedraw = () => {
+      window.cancelAnimationFrame(redrawFrame);
+      redrawFrame = window.requestAnimationFrame(render);
+    };
+    new ResizeObserver(scheduleRedraw).observe(stage);
+
+    updateNodesForMode();
+    render();
+  };
+
+  const initializeAllArchitectureDiagrams = () => {
+    document
+      .querySelectorAll<HTMLElement>("[data-architecture-diagram]")
+      .forEach(initializeArchitectureDiagram);
+  };
+
+  initializeAllArchitectureDiagrams();
+  document.addEventListener("astro:page-load", initializeAllArchitectureDiagrams);
+</script>
+
+<style>
+  .architecture-diagram {
+    --architecture-bg: #0d1119;
+    --architecture-surface: #141b27;
+    --architecture-surface-strong: #1a2433;
+    --architecture-text: #edf3fb;
+    --architecture-muted: #93a4ba;
+    --architecture-border: #34435a;
+    --architecture-role-user: #46f9b8;
+    --architecture-role-orchestrator: #6aa9ff;
+    --architecture-role-compute: #ff6b8a;
+    --architecture-role-transform: #ffc14d;
+    --architecture-role-data: #b388ff;
+    --architecture-role-automation: #ff9457;
+    container-type: inline-size;
+    margin-block: 2.5rem;
+    border: 1px solid var(--architecture-border);
+    border-radius: 1rem;
+    overflow: clip;
+    color: var(--architecture-text);
+    background: var(--architecture-bg);
+    box-shadow: 0 1.25rem 4rem rgb(0 0 0 / 0.18);
+    color-scheme: dark;
+    font-family:
+      Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+      sans-serif;
+  }
+
+  .architecture-diagram[data-theme="light"] {
+    --architecture-bg: #f6f7fa;
+    --architecture-surface: #ffffff;
+    --architecture-surface-strong: #eef2f7;
+    --architecture-text: #192131;
+    --architecture-muted: #56657a;
+    --architecture-border: #c5cfdd;
+    color-scheme: light;
+  }
+
+  .architecture-diagram[data-theme="auto"] {
+    --architecture-bg: var(--site-canvas);
+    --architecture-surface: var(--site-surface);
+    --architecture-surface-strong: color-mix(in srgb, var(--site-surface), var(--site-ink) 6%);
+    --architecture-text: var(--site-ink);
+    --architecture-muted: var(--site-muted);
+    --architecture-border: var(--site-line);
+    color-scheme: light;
+  }
+
+  :global(.dark) .architecture-diagram[data-theme="auto"] {
+    color-scheme: dark;
+  }
+
+  .architecture-diagram :where(button) {
+    font: inherit;
+  }
+
+  .architecture-diagram :where(button):focus-visible,
+  .stage-scroll:focus-visible,
+  .text-alternative summary:focus-visible {
+    outline: 3px solid var(--architecture-role-orchestrator);
+    outline-offset: 3px;
+  }
+
+  .diagram-caption {
+    display: grid;
+    gap: 0.3rem;
+    padding: 1.1rem 1.25rem 0.9rem;
+    border-bottom: 1px solid var(--architecture-border);
+    background: var(--architecture-surface);
+  }
+
+  .diagram-caption strong {
+    font-size: clamp(1rem, 2.5cqi, 1.35rem);
+    line-height: 1.25;
+  }
+
+  .diagram-caption span,
+  .flow-note {
+    color: var(--architecture-muted);
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+
+  .diagram-toolbar {
+    display: grid;
+    gap: 0.75rem;
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid var(--architecture-border);
+    background: var(--architecture-surface);
+  }
+
+  .mode-switch,
+  .flow-switch,
+  .player-actions,
+  .panel-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .mode-switch button,
+  .flow-switch button,
+  .player-actions button {
+    min-height: 2.35rem;
+    padding: 0.45rem 0.75rem;
+    border: 1px solid var(--architecture-border);
+    border-radius: 0.55rem;
+    color: var(--architecture-muted);
+    background: var(--architecture-bg);
+    cursor: pointer;
+  }
+
+  .mode-switch button[aria-pressed="true"],
+  .flow-switch button[aria-pressed="true"] {
+    border-color: var(--architecture-role-orchestrator);
+    color: var(--architecture-text);
+    background: color-mix(in srgb, var(--architecture-role-orchestrator) 14%, var(--architecture-bg));
+  }
+
+  .diagram-shell {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(15rem, 24rem);
+  }
+
+  .diagram-main {
+    min-width: 0;
+    border-right: 1px solid var(--architecture-border);
+  }
+
+  .player {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.75rem 1rem 0.45rem;
+  }
+
+  .flow-heading {
+    display: grid;
+    gap: 0.15rem;
+    margin: 0;
+    font-weight: 700;
+  }
+
+  .flow-heading [data-step-count] {
+    color: var(--architecture-muted);
+    font-size: 0.78rem;
+    font-weight: 500;
+  }
+
+  .player-actions {
+    flex-wrap: nowrap;
+  }
+
+  .player-actions button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  .flow-note {
+    margin: 0;
+    padding: 0 1rem 0.65rem;
+  }
+
+  .progress-track {
+    height: 0.22rem;
+    background: var(--architecture-surface-strong);
+  }
+
+  .progress-track span {
+    display: block;
+    height: 100%;
+    background: var(--architecture-role-orchestrator);
+    transition: width 180ms ease;
+  }
+
+  .stage-scroll {
+    max-width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+  }
+
+  .stage {
+    position: relative;
+    min-width: 44rem;
+    min-height: 32rem;
+    contain: layout paint;
+    background-image:
+      linear-gradient(rgb(255 255 255 / 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(255 255 255 / 0.035) 1px, transparent 1px);
+    background-size: 2rem 2rem;
+  }
+
+  .wires {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  .node {
+    --role-color: var(--architecture-role-orchestrator);
+    position: absolute;
+    left: var(--node-x);
+    top: var(--node-y);
+    z-index: 1;
+    display: grid;
+    width: 9.25rem;
+    min-height: 6.3rem;
+    padding: 0.7rem 0.8rem;
+    border: 1px solid color-mix(in srgb, var(--role-color) 55%, var(--architecture-border));
+    border-radius: 0.75rem;
+    transform: translate(-50%, -50%);
+    text-align: start;
+    color: var(--architecture-text);
+    background: color-mix(in srgb, var(--role-color) 7%, var(--architecture-surface));
+    box-shadow: 0 0.8rem 2rem rgb(0 0 0 / 0.2);
+    cursor: pointer;
+    transition: opacity 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+  }
+
+  .node[data-role="user"] { --role-color: var(--architecture-role-user); }
+  .node[data-role="orchestrator"] { --role-color: var(--architecture-role-orchestrator); }
+  .node[data-role="compute"] { --role-color: var(--architecture-role-compute); }
+  .node[data-role="transform"] { --role-color: var(--architecture-role-transform); }
+  .node[data-role="data"] { --role-color: var(--architecture-role-data); }
+  .node[data-role="automation"] { --role-color: var(--architecture-role-automation); }
+
+  .node:hover,
+  .node.is-source,
+  .node.is-active {
+    border-color: var(--role-color);
+  }
+
+  .node.is-active {
+    box-shadow: 0 0 0 2px var(--role-color), 0 0 2rem color-mix(in srgb, var(--role-color) 42%, transparent);
+  }
+
+  .node.is-dimmed {
+    opacity: 0.3;
+  }
+
+  .node-role {
+    justify-self: start;
+    margin-bottom: 0.35rem;
+    padding: 0.12rem 0.35rem;
+    border-radius: 999px;
+    color: var(--architecture-bg);
+    background: var(--role-color);
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  .node strong,
+  .node span,
+  .node small {
+    overflow-wrap: anywhere;
+  }
+
+  .node strong {
+    font-size: 0.88rem;
+    line-height: 1.2;
+  }
+
+  .node [data-node-tech],
+  .node [data-node-detail] {
+    color: var(--architecture-muted);
+    font-size: 0.7rem;
+    line-height: 1.3;
+  }
+
+  .step-badge {
+    position: absolute;
+    inset-block-start: -0.55rem;
+    inset-inline-end: -0.55rem;
+    display: grid;
+    place-items: center;
+    width: 1.45rem;
+    height: 1.45rem;
+    border-radius: 50%;
+    color: var(--architecture-bg);
+    background: var(--role-color);
+    font-size: 0.75rem;
+    font-weight: 800;
+  }
+
+  .step-badge:empty {
+    display: none;
+  }
+
+  .step-panel {
+    min-width: 0;
+    padding: 1rem;
+    background: var(--architecture-surface);
+  }
+
+  .panel-eyebrow,
+  .panel-title,
+  .panel-route,
+  .panel-description {
+    margin: 0 0 0.8rem;
+  }
+
+  .panel-eyebrow,
+  .panel-route {
+    color: var(--architecture-muted);
+    font: 0.72rem/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  [data-panel-mode] {
+    float: inline-end;
+    color: var(--architecture-role-orchestrator);
+  }
+
+  .panel-title {
+    font-size: 1.05rem;
+  }
+
+  .panel-description {
+    color: var(--architecture-muted);
+    font-size: 0.88rem;
+    line-height: 1.55;
+  }
+
+  .panel-payload {
+    min-height: 8rem;
+    max-height: 17rem;
+    margin: 1rem 0;
+    padding: 0.85rem;
+    overflow: auto;
+    border: 1px solid var(--architecture-border);
+    border-radius: 0.6rem;
+    color: var(--architecture-text);
+    background: var(--architecture-bg);
+    font-size: 0.72rem;
+    line-height: 1.55;
+    white-space: pre-wrap;
+  }
+
+  .panel-chips span {
+    padding: 0.25rem 0.48rem;
+    border: 1px solid var(--architecture-border);
+    border-radius: 999px;
+    color: var(--architecture-muted);
+    background: var(--architecture-bg);
+    font-size: 0.68rem;
+  }
+
+  .text-alternative {
+    padding: 0.85rem 1rem 1rem;
+    border-top: 1px solid var(--architecture-border);
+    background: var(--architecture-surface);
+    font-size: 0.88rem;
+    line-height: 1.55;
+  }
+
+  .text-alternative summary {
+    cursor: pointer;
+    font-weight: 700;
+  }
+
+  .text-alternative ol {
+    padding-inline-start: 1.4rem;
+  }
+
+  [hidden] {
+    display: none !important;
+  }
+
+  @container (max-width: 52rem) {
+    .diagram-shell {
+      grid-template-columns: 1fr;
+    }
+
+    .diagram-main {
+      border-right: 0;
+      border-bottom: 1px solid var(--architecture-border);
+    }
+
+    .stage {
+      min-height: 29rem;
+    }
+
+    .panel-payload {
+      min-height: 5rem;
+    }
+  }
+
+  @container (max-width: 34rem) {
+    .player {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .player-actions button {
+      flex: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .architecture-diagram *,
+    .architecture-diagram *::before,
+    .architecture-diagram *::after {
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+    }
+  }
+</style>

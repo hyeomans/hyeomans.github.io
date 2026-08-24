@@ -19,9 +19,9 @@ const languageLinks = [
 ---
 
 <BaseLayout title={title} description={description} lang="en" languageLinks={languageLinks} canonicalUrl="/posts/">
-	<div class="bg-white dark:bg-gray-900 py-24 sm:py-32">
+	<div class="site-canvas py-16 sm:py-24">
 		<div class="mx-auto max-w-7xl px-6 lg:px-8">
-			<div class="mx-auto max-w-2xl text-center mb-16">
+			<div class="page-intro mb-12" data-reveal>
 				<h1 class="text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl">
 					{title}
 				</h1>
@@ -35,23 +35,23 @@ const languageLinks = [
 					<p>No posts found.</p>
 				</div>
 			) : (
-				<div class="mx-auto max-w-4xl">
-					<div class="space-y-12">
+				<div class="max-w-4xl">
+					<div class="divide-y divide-gray-200 dark:divide-gray-800" data-reveal-group>
 						{posts.map((post) => {
 							// Extract just the post name from the slug (e.g., 'en/golang-and-interfaces-misuse' -> 'golang-and-interfaces-misuse')
 							const slug = post.slug.split('/').pop() ?? post.slug;
 							const postUrl = `/posts/${slug}/`;
 							return (
-								<article class="group relative">
+								<article class="group relative py-10 first:pt-0 last:pb-0">
 									<div class="relative flex flex-col gap-8 lg:flex-row">
 										{/* Hero Image */}
 										{post.data.heroImage && (
 											<div class="lg:w-64 lg:flex-shrink-0">
-												<a href={postUrl} class="block">
+												<a href={postUrl} class="block overflow-hidden rounded-xl">
 													<img
 														src={post.data.heroImage.src}
 														alt={post.data.heroAlt || post.data.title}
-														class="aspect-[16/9] w-full rounded-2xl bg-gray-100 object-cover lg:aspect-[4/3] transition-transform group-hover:scale-105"
+													class="aspect-[16/9] w-full bg-gray-100 object-cover transition-transform duration-300 group-hover:scale-[1.015] lg:aspect-[4/3]"
 														loading="lazy"
 													/>
 												</a>
@@ -84,7 +84,7 @@ const languageLinks = [
 														return (
 															<a
 																href={`/tags/${tagSlug}/`}
-																class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gamboge-100 text-gamboge-800 hover:bg-gamboge-200 dark:bg-gamboge-900 dark:text-gamboge-200 dark:hover:bg-gamboge-800 transition-colors"
+												class="inline-flex items-center rounded-md bg-gamboge-100 px-2.5 py-0.5 text-xs font-medium text-gamboge-800 transition-colors hover:bg-gamboge-200 dark:bg-gamboge-900 dark:text-gamboge-200 dark:hover:bg-gamboge-800"
 															>
 																#{tag}
 															</a>

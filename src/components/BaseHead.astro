@@ -248,6 +248,9 @@ if (breadcrumbs.length > 0) {
 
 	const isDark = getThemePreference() === 'dark';
 	document.documentElement.classList[isDark ? 'add' : 'remove']('dark');
+	if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+		document.documentElement.classList.add('motion-enabled');
+	}
 
 	// Watch for changes to the dark class
 	if (typeof localStorage !== 'undefined') {

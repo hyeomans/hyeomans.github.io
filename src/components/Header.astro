@@ -21,8 +21,8 @@ const isActivePath = (href: string) => {
 };
 ---
 
-<header class="sticky top-0 z-50 bg-white/90 backdrop-blur-sm dark:bg-gray-900/90 border-b border-gray-200 dark:border-gray-800 transition-colors">
-	<nav class="mx-auto max-w-7xl px-6 lg:px-8 py-4">
+<header class="site-header sticky top-0 z-50 border-b border-gray-200/80 backdrop-blur-md dark:border-gray-800/80">
+	<nav class="relative mx-auto max-w-7xl px-6 py-4 lg:px-8">
 		<div class="flex items-center justify-between">
 			<!-- Logo / Site Title -->
 			<div class="flex-shrink-0">
@@ -97,22 +97,30 @@ const isActivePath = (href: string) => {
 				<button
 					id="mobile-menu-btn"
 					type="button"
-					class="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-700 dark:text-gray-300 hover:text-gamboge-600 dark:hover:text-gamboge-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+					class="menu-button inline-flex size-9 items-center justify-center rounded-md text-gray-700 transition-colors hover:bg-gray-100 hover:text-gamboge-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gamboge-500 md:hidden dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gamboge-400"
 					aria-controls="mobile-menu"
 					aria-expanded="false"
+					data-open="false"
 				>
 					<span class="sr-only">Open main menu</span>
-					<!-- Hamburger icon -->
-					<svg class="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-						<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-					</svg>
+					<span class="menu-icon" aria-hidden="true">
+						<span class="menu-line"></span>
+						<span class="menu-line"></span>
+						<span class="menu-line"></span>
+					</span>
 				</button>
 			</div>
 		</div>
 
 		<!-- Mobile Menu -->
-		<div id="mobile-menu" class="hidden md:hidden mt-4 pb-4">
-			<div class="flex flex-col gap-3" role="navigation" aria-label="Mobile">
+		<div
+			id="mobile-menu"
+			class="mobile-menu md:hidden"
+			data-open="false"
+			aria-hidden="true"
+			inert
+		>
+			<div class="flex flex-col gap-2" role="navigation" aria-label="Mobile">
 				{navItems.map((item) => (
 					<a
 						href={item.href}
@@ -167,18 +175,148 @@ const isActivePath = (href: string) => {
 				</div>
 			</div>
 		</div>
+
+		<noscript>
+			<style>
+				#mobile-menu-btn { display: none !important; }
+			</style>
+			<div class="mt-4 border-t border-gray-200 pt-4 md:hidden dark:border-gray-800">
+				<div class="flex flex-col gap-2" role="navigation" aria-label="Mobile">
+					{navItems.map((item) => (
+						<a
+							href={item.href}
+							class={`rounded-md px-3 py-2 text-base font-medium ${
+								isActivePath(item.href)
+									? 'bg-gamboge-100 text-gamboge-900 dark:bg-gamboge-900 dark:text-gamboge-100'
+									: 'text-gray-700 dark:text-gray-300'
+							}`}
+						>
+							{item.label}
+						</a>
+					))}
+					<div class="px-3 py-2">
+						<LanguageSwitcher currentLang={lang} links={languageLinks} />
+					</div>
+				</div>
+			</div>
+		</noscript>
 	</nav>
 </header>
+
+<style>
+	.site-header {
+		background: color-mix(in srgb, var(--site-canvas) 90%, transparent);
+	}
+
+	.mobile-menu {
+		position: absolute;
+		top: calc(100% + 0.5rem);
+		left: 1.5rem;
+		right: 1.5rem;
+		padding: 0.75rem;
+		border: 1px solid var(--site-line);
+		border-radius: 0.75rem;
+		background: var(--site-surface);
+		box-shadow: 0 18px 45px rgb(17 24 39 / 0.12);
+		opacity: 0;
+		visibility: hidden;
+		pointer-events: none;
+		transform: translateY(-0.5rem) scale(0.985);
+		transform-origin: top right;
+		transition:
+			opacity 160ms ease,
+			transform 220ms var(--motion-ease),
+			visibility 0s linear 220ms;
+	}
+
+	.mobile-menu[data-open='true'] {
+		opacity: 1;
+		visibility: visible;
+		pointer-events: auto;
+		transform: translateY(0) scale(1);
+		transition-delay: 0s;
+	}
+
+	.menu-icon {
+		position: relative;
+		display: block;
+		width: 1.25rem;
+		height: 1rem;
+	}
+
+	.menu-line {
+		position: absolute;
+		left: 0;
+		display: block;
+		width: 100%;
+		height: 1.5px;
+		border-radius: 999px;
+		background: currentColor;
+		transition:
+			transform 220ms var(--motion-ease),
+			top 220ms var(--motion-ease),
+			opacity 120ms ease;
+	}
+
+	.menu-line:nth-child(1) { top: 0; }
+	.menu-line:nth-child(2) { top: calc(50% - 0.75px); }
+	.menu-line:nth-child(3) { top: calc(100% - 1.5px); }
+
+	.menu-button[data-open='true'] .menu-line:nth-child(1) {
+		top: calc(50% - 0.75px);
+		transform: rotate(45deg);
+	}
+
+	.menu-button[data-open='true'] .menu-line:nth-child(2) {
+		opacity: 0;
+		transform: scaleX(0.4);
+	}
+
+	.menu-button[data-open='true'] .menu-line:nth-child(3) {
+		top: calc(50% - 0.75px);
+		transform: rotate(-45deg);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.mobile-menu,
+		.menu-line {
+			transition: none;
+		}
+	}
+</style>
 
 <script is:inline>
 	const mobileMenuBtn = document.getElementById('mobile-menu-btn');
 	const mobileMenu = document.getElementById('mobile-menu');
 
 	if (mobileMenuBtn && mobileMenu) {
+		const buttonLabel = mobileMenuBtn.querySelector('.sr-only');
+		const setMenu = (open) => {
+			mobileMenuBtn.setAttribute('aria-expanded', open.toString());
+			mobileMenuBtn.dataset.open = open.toString();
+			mobileMenu.dataset.open = open.toString();
+			mobileMenu.setAttribute('aria-hidden', (!open).toString());
+			mobileMenu.inert = !open;
+			if (buttonLabel) buttonLabel.textContent = open ? 'Close main menu' : 'Open main menu';
+		};
+
 		mobileMenuBtn.addEventListener('click', () => {
-			const isExpanded = mobileMenuBtn.getAttribute('aria-expanded') === 'true';
-			mobileMenuBtn.setAttribute('aria-expanded', (!isExpanded).toString());
-			mobileMenu.classList.toggle('hidden');
+			setMenu(mobileMenuBtn.getAttribute('aria-expanded') !== 'true');
+		});
+
+		mobileMenu.addEventListener('click', (event) => {
+			if (event.target instanceof Element && event.target.closest('a')) setMenu(false);
+		});
+
+		document.addEventListener('keydown', (event) => {
+			if (event.key === 'Escape' && mobileMenuBtn.getAttribute('aria-expanded') === 'true') {
+				setMenu(false);
+				mobileMenuBtn.focus();
+			}
+		});
+
+		window.matchMedia('(min-width: 768px)').addEventListener('change', (event) => {
+			if (event.matches) setMenu(false);
 		});
 	}
 </script>

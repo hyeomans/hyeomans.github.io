@@ -115,10 +115,10 @@ const breadcrumbs = [
 	canonicalUrl={canonicalPath}
 	breadcrumbs={breadcrumbs}
 >
-	<article class="py-12 sm:py-16">
+	<article class="site-canvas py-10 sm:py-16">
 		<div class="mx-auto max-w-3xl px-6 lg:px-8">
 			<!-- Breadcrumb Navigation -->
-			<nav class="flex mb-8 text-sm" aria-label="Breadcrumb">
+			<nav class="mb-7 flex text-sm" aria-label="Breadcrumb" data-reveal>
 				<ol class="inline-flex items-center space-x-1 md:space-x-3">
 					<li class="inline-flex items-center">
 						<a
@@ -139,31 +139,11 @@ const breadcrumbs = [
 							</a>
 						</div>
 					</li>
-					<li aria-current="page">
-						<div class="flex items-center">
-							<span class="mx-2 text-gray-400">/</span>
-							<span class="text-gray-900 dark:text-white font-medium">
-								{title}
-							</span>
-						</div>
-					</li>
 				</ol>
 			</nav>
 
-			<!-- Hero Image -->
-			{heroImage && (
-				<div class="mb-8 -mx-6 lg:-mx-8">
-					<img
-						src={heroImage.src}
-						alt={heroAlt || title}
-						class="w-full h-auto rounded-lg"
-						loading="eager"
-					/>
-				</div>
-			)}
-
 			<!-- Post Header -->
-			<header class="mb-8">
+			<header class="mb-8" data-reveal>
 				<h1 class="text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl mb-4">
 					{title}
 				</h1>
@@ -197,7 +177,7 @@ const breadcrumbs = [
 								return (
 									<a
 										href={tagPath}
-										class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gamboge-100 text-gamboge-800 hover:bg-gamboge-200 dark:bg-gamboge-900 dark:text-gamboge-200 dark:hover:bg-gamboge-800 transition-colors"
+										class="inline-flex items-center rounded-md bg-gamboge-100 px-3 py-1 text-sm font-medium text-gamboge-800 transition-colors hover:bg-gamboge-200 dark:bg-gamboge-900 dark:text-gamboge-200 dark:hover:bg-gamboge-800"
 									>
 										#{tag}
 									</a>
@@ -208,8 +188,20 @@ const breadcrumbs = [
 				)}
 			</header>
 
+			<!-- Hero Image -->
+			{heroImage && (
+				<div class="wide-media mb-10" data-reveal>
+					<img
+						src={heroImage.src}
+						alt={heroAlt || title}
+						class="h-auto w-full rounded-xl"
+						loading="eager"
+					/>
+				</div>
+			)}
+
 			<!-- Post Content -->
-			<div class="prose prose-lg dark:prose-invert max-w-none">
+			<div class="prose prose-lg max-w-none dark:prose-invert" data-reveal-prose>
 				<slot />
 			</div>
 		</div>

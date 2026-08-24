@@ -32,9 +32,9 @@ const languageLinks = [
 ---
 
 <BaseLayout title={title} description={description} lang="es" languageLinks={languageLinks} canonicalUrl="/es/tags/">
-	<div class="bg-white dark:bg-gray-900 py-24 sm:py-32">
+	<div class="site-canvas py-16 sm:py-24">
 		<div class="mx-auto max-w-7xl px-6 lg:px-8">
-			<div class="mx-auto max-w-2xl text-center mb-16">
+			<div class="page-intro mb-12" data-reveal>
 				<h1 class="text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl">
 					{title}
 				</h1>
@@ -48,18 +48,18 @@ const languageLinks = [
 					<p>No se encontraron etiquetas.</p>
 				</div>
 			) : (
-				<div class="mx-auto max-w-4xl">
-					<div class="flex flex-wrap gap-4 justify-center">
+				<div class="max-w-4xl">
+					<div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3" data-reveal-group>
 						{sortedTags.map((tag) => (
 							<a
 								href={`/es/tags/${tag.slug}/`}
-								class="group inline-flex flex-col items-center px-6 py-4 rounded-lg bg-gray-50 dark:bg-gray-800 hover:bg-gamboge-50 dark:hover:bg-gamboge-900 transition-colors border border-gray-200 dark:border-gray-700"
+								class="editorial-card group flex items-center justify-between gap-4 p-5"
 							>
-								<span class="text-xl font-semibold text-gray-900 dark:text-white group-hover:text-gamboge-600 dark:group-hover:text-gamboge-400 transition-colors">
+								<span class="font-semibold text-gray-900 transition-colors group-hover:text-gamboge-600 dark:text-white dark:group-hover:text-gamboge-400">
 									#{tag.label}
 								</span>
-								<span class="text-sm text-gray-600 dark:text-gray-400 mt-1">
-									{tag.count} {tag.count === 1 ? 'post' : 'posts'}
+								<span class="font-mono text-xs text-gray-500 dark:text-gray-400">
+									{tag.count.toString().padStart(2, '0')} {tag.count === 1 ? 'artículo' : 'artículos'}
 								</span>
 							</a>
 						))}

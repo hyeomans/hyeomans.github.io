@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Shared Signals Framework in Go</title>
+  <desc id="desc">A signed security event moves from a Go transmitter through a SQLite queue to a receiver.</desc>
+  <defs>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#263346" stroke-width="1"/>
+    </pattern>
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0l10 5-10 5z" fill="#e8bb37"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="630" fill="#0d1119"/>
+  <rect width="1200" height="630" fill="url(#grid)" opacity=".55"/>
+  <path d="M0 78h1200M0 552h1200" stroke="#34435a"/>
+
+  <g font-family="Atkinson Hyperlegible, Arial, sans-serif">
+    <text x="70" y="58" fill="#93a4ba" font-size="20" letter-spacing="5">SECURITY EVENT DELIVERY / GO + SQLITE</text>
+    <text x="70" y="151" fill="#edf3fb" font-size="65" font-weight="700">Shared Signals</text>
+    <text x="70" y="219" fill="#edf3fb" font-size="65" font-weight="700">Framework</text>
+    <text x="73" y="265" fill="#e8bb37" font-size="24">Sign it. Store it. Send it. Acknowledge it.</text>
+  </g>
+
+  <g transform="translate(68 344)">
+    <rect width="250" height="144" rx="16" fill="#141b27" stroke="#6aa9ff" stroke-width="2"/>
+    <rect x="18" y="18" width="55" height="25" rx="12" fill="#6aa9ff"/>
+    <text x="45.5" y="36" text-anchor="middle" fill="#0d1119" font-family="Arial, sans-serif" font-size="12" font-weight="700">GO</text>
+    <text x="18" y="79" fill="#edf3fb" font-family="Atkinson Hyperlegible, Arial, sans-serif" font-size="25" font-weight="700">Transmitter</text>
+    <text x="18" y="109" fill="#93a4ba" font-family="ui-monospace, monospace" font-size="15">secevent+jwt / EdDSA</text>
+  </g>
+
+  <g transform="translate(472 344)">
+    <ellipse cx="116" cy="24" rx="116" ry="24" fill="#241d3a" stroke="#b388ff" stroke-width="2"/>
+    <path d="M0 24v86c0 13 52 24 116 24s116-11 116-24V24" fill="#1a1730" stroke="#b388ff" stroke-width="2"/>
+    <ellipse cx="116" cy="110" rx="116" ry="24" fill="#241d3a" stroke="#b388ff" stroke-width="2"/>
+    <text x="116" y="75" text-anchor="middle" fill="#edf3fb" font-family="Atkinson Hyperlegible, Arial, sans-serif" font-size="24" font-weight="700">SQLite queue</text>
+    <text x="116" y="101" text-anchor="middle" fill="#b8a4e8" font-family="ui-monospace, monospace" font-size="14">waiting for ack</text>
+  </g>
+
+  <g transform="translate(858 344)">
+    <rect width="274" height="144" rx="16" fill="#141b27" stroke="#ff6b8a" stroke-width="2"/>
+    <rect x="18" y="18" width="86" height="25" rx="12" fill="#ff6b8a"/>
+    <text x="61" y="36" text-anchor="middle" fill="#0d1119" font-family="Arial, sans-serif" font-size="12" font-weight="700">RECEIVER</text>
+    <text x="18" y="79" fill="#edf3fb" font-family="Atkinson Hyperlegible, Arial, sans-serif" font-size="25" font-weight="700">Verify and act</text>
+    <text x="18" y="109" fill="#93a4ba" font-family="ui-monospace, monospace" font-size="15">poll / validate / ack</text>
+  </g>
+
+  <g fill="none" stroke="#e8bb37" stroke-width="3" marker-end="url(#arrow)">
+    <path d="M324 414H452"/>
+    <path d="M714 414H838"/>
+  </g>
+  <circle cx="390" cy="414" r="7" fill="#e8bb37" filter="url(#glow)"/>
+  <circle cx="778" cy="414" r="7" fill="#e8bb37" filter="url(#glow)"/>
+
+  <g font-family="ui-monospace, monospace" font-size="14" fill="#93a4ba">
+    <text x="70" y="584">SSF 1.0</text>
+    <text x="1058" y="584">RFC 8936</text>
+  </g>
+</svg>

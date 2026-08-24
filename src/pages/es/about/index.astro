@@ -11,9 +11,9 @@ const languageLinks = [
 ---
 
 <BaseLayout title={title} description={description} lang="es" languageLinks={languageLinks} canonicalUrl="/es/about/">
-	<div class="bg-white dark:bg-gray-900 py-24 sm:py-32">
+	<div class="site-canvas py-16 sm:py-24">
 		<div class="mx-auto max-w-4xl px-6 lg:px-8">
-			<article class="prose prose-lg dark:prose-invert mx-auto">
+			<article class="prose prose-lg mx-auto dark:prose-invert" data-reveal-prose>
 				<h1>Acerca de Mí</h1>
 
 				<p class="lead">
@@ -55,7 +55,7 @@ const languageLinks = [
 
 				<h2>Proyectos Destacados</h2>
 
-				<div class="not-prose bg-gray-50 dark:bg-gray-800 p-6 rounded-lg my-6">
+				<div class="editorial-panel not-prose my-6 p-6">
 					<h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-gray-100">
 						¿Quién Me Representa?
 					</h3>
@@ -64,13 +64,13 @@ const languageLinks = [
 						a sus representantes electos y promover la transparencia gubernamental.
 					</p>
 					<p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
-						🏆 <strong>Ganador del Concurso Nacional de Transparencia 2021</strong>
+						<strong>Ganador del Concurso Nacional de Transparencia 2021</strong>
 					</p>
 					<a
 						href="https://quienmerepresenta.com.mx"
 						target="_blank"
 						rel="noopener noreferrer"
-						class="inline-block text-blue-600 dark:text-blue-400 hover:underline"
+						class="inline-block font-semibold text-gamboge-600 hover:underline dark:text-gamboge-400"
 					>
 						Visitar sitio →
 					</a>

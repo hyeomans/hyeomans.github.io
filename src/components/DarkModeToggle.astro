@@ -5,7 +5,7 @@
 <button
 	id="dark-mode-toggle"
 	type="button"
-	class="p-2 rounded-md text-gray-700 dark:text-gray-300 hover:text-gamboge-600 dark:hover:text-gamboge-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gamboge-500"
+	class="theme-toggle relative inline-flex size-9 items-center justify-center rounded-md text-gray-700 transition-colors hover:bg-gray-100 hover:text-gamboge-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gamboge-500 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gamboge-400"
 	aria-label="Toggle dark mode"
 	aria-pressed="false"
 >
@@ -13,7 +13,7 @@
 	<!-- Sun icon (visible in dark mode) -->
 	<svg
 		id="sun-icon"
-		class="hidden dark:block w-5 h-5"
+		class="sun-icon absolute size-5"
 		fill="none"
 		viewBox="0 0 24 24"
 		stroke-width="1.5"
@@ -26,7 +26,7 @@
 	<!-- Moon icon (visible in light mode) -->
 	<svg
 		id="moon-icon"
-		class="block dark:hidden w-5 h-5"
+		class="moon-icon absolute size-5"
 		fill="none"
 		viewBox="0 0 24 24"
 		stroke-width="1.5"
@@ -36,6 +36,37 @@
 		<path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
 	</svg>
 </button>
+
+<style>
+	.sun-icon {
+		opacity: 0;
+		transform: rotate(-35deg) scale(0.72);
+	}
+
+	.moon-icon {
+		opacity: 1;
+		transform: rotate(0) scale(1);
+	}
+
+	:global(.dark) .sun-icon {
+		opacity: 1;
+		transform: rotate(0) scale(1);
+	}
+
+	:global(.dark) .moon-icon {
+		opacity: 0;
+		transform: rotate(35deg) scale(0.72);
+	}
+
+	@media (prefers-reduced-motion: no-preference) {
+		.sun-icon,
+		.moon-icon {
+			transition:
+				opacity 160ms ease,
+				transform 240ms var(--motion-ease);
+		}
+	}
+</style>
 
 <script is:inline>
 	if (typeof window !== 'undefined') {

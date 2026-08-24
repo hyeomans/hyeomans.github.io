@@ -130,6 +130,14 @@ export default defineConfig({
   integrations: [mdx(), sitemap({ filter: shouldIncludeInSitemap })],
 
   markdown: {
+    shikiConfig: {
+      themes: {
+        light: "github-light",
+        dark: "github-dark",
+      },
+      defaultColor: false,
+      wrap: false,
+    },
     rehypePlugins: [markMermaidCodeBlocks, [rehypeMermaid, { strategy: "pre-mermaid" }]],
   },
 

@@ -1,0 +1,199 @@
+---
+import ArchitectureDiagram from "./ArchitectureDiagram.astro";
+import type { ArchitectureDiagramDefinition } from "./architecture-diagram";
+
+const sessionRevoked =
+  "https://schemas.openid.net/secevent/caep/event-type/session-revoked";
+
+const diagram = {
+  id: "ssf-poll-transmitter",
+  title: "How the demo transmitter moves one security event",
+  summary:
+    "The Go service signs a Security Event Token, keeps it in SQLite, and removes it only after the receiver acknowledges its JWT ID.",
+  autoplayMs: 3000,
+  nodes: [
+    {
+      id: "event-source",
+      role: "automation",
+      label: "Event source",
+      tech: "POST /emit",
+      detail: "A session is revoked",
+      x: 12,
+      y: 52,
+    },
+    {
+      id: "transmitter",
+      role: "orchestrator",
+      label: "SSF transmitter",
+      tech: "Go + Ed25519",
+      detail: "Signs and serves SETs",
+      x: 40,
+      y: 52,
+    },
+    {
+      id: "queue",
+      role: "data",
+      label: "Durable queue",
+      tech: "SQLite",
+      detail: "Waits for an ack",
+      x: 67,
+      y: 75,
+    },
+    {
+      id: "receiver",
+      role: "compute",
+      label: "SSF receiver",
+      tech: "RFC 8936 client",
+      detail: "Verifies and acts",
+      x: 88,
+      y: 30,
+    },
+  ],
+  flows: [
+    {
+      id: "publish-event",
+      label: "1. Publish",
+      note: "The event becomes durable before the transmitter reports success.",
+      steps: [
+        {
+          from: "event-source",
+          to: "transmitter",
+          title: "Report the session revocation",
+          route: "POST /emit",
+          description:
+            "A trusted internal caller tells the transmitter which session was revoked.",
+          payload: '{ "subject_id": "session-123" }',
+          chips: ["Bearer token", "demo endpoint"],
+        },
+        {
+          from: "transmitter",
+          to: "queue",
+          title: "Sign and store the SET",
+          route: "INSERT ssf_events",
+          description:
+            "The transmitter creates an explicitly typed, Ed25519-signed SET and commits it to SQLite.",
+          payload: `{ "jti": "…", "events": { "${sessionRevoked}": { "event_timestamp": 1787337600 } } }`,
+          chips: ["secevent+jwt", "durable first"],
+        },
+      ],
+    },
+    {
+      id: "discover-transmitter",
+      label: "2. Discover",
+      note: "Discovery tells the receiver where to find stream metadata and signing keys.",
+      steps: [
+        {
+          from: "receiver",
+          to: "transmitter",
+          title: "Request transmitter metadata",
+          route: "GET /.well-known/ssf-configuration",
+          description:
+            "The receiver starts with the trusted issuer URL and asks for the SSF endpoints.",
+          payload: "Accept: application/json",
+          chips: ["SSF 1.0", "discovery"],
+        },
+        {
+          from: "transmitter",
+          to: "receiver",
+          title: "Return endpoints and capabilities",
+          route: "200 application/json",
+          description:
+            "The metadata names the issuer, JWKS URI, stream endpoint, and poll delivery support.",
+          payload:
+            '{ "spec_version": "1_0", "jwks_uri": "http://localhost:8080/jwks.json", "delivery_methods_supported": ["urn:ietf:rfc:8936"] }',
+          chips: ["issuer check", "poll delivery"],
+        },
+        {
+          from: "receiver",
+          to: "transmitter",
+          title: "Fetch the signing key",
+          route: "GET /jwks.json",
+          description:
+            "The receiver fetches the public Ed25519 key identified by the SET header's kid value.",
+          payload: '{ "kid": "demo-key-1", "kty": "OKP", "crv": "Ed25519" }',
+          chips: ["public key", "signature verification"],
+        },
+        {
+          from: "transmitter",
+          to: "receiver",
+          title: "Return the public JWKS",
+          route: "200 application/json",
+          description:
+            "The receiver now has the public key it needs to verify delivered SETs.",
+          payload: '{ "keys": [{ "kid": "demo-key-1", "alg": "EdDSA" }] }',
+          chips: ["no private key", "cache carefully"],
+        },
+      ],
+    },
+    {
+      id: "poll-and-ack",
+      label: "3. Poll + ack",
+      note: "A missing acknowledgement leaves the event eligible for redelivery.",
+      steps: [
+        {
+          from: "receiver",
+          to: "transmitter",
+          title: "Poll for available SETs",
+          route: "POST /events",
+          description:
+            "The receiver asks for up to ten events and requests an immediate response.",
+          payload: '{ "maxEvents": 10, "returnImmediately": true }',
+          chips: ["RFC 8936", "short poll"],
+        },
+        {
+          from: "transmitter",
+          to: "queue",
+          title: "Claim events ready for delivery",
+          route: "UPDATE … RETURNING",
+          description:
+            "One SQLite statement selects due rows and moves their next delivery time forward.",
+          payload: "status = queued AND deliver_after <= now",
+          chips: ["atomic claim", "30 s retry"],
+        },
+        {
+          from: "queue",
+          to: "transmitter",
+          title: "Return the signed SET",
+          route: "jti + set_token",
+          description:
+            "SQLite returns the JWT ID and compact signed token without deleting the row.",
+          payload: '{ "jti": "8c…", "set_token": "eyJ…" }',
+          chips: ["still durable", "attempts + 1"],
+        },
+        {
+          from: "transmitter",
+          to: "receiver",
+          title: "Deliver the SET map",
+          route: "200 application/json",
+          description:
+            "The response maps each jti to its signed SET so the receiver can verify each item.",
+          payload: '{ "sets": { "8c…": "eyJ…" }, "moreAvailable": false }',
+          chips: ["verify typ", "verify iss + aud"],
+        },
+        {
+          from: "receiver",
+          to: "transmitter",
+          title: "Acknowledge the JWT ID",
+          route: "POST /events",
+          description:
+            "After validation, the receiver returns the jti in its next poll request.",
+          payload: '{ "ack": ["8c…"], "maxEvents": 0, "returnImmediately": true }',
+          chips: ["acknowledge-only", "idempotent"],
+        },
+        {
+          from: "transmitter",
+          to: "queue",
+          title: "Remove the acknowledged event",
+          route: "DELETE FROM ssf_events",
+          description:
+            "The row is deleted only after the receiver confirms the exact jti.",
+          payload: 'DELETE WHERE jti = "8c…"',
+          chips: ["delivery complete", "queue empty"],
+        },
+      ],
+    },
+  ],
+} satisfies ArchitectureDiagramDefinition;
+---
+
+<ArchitectureDiagram {...diagram} class="not-prose wide-media" theme="auto" />
