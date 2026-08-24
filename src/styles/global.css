@@ -370,7 +370,25 @@
     box-shadow: 0 1px 2px rgb(23 26 33 / 0.03);
     overflow-x: auto;
     overscroll-behavior-inline: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-color: var(--site-muted) var(--site-line);
+    scrollbar-width: thin;
     white-space: pre;
+  }
+
+  .prose pre.astro-code::-webkit-scrollbar {
+    block-size: 0.75rem;
+  }
+
+  .prose pre.astro-code::-webkit-scrollbar-track {
+    border-radius: 999px;
+    background: var(--site-line);
+  }
+
+  .prose pre.astro-code::-webkit-scrollbar-thumb {
+    border: 0.2rem solid var(--site-line);
+    border-radius: 999px;
+    background: var(--site-muted);
   }
 
   .prose pre.astro-code code {
