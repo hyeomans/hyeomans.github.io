@@ -365,13 +365,28 @@
 }
 
 @layer utilities {
+  .prose table :is(th, td):first-child {
+    padding-inline-start: 1rem;
+  }
+
+  .prose table :is(th, td):last-child {
+    padding-inline-end: 1rem;
+  }
+
+  .prose > pre.mermaid.mermaid-portrait {
+    inline-size: min(100%, 28rem);
+    max-inline-size: 28rem;
+    margin-inline: auto;
+  }
+
   .prose pre.astro-code {
+	position: relative;
     margin-block: 2rem;
     border-color: var(--site-line);
     border-radius: 0.75rem;
     background-color: var(--shiki-light-bg, var(--site-surface));
     color: var(--shiki-light, var(--site-ink));
-    padding: 1rem;
+    padding: 3.25rem 1rem 1rem;
     box-shadow: 0 1px 2px rgb(23 26 33 / 0.03);
     overflow-x: auto;
     overscroll-behavior-inline: contain;
@@ -379,6 +394,59 @@
     scrollbar-color: var(--site-muted) var(--site-line);
     scrollbar-width: thin;
     white-space: pre;
+  }
+
+  .prose .code-copy-button {
+    position: absolute;
+    inset-block-start: 0.75rem;
+    inset-inline-end: 0.75rem;
+    z-index: 1;
+    min-block-size: 2rem;
+    min-inline-size: 3.75rem;
+    border: 1px solid var(--site-line);
+    border-radius: 0.5rem;
+    background: var(--site-canvas);
+    color: var(--site-ink);
+    padding-inline: 0.75rem;
+    font-family: inherit;
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1;
+    white-space: normal;
+    cursor: pointer;
+    transition:
+      border-color 150ms ease,
+      background-color 150ms ease,
+      color 150ms ease;
+  }
+
+  .prose .code-copy-button:hover {
+    border-color: var(--color-gamboge-500);
+    color: var(--color-gamboge-700);
+  }
+
+  .prose .code-copy-button[data-copy-state="success"] {
+    border-color: var(--color-gamboge-500);
+    background: var(--color-gamboge-100);
+    color: var(--color-gamboge-900);
+  }
+
+  .dark .prose .code-copy-button:hover {
+    color: var(--color-gamboge-400);
+  }
+
+  .dark .prose .code-copy-button[data-copy-state="success"] {
+    background: var(--color-gamboge-900);
+    color: var(--color-gamboge-100);
+  }
+
+  .prose .code-copy-button[data-copy-state="error"] {
+    border-color: var(--color-gray-500);
+  }
+
+  .prose .code-copy-button:focus-visible {
+    outline: 2px solid var(--color-gamboge-500);
+    outline-offset: 2px;
   }
 
   .prose pre.astro-code::-webkit-scrollbar {

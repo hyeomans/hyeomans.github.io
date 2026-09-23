@@ -209,6 +209,55 @@ const breadcrumbs = [
 </BaseLayout>
 
 <script>
+	const initializeCodeCopyButtons = () => {
+		const labels = document.documentElement.lang === 'es'
+			? { copy: 'Copiar', copied: 'Copiado', failed: 'Error al copiar' }
+			: { copy: 'Copy', copied: 'Copied', failed: 'Copy failed' };
+
+		for (const block of document.querySelectorAll<HTMLElement>('.prose pre.astro-code')) {
+			if (block.dataset.copyReady === 'true') continue;
+
+			const code = block.querySelector('code');
+			if (!code) continue;
+
+			const button = document.createElement('button');
+			button.type = 'button';
+			button.className = 'code-copy-button';
+			button.textContent = labels.copy;
+			button.setAttribute('aria-label', labels.copy);
+
+			let resetTimer: number | undefined;
+			button.addEventListener('click', async () => {
+				if (resetTimer) window.clearTimeout(resetTimer);
+
+				try {
+					if (!navigator.clipboard?.writeText) throw new Error('Clipboard API unavailable');
+					await navigator.clipboard.writeText(code.textContent ?? '');
+					button.textContent = labels.copied;
+					button.setAttribute('aria-label', labels.copied);
+					button.dataset.copyState = 'success';
+				} catch {
+					button.textContent = labels.failed;
+					button.setAttribute('aria-label', labels.failed);
+					button.dataset.copyState = 'error';
+				}
+
+				resetTimer = window.setTimeout(() => {
+					button.textContent = labels.copy;
+					button.setAttribute('aria-label', labels.copy);
+					delete button.dataset.copyState;
+				}, 2000);
+			});
+
+			block.dataset.copyReady = 'true';
+			block.prepend(button);
+		}
+	};
+
+	initializeCodeCopyButtons();
+	document.addEventListener('astro:page-load', initializeCodeCopyButtons);
+	window.addEventListener('pageshow', initializeCodeCopyButtons);
+
 	const mermaidBlocks = Array.from(document.querySelectorAll<HTMLElement>('.prose pre.mermaid'));
 
 	if (mermaidBlocks.length > 0) {
@@ -235,6 +284,8 @@ const breadcrumbs = [
 			}
 
 			if (box.width === 0 || box.height === 0) return;
+
+			block.classList.toggle('mermaid-portrait', box.height > box.width * 1.15);
 
 			svg.setAttribute(
 				'viewBox',
